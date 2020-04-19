@@ -1,0 +1,4 @@
+requests>=2.22.0
+recipe-scrapers==6.0.6
+selectolax==0.2.3
+rdflib>=5.0.0
