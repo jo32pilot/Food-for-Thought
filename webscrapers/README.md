@@ -1,5 +1,4 @@
 ## Installing Dependencies
-----
 
 In the root of the project directory, run `pip install -r requirements.txt`.  
 
@@ -33,7 +32,6 @@ initial_context["http://www.w3.org/2011/rdfa-context/rdfa-1.1"].ns.update({
 ```
 
 ## Implementing the Scraper
----
 
 To develop a scraper for one of the [recipe-scraper](https://github.com/hhursev/recipe-scrapers)
 supported websites, perform the following 
@@ -58,7 +56,6 @@ is 5 times faster than `BeautifulSoup`, but if you are more familiar with
 might save you a lot of time.
 
 ## Running the Tester
----
 
 The tester isn't really much of a tester as all it does is print out the results
 of the scraping. To test your parser you can basically copy what's already in 
