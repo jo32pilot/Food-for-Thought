@@ -17,4 +17,8 @@
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
     <string name="register">Register</string>
+    <string name="home">Home</string>
+    <string name="saved">Saved</string>
+    <string name="shopping_list">Shopping List</string>
+    <string name="home_name">HomeActivity</string>
 </resources>
