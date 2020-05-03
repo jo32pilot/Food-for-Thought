@@ -12,9 +12,17 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class LoginFragment extends Fragment {
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     EditText emailId;
+    // Create an instance of database using getInstance
+    //FirebaseDatabase db = FirebaseDatabase.getInstance();
+    // Reference the location that we want to write to with specific data types
+    //DatabaseReference myRef = db.getReference().child("com.example.foodforthought.Types");
+    // See com.example.foodforthought.Types class for list of all data types that we will use
 
     @Override
     public View onCreateView(

@@ -21,4 +21,6 @@
     <string name="saved">Saved</string>
     <string name="shopping_list">Shopping List</string>
     <string name="home_name">HomeActivity</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 </resources>
