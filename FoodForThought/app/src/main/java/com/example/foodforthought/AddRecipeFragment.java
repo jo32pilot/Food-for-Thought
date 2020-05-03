@@ -13,33 +13,13 @@ import androidx.navigation.fragment.NavHostFragment;
 public class AddRecipeFragment extends Fragment {
     @Nullable
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_addrecipe, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_addrecipe, container, false);
+        return view;
     }
 
-
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        view.findViewById(R.id.HomeItem).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(AddRecipeFragment.this)
-                        .navigate(R.id.action_AddRecipe_toMain);
-            }
-        });
-
-        view.findViewById(R.id.RecipeItem).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                NavHostFragment.findNavController(AddRecipeFragment.this)
-                        .navigate(R.id.action_MainFragment_toAddRecipe);
-            }
-        });
     }
-
 }

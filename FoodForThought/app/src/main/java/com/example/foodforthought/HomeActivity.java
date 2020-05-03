@@ -32,12 +32,12 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
         drawerLayout = findViewById(R.id.drawer);
         navigationView = findViewById(R.id.navigationView);
-//        //navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);
        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
-//        // Load default fragment
+        // Load default fragment
         fragmentManager = getSupportFragmentManager();
 
         fragmentTransaction = fragmentManager.beginTransaction();
@@ -47,10 +47,17 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.home){
-
+        if (item.getItemId() == R.id.HomeItem){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
+            fragmentTransaction.commit();
         }
-        if (item.getItemId() == R.id.home){
+        if (item.getItemId() == R.id.RecipeItem){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new AddRecipeFragment());
+            fragmentTransaction.commit();
 
         }
         return true;
