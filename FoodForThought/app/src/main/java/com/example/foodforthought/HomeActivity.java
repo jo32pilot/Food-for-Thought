@@ -15,7 +15,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
-public class HomeActivity  extends AppCompatActivity{
+public class HomeActivity  extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
@@ -37,12 +37,22 @@ public class HomeActivity  extends AppCompatActivity{
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
         actionBarDrawerToggle.syncState();
-////
 //        // Load default fragment
-//        fragmentManager = getSupportFragmentManager();
-//
-//        fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.add(R.id.MainFragment, new MainFragment());
-//        fragmentTransaction.commit();
+        fragmentManager = getSupportFragmentManager();
+
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.container_fragment, new MainFragment());
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.home){
+
+        }
+        if (item.getItemId() == R.id.home){
+
+        }
+        return true;
     }
 }
