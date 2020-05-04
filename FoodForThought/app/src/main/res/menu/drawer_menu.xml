@@ -11,12 +11,12 @@
             <item android:id="@+id/RecipeItem"
                 android:icon="@drawable/ic_add_recipe"
                 android:title="Add Recipe"/>
-            <item
+            <item android:id="@+id/InventoryItem"
                 android:icon="@drawable/ic_savedrecipe"
-                android:title="Saved Recipes" />
-            <item
+                android:title="Inventory" />
+            <item android:id="@+id/ShoppingItem"
                 android:icon="@drawable/ic_shareicon"
-                android:title="Share" />
+                android:title="Shopping" />
         </menu>
     </item>
 </menu>

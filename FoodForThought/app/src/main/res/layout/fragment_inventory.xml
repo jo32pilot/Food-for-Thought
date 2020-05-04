@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".AddRecipeFragment">
+    tools:context=".InventoryFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,36 +15,31 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/addnewrecipebutton"
+            android:id="@+id/insertingredientbutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="72dp"
-            android:text="Add New Recipe" />
+            android:text="Insert Ingredients" />
 
         <Button
-            android:id="@+id/saveunsaverecipebutton"
+            android:id="@+id/userecipebutton"
             android:layout_width="match_parent"
             android:layout_height="61dp"
             android:layout_marginTop="5dp"
-            android:text="Save/Unsave Recipes" />
+            android:text="Use Recipe" />
 
         <Button
-            android:id="@+id/favoriterecipebutton"
+            android:id="@+id/updateinventorybutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Favorite Recipes" />
+            android:text="Manually Update Inventory" />
 
         <Button
-            android:id="@+id/addpersonalrecipebutton"
+            android:id="@+id/expirationdatebutton"
             android:layout_width="436dp"
             android:layout_height="wrap_content"
-            android:text="Add Personal Recipes" />
+            android:text="Display Expiration Date" />
 
-        <Button
-            android:id="@+id/updaterecipebutton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update Recipes" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,6 +60,21 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             fragmentTransaction.commit();
 
         }
+        if (item.getItemId() == R.id.InventoryItem){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new InventoryFragment());
+            fragmentTransaction.commit();
+
+        }
+        if (item.getItemId() == R.id.ShoppingItem){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
+            fragmentTransaction.commit();
+
+        }
+
         return true;
     }
 }
