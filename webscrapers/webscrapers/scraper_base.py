@@ -52,12 +52,13 @@ class ScraperBase():
             scraper = scrape_me(link)
             try:
                 recipe = {
-                    'title': scraper.title(),
+                    'name': scraper.title(),
                     'total_time': scraper.total_time(),
-                    'yields': scraper.yields(),
+                    'yield': scraper.yields(),
                     'ingredients': scraper.ingredients(),
                     'instructions': scraper.instructions(),
-                    'image': scraper.image()
+                    'image': scraper.image(),
+                    'user_created': ''
                 }
                 self.recipes[link] = recipe
             except (AttributeError, NotImplementedError) as e: 
@@ -66,9 +67,20 @@ class ScraperBase():
             
 
 
-    def upload(self):
-        """ TODO will upload to databse. """
-        pass
+    def upload(self, db):
+        """ Uploads recipes to database. 
+        
+        Params:
+            db: databse to upload to.
+        
+        """
+        recipe_key = 0
+        recipes_ref = db.collection('recipes')
+        for link, recipe in self.recipes.items():
+            # TODO Temp key, need to make better leter
+            recipe_ref = recipes_ref.document(f'{recipe_key}')
+            recipe_ref.set(recipe)
+            recipe_key += 1
 
     def _print_recipes(self):
         """ Prints recipes dictionary for testing / debugging. """
