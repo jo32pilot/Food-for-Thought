@@ -35,7 +35,7 @@ initial_context["http://www.w3.org/2011/rdfa-context/rdfa-1.1"].ns.update({
 
 To develop a scraper for one of the [recipe-scraper](https://github.com/hhursev/recipe-scrapers)
 supported websites, perform the following 
-1. Make a copy of the provided `example.py` file and rename it to 
+1. In `webscrapers/` make a copy of the provided `example.py` file and rename it to 
 `{name_of_website}.py`. For example, `foodnetwork.py`. 
 2. In `{name_of_website}.py`, rename the class to `{NameOfWebsite}`. 
 For example `FoodNetwork`.
@@ -59,5 +59,5 @@ might save you a lot of time.
 
 The tester isn't really much of a tester as all it does is print out the results
 of the scraping. To test your parser you can basically copy what's already in 
-the given tester file. Note that you need to run it in the `webparser/` directory
-as that's where `base_links.py` is. To run it, just use `python tests/test_base.py`.
+the given tester file. Be sure to be in the `tests/` directory when you run the 
+tester.

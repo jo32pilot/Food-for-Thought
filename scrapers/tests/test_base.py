@@ -1,6 +1,5 @@
 import sys
-sys.path.append('/home/jo32pilot/cse110/')
-
+sys.path.append('..')
 import webscrapers
 
 scraper = webscrapers.FoodNetwork()

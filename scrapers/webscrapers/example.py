@@ -19,7 +19,7 @@ class Example(ScraperBase):
 
     def __init__(self):
         """ Default constructor. Mainly sets up parent class. """
-        with open('base_links.json', 'r') as f:
+        with open('../config/base_links.json', 'r') as f:
             links = json.load(f)
             site = '' # TODO replace with site name as in base_links.json
             super().__init__(site, links[site])
