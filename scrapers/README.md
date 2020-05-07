@@ -1,6 +1,6 @@
 ## Installing Dependencies
 
-In the root of the scrapers directory, run `pip install -r requirements.txt`.  
+In the root of the `scrapers/` directory, run `pip install -r requirements.txt`.  
 
 Now if you try to run the tester, you'll most likely get an error with a path
 along the lines of 
