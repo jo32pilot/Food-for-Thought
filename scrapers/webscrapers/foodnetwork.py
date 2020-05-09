@@ -1,8 +1,8 @@
 """
 
-Scraper for allrecipes.com. Collectis all recipe links from website.
+Scraper for foodnetwork.com. Collectis all recipe links from website.
 
-Author: Ankur Duggal & John Li
+Author: John Li
 
 """
 
@@ -13,20 +13,21 @@ import requests
 import string
 import re
 
-class AllRecipes(ScraperBase):
-    """ Class for scraping recipe links from allrecipes.com. """
+class FoodNetwork(ScraperBase):
+    """ Class for scraping recipe links from foodnetwork.com. """
+
     def __init__(self):
         """ Default constructor. Mainly sets up parent class. """
-        with open('base_links.json', 'r') as f:
+        with open('../config/base_links.json', 'r') as f:
             links = json.load(f)
-            site = 'allrecipes'
+            site = 'foodnetwork'
             super().__init__(site, links[site])
         
     def parse(self):
         """ Scrapes website for recipe links. """
     
         # how recipe links should look like in regex
-        pattern = r'.*allrecipes\.com/recipes/.*\d{6}'
+        pattern = r'.*foodnetwork\.com/recipes/.*\d{7}'
 
         # list or recipes are organized alphabetically on website,
         # so just append letters to base link.
@@ -41,3 +42,4 @@ class AllRecipes(ScraperBase):
                 link = anchor_node.attributes['href'] if 'href' in anchor_node.attributes else ''
                 if re.fullmatch(pattern, link):
                     self.links.add('http:' + link)
+
