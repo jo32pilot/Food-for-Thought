@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "926184115242",
+    "firebase_url": "https://food-for-thought-4dd85.firebaseio.com",
+    "project_id": "food-for-thought-4dd85",
+    "storage_bucket": "food-for-thought-4dd85.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926184115242:android:4cdb82521d1a5df6cc0753",
+        "android_client_info": {
+          "package_name": "com.example.foodforthought"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926184115242-3gmg336nh08s9ui6lr57cdjn6prjcio2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_10OpBDw0TiQZjJ5Vpj-6QQrA3u65jiw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "926184115242-3gmg336nh08s9ui6lr57cdjn6prjcio2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
