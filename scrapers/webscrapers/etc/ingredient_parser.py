@@ -12,7 +12,9 @@ Author: John Li
 
 import re
 
-TO_STRIP = {'pinch', 'dash', 'teaspoons', 'teaspoon', 'fluid', 'oz', 
+# special cases: wanted to get rid of garlic {cloves} but cloves are
+# their own thing too
+TO_STRIP = {'pinch', 'dash', 'teaspoons', 'teaspoon', 'fluid', 
         'tablespoons', 'tablespoon', 'cup', 'cups', 'ounce', 'ounces', 
         'pint', 'pints', 'quart', 'quarts', 'milliliter', 'milliters', 
         'liter', 'liters', 'gram', 'grams', 'kilogram', 'kilograms', 
@@ -20,15 +22,25 @@ TO_STRIP = {'pinch', 'dash', 'teaspoons', 'teaspoon', 'fluid', 'oz',
         'sprig', 'sprigs', 'ground', 'piece', 'pieces', 'of', 'to', 
         'bottle', 'bottles', 'carton', 'cartons', 'slice', 'slices',
         'fresh', 'freshly', 'hard', 'boiled', 'boiling', 'chopped',
-        'yolk', 'fine', 'finely', 'clove', 'cloves', 'zest', 'diced',
-        'lbs', 'TBSP', 'tsp.', 'tsp', 'taste', 'g', 'ml', 'sharp',
-        'grated', 'lb.', 'can', 'stick'}
+        'yolk', 'fine', 'finely', 'zest', 'diced', 'thin', 'thinly',
+        'taste', 'sharp', 'inch', 'inches', 'sliced'
+        'grated', 'can', 'stick', 'a', 'few', 'dash', 'dashes',
+        'really', 'sheet', 'one', 'two', 'three', 'four', 'five', 'six',
+        'seven', 'eight', 'nine', 'store-bought', '-one', '-oz.',
+        '-size', 'about', 'the', 'rind', '/'}
+
 
 RM_EVERYTHING_AFTER = {'for', ','}
 
-DELIMITERS = {',', ' ', '-'}
+DELIMITERS = {',', ' ', '-', '/'}
+MULT_INGREDIENT_DELIM = r'([/,\s]?(and|or|and/or)[/,\s]?)'
 
-PATTERNS = [r'[0-9]+/?(?<=/)[0-9]+|[0-9]*', r'\(.*\)']
+PATTERNS = [
+    r'[0-9]+', 
+    r'.*/[0-9]+', 
+    r'\(.*\)', 
+    r'[0-9]+\.[0-9]+', 
+    r'[0-9]*(g|g\.|oz|oz\.|ml|ml\.|lb\.|lb|lbs|lbs\.|tsp|tsp\.|tbsp|tbsp\.)']
 
 OPEN_PAR = '('
 CLOSE_PAR = ')'
@@ -158,25 +170,75 @@ class IngredientParser:
         curr.prev.next = curr.next
         curr.next.prev = curr.prev
 
-    def join(self):
+    def _recount_size(self):
+        """ Gets size by counting number of nodes in list 
+        
+        Return:
+            The number of valid nodes in the list
+        """
+        self._size = 0
+        curr = self._head.next
+        while curr.data != None:
+            self._size += 1
+            curr = curr.next
+        return self._size
+
+
+    def join_list(self):
         """ Combines strings in list 
         
         Returns:
-            All of the strings in the list combined
+            List of ingredient strings, all in lowercase
 
         """
         curr = self._head.next
-        self._size = 0
+        final_product = [[]]
+        while curr.data != None:
+            if re.fullmatch(MULT_INGREDIENT_DELIM, curr.data):
+                self._rm_curr_node(curr)
+
+                # check if one of the optional ingredients (delimited
+                # by or / and) isn't just white space
+                option_ingredient = final_product[len(final_product) - 1]
+                if not re.fullmatch(r'\s*', ''.join(option_ingredient)):
+                    final_product.append([])
+
+            else:
+                final_product[len(final_product) - 1].append(curr.data.lower())
+            curr = curr.next
+
+        # nested join to remove extra white space
+        list_of_ingredients = []
+        for ingredient in final_product:
+            final_ingredient = ' '.join(''.join(ingredient).split()).strip('.-,/ ')
+            if not re.fullmatch(r'\s*', final_ingredient):
+                list_of_ingredients.append(final_ingredient)
+        
+        return list_of_ingredients
+
+    def join(self):
+        """ Combines string in list into one whole string
+
+        Returns:
+            Combined strings from list data
+
+        """
+        curr = self._head.next
         final_product = []
         while curr.data != None:
-            self._size += 1
             final_product.append(curr.data)
             curr = curr.next
 
-        return ' '.join(''.join(final_product).split())
+        # nested join to remove extra white space
+        return ' '.join(''.join(final_product).split()) 
 
     def parse(self):
-        """ Parses ingredient to remove qualifiers and quantifiers. """
+        """ Parses ingredient to remove qualifiers and quantifiers.
+
+        Returns:
+            List of ingredient strings
+
+        """
         curr = self._head.next
 
         # Remove unnecessary elements
@@ -186,18 +248,42 @@ class IngredientParser:
             if normalized in RM_EVERYTHING_AFTER:
                 # Remove curr node and everything after
                 curr.prev.next = self._tail
-                self._tail.prev = curr.prev
-                curr = self._tail
 
+                # save previous _tail.prev just in case we remove too much
+                # and want to go back
+                prev_tail = self._tail.prev
+
+                self._tail.prev = curr.prev
+                result_string = self.join()
+
+                # if everything is whitespace, we removed too much
+                if re.fullmatch(r'\s*', result_string):
+
+                    # unremove everything
+                    curr.prev.next = curr
+                    self._tail.prev = prev_tail
+
+                    # but remove current node
+                    self._rm_curr_node(curr)
+                    curr = curr.next
+
+                else:
+                    curr = self._tail
+
+            # else if element matches a regex pattern or is one of the words we
+            # don't want, remove
             elif (any(re.fullmatch(pattern, normalized) for pattern in PATTERNS)
                     or normalized in TO_STRIP):
                 self._rm_curr_node(curr)
                 curr = curr.next
 
+            # otherwise we keep the word
             else:
                 curr = curr.next
 
-        return self.join()
+        self._recount_size()
+
+        return self.join_list()
 
 
 if __name__ == '__main__':

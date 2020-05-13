@@ -1,1 +1,1 @@
-from .linked_list import LinkedList
+from .ingredient_parser import IngredientParser
