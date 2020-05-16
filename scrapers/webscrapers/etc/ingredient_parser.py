@@ -23,24 +23,38 @@ TO_STRIP = {'pinch', 'dash', 'teaspoons', 'teaspoon', 'fluid',
         'bottle', 'bottles', 'carton', 'cartons', 'slice', 'slices',
         'fresh', 'freshly', 'hard', 'boiled', 'boiling', 'chopped',
         'yolk', 'fine', 'finely', 'zest', 'diced', 'thin', 'thinly',
-        'taste', 'sharp', 'inch', 'inches', 'sliced'
+        'taste', 'sharp', 'inch', 'inches', 'sliced', 'with', 'generous',
         'grated', 'can', 'stick', 'a', 'few', 'dash', 'dashes',
         'really', 'sheet', 'one', 'two', 'three', 'four', 'five', 'six',
         'seven', 'eight', 'nine', 'store-bought', '-one', '-oz.',
-        '-size', 'about', 'the', 'rind', '/'}
+        '-size', 'about', 'the', 'rind', '/', 'an', 'from', 'bunch',
+        'bunches', 'coarsely', 'cooked', 'cubed', 'cubes', 'container'
+        'containers', 'bag', 'bags', 'box', 'boxes', 'crushed', 'each',
+        'plus', 'yolks', 'envelope', 'envelopes', 'garnish', 'good', 'quality',
+        'good', 'half', 'handful', 'jar', 'julienned', 'leftover', 'millileter',
+        'milliliters', 'minced', 'natural', 'brewed', 'other', 'part', 'parts', 
+        'pack', 'package', 'packages', 'packed', 'packet', 'packets',
+        'peeled', 'pkg', 'pkgs', 'premium', 'prepared', 'roughly',
+        'round', 'rounded', 'sauteed', 'scant', 'palmful', 'scoop', 'scoops',
+        'serving', 'suggestions', 'shredded', 'splash', 'squeezed',
+        'store', 'bought', 'tbs.', 'uncooked', 'very', 'your', 'favourite',
+        'favorite', 'rounds', 'pkg.', 'percent', 'whites', 'sticks'}
 
 
 RM_EVERYTHING_AFTER = {'for', ','}
 
-DELIMITERS = {',', ' ', '-', '/'}
+DELIMITERS = {',', ' ', '-', '/', ':', '*'}
 MULT_INGREDIENT_DELIM = r'([/,\s]?(and|or|and/or)[/,\s]?)'
 
 PATTERNS = [
     r'[0-9]+', 
     r'.*/[0-9]+', 
     r'\(.*\)', 
-    r'[0-9]+\.[0-9]+', 
+    r'[0-9]*\.[0-9]+', 
     r'[0-9]*(g|g\.|oz|oz\.|ml|ml\.|lb\.|lb|lbs|lbs\.|tsp|tsp\.|tbsp|tbsp\.)']
+
+END_STRIP = '.-,/:!*? '
+WHITE_SPACE = r'\s*'
 
 OPEN_PAR = '('
 CLOSE_PAR = ')'
@@ -200,7 +214,7 @@ class IngredientParser:
                 # check if one of the optional ingredients (delimited
                 # by or / and) isn't just white space
                 option_ingredient = final_product[len(final_product) - 1]
-                if not re.fullmatch(r'\s*', ''.join(option_ingredient)):
+                if not re.fullmatch(WHITE_SPACE, ''.join(option_ingredient)):
                     final_product.append([])
 
             else:
@@ -210,8 +224,8 @@ class IngredientParser:
         # nested join to remove extra white space
         list_of_ingredients = []
         for ingredient in final_product:
-            final_ingredient = ' '.join(''.join(ingredient).split()).strip('.-,/ ')
-            if not re.fullmatch(r'\s*', final_ingredient):
+            final_ingredient = ' '.join(''.join(ingredient).split()).strip(END_STRIP)
+            if not re.fullmatch(WHITE_SPACE, final_ingredient):
                 list_of_ingredients.append(final_ingredient)
         
         return list_of_ingredients
@@ -257,7 +271,7 @@ class IngredientParser:
                 result_string = self.join()
 
                 # if everything is whitespace, we removed too much
-                if re.fullmatch(r'\s*', result_string):
+                if re.fullmatch(WHITE_SPACE, result_string):
 
                     # unremove everything
                     curr.prev.next = curr
@@ -272,8 +286,8 @@ class IngredientParser:
 
             # else if element matches a regex pattern or is one of the words we
             # don't want, remove
-            elif (any(re.fullmatch(pattern, normalized) for pattern in PATTERNS)
-                    or normalized in TO_STRIP):
+            elif normalized in TO_STRIP or \
+                    any(re.fullmatch(pattern, normalized) for pattern in PATTERNS):
                 self._rm_curr_node(curr)
                 curr = curr.next
 
