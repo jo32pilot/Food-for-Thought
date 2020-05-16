@@ -45,4 +45,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:21.4.3'
 
     apply plugin: 'com.google.gms.google-services'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 }

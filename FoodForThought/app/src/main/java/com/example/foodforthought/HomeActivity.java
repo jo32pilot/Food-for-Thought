@@ -90,6 +90,13 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
             fragmentTransaction.commit();
 
         }
+        if (item.getItemId() == R.id.UserProfileItem){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new UserProfileFragment());
+            fragmentTransaction.commit();
+
+        }
 
         return true;
     }
