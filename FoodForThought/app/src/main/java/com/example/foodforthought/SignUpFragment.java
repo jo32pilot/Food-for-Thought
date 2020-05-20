@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class SingUpFragment extends Fragment {
+public class SignUpFragment extends Fragment {
     static final int GOOGLE_SIGN_IN = 123;
     EditText mFirstName, mLastName, mEmail, mPassword;
     FirebaseAuth fAuth;
@@ -104,8 +104,8 @@ public class SingUpFragment extends Fragment {
         view.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SingUpFragment.this)
-                        .navigate(R.id.action_SignUpFragment_to_LoginFragment);
+                NavHostFragment.findNavController(SignUpFragment.this)
+                        .navigate(R.id.action_SignUpFragment_to_LogInFragment);
             }
         });
     }
