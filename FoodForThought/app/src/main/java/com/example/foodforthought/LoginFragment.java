@@ -12,9 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,8 +27,9 @@ import java.util.Map;
 
 public class LoginFragment extends Fragment {
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-    EditText emailId;
+    EditText emailId, passwordId;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth fAuth;
 
 
     @Override
@@ -40,7 +45,15 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fAuth = FirebaseAuth.getInstance();
         emailId = (EditText) view.findViewById(R.id.emailLogin);
+        passwordId = (EditText) view.findViewById(R.id.passwordLogin);
+
+        //check if users already logged in
+        if(fAuth.getCurrentUser() != null) {
+            Intent intent = new Intent(getActivity(), HomeActivity.class);
+            startActivity(intent);
+        }
 
         view.findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,33 +64,29 @@ public class LoginFragment extends Fragment {
                     Toast.makeText(getContext(),"enter email address",Toast.LENGTH_SHORT).show();
                 }else {
                     if (emailId.getText().toString().trim().matches(emailPattern)) {
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        startActivity(intent);
-                        Map<String, Object> user = new HashMap<>();
-                        user.put("first", "Ada");
-                        user.put("last", "Lovelace");
-                        user.put("born", 1815);
 
-                        // Add a new document with a generated ID
-                        db.collection("users")
-                                .add(user)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        System.out.println("Successfully added to database");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        System.out.println("Failed");
-                                    }
-                                });
+                        String email = emailId.getText().toString().trim();
+                        String password = passwordId.getText().toString().trim();
+                        //log in the user right here
+                        fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(getContext(), "Logged in Successfully", Toast.LENGTH_SHORT).show();
+
+                                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                                    startActivity(intent);
+
+                                }else {
+                                    Toast.makeText(getContext(), "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
 
                     } else {
                         Toast.makeText(getContext(),"Invalid email address", Toast.LENGTH_SHORT).show();
                     }
-            }
+                }
             }
         });
 

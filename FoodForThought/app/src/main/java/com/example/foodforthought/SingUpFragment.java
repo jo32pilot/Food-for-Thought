@@ -1,15 +1,38 @@
 package com.example.foodforthought;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
 public class SingUpFragment extends Fragment {
+    static final int GOOGLE_SIGN_IN = 123;
+    EditText mFirstName, mLastName, mEmail, mPassword;
+    FirebaseAuth fAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     public View onCreateView(
@@ -23,14 +46,61 @@ public class SingUpFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //signing up
+        mFirstName = view.findViewById(R.id.firstNameRegister);
+        mLastName = view.findViewById(R.id.lastNameRegister);
+        mEmail = view.findViewById(R.id.emailRegister);
+        mPassword = view.findViewById(R.id.passwordRegister);
+
+        fAuth = FirebaseAuth.getInstance();
+
+        //check if users already logged in
+        if(fAuth.getCurrentUser() != null) {
+            Intent intent = new Intent(getActivity(), HomeActivity.class);
+            startActivity(intent);
+        }
+
         view.findViewById(R.id.registerButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Store Data into database
-                NavHostFragment.findNavController(SingUpFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                String email = mEmail.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+                final String firstName = mFirstName.getText().toString().trim();
+                final String lastName = mLastName.getText().toString().trim();
+
+                if(TextUtils.isEmpty(email)){
+                    mEmail.setError("Email is Required.");
+                    return;
+                }
+                if(TextUtils.isEmpty(password)){
+                    mEmail.setError("Password is Required.");
+                    return;
+                }
+                if(password.length() < 6) {
+                    mPassword.setError("Password must be at least 6 characters long.");
+                    return;
+                }
+
+                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(getContext(), "User Created", Toast.LENGTH_SHORT).show();
+
+                            //Store Data into database
+                            FirebaseUser us = fAuth.getCurrentUser();
+                            updateDB(us, firstName, lastName);
+
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getContext(), " Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
+
         view.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -38,5 +108,96 @@ public class SingUpFragment extends Fragment {
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
+    }
+
+    private void updateDB (FirebaseUser us, String first, String last) {
+        List<String> inventory_l = new ArrayList<String>();
+        List<String> shopping_l = new ArrayList<String>();
+        List<String> favourite_l = new ArrayList<String>();
+        List<String> liked_l = new ArrayList<String>();
+        List<String> disliked_l = new ArrayList<String>();
+        List<String> saved_l = new ArrayList<String>();
+        List<String> self_made_l = new ArrayList<String>();
+
+        Map<String, Object> user = new HashMap<>();
+        user.put("username", first + " " + last);
+        user.put("email", us.getEmail());
+        user.put("user_ingredients_id", "user_ingredients_id_" + us.getUid());
+        user.put("user_recipes_id", "user_recipes_id_" + us.getUid());
+
+        //Add a new document with a UID, users collection
+        db.collection("users")
+                .document(us.getUid())
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("Successfully added to db.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Failed");
+                    }
+                });
+
+        inventory_l.add("inventory 1");
+        inventory_l.add("inventory 2");
+        shopping_l.add("shopping 1");
+        shopping_l.add("shopping 2");
+
+        Map<String, Object> user_ingredients = new HashMap<>();
+        user_ingredients.put("inventory", inventory_l);
+        user_ingredients.put("shopping_list", shopping_l);
+
+        //user_ingredients collection
+        db.collection("user_ingredients")
+                .document("user_ingredients_id_" + us.getUid())
+                .set(user_ingredients)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("Successfully added to db.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Failed");
+                    }
+                });
+
+
+        favourite_l.add("favourite recipe");
+        liked_l.add("liked recipe");
+        disliked_l.add("disliked recipe");
+        saved_l.add("saved recipe");
+        self_made_l.add("self made recipe");
+
+        Map<String, Object> user_recipes = new HashMap<>();
+        user_recipes.put("favourite", favourite_l);
+        user_recipes.put("liked", liked_l);
+        user_recipes.put("disliked", disliked_l);
+        user_recipes.put("saved", saved_l);
+        user_recipes.put("self_made", self_made_l);
+
+
+        //user_ingredients collection
+        db.collection("user_recipes")
+                .document("user_recipes_id_" + us.getUid())
+                .set(user_recipes)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        System.out.println("Successfully added to db.");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println("Failed");
+                    }
+                });
     }
 }
