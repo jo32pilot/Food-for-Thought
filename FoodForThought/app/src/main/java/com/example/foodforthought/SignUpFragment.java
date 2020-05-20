@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-public class SingUpFragment extends Fragment {
+public class SignUpFragment extends Fragment {
 
     @Override
     public View onCreateView(
@@ -27,14 +27,14 @@ public class SingUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //Store Data into database
-                NavHostFragment.findNavController(SingUpFragment.this)
+                NavHostFragment.findNavController(SignUpFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
         view.findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SingUpFragment.this)
+                NavHostFragment.findNavController(SignUpFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
