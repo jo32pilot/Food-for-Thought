@@ -1,34 +1,42 @@
 {
   "project_info": {
-    "project_number": "926184115242",
-    "firebase_url": "https://food-for-thought-4dd85.firebaseio.com",
-    "project_id": "food-for-thought-4dd85",
-    "storage_bucket": "food-for-thought-4dd85.appspot.com"
+    "project_number": "463959295892",
+    "firebase_url": "https://food-for-thought-3bdc1.firebaseio.com",
+    "project_id": "food-for-thought-3bdc1",
+    "storage_bucket": "food-for-thought-3bdc1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:926184115242:android:4cdb82521d1a5df6cc0753",
+        "mobilesdk_app_id": "1:463959295892:android:2eb3dab64e92d65f40b181",
         "android_client_info": {
           "package_name": "com.example.foodforthought"
         }
       },
       "oauth_client": [
         {
-          "client_id": "926184115242-3gmg336nh08s9ui6lr57cdjn6prjcio2.apps.googleusercontent.com",
+          "client_id": "463959295892-hd25rgv9ldaa5kgn3kdnjhh8lalsdtl5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.foodforthought",
+            "certificate_hash": "ab5c95de4ad9ec6348a77766e85167b31b4866fd"
+          }
+        },
+        {
+          "client_id": "463959295892-rihb13ve8mrheqhrgi53nvkhe62nap3c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB_10OpBDw0TiQZjJ5Vpj-6QQrA3u65jiw"
+          "current_key": "AIzaSyDWF9tQWDNRHIZB1MATqmAfd_qVXX__chU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "926184115242-3gmg336nh08s9ui6lr57cdjn6prjcio2.apps.googleusercontent.com",
+              "client_id": "463959295892-rihb13ve8mrheqhrgi53nvkhe62nap3c.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,7 +1,20 @@
+"""
+Main file to run to parse websites
+
+Author: John Li
+
+"""
+
 from webscrapers import get_db
+from webscrapers.etc import IngredientParser
+from pprint import pprint
 import webscrapers
+import json
+import sys
+import re
 
 if __name__ == '__main__':
+
     scraper = webscrapers.FoodNetwork()
     scraper.parse()
     scraper._print_links()

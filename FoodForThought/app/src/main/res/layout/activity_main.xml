@@ -4,40 +4,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F8F8FF"
     tools:context=".MainActivity">
+
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="195dp"
+        android:layout_height="1dp"
+        android:background="#F8F8FF"
         android:theme="@style/AppTheme.AppBarOverlay">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="match_parent"
-            android:layout_height="247dp"
-            android:background="#FFFFFF"
-            app:srcCompat="@drawable/soup" />
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="184dp"
-            android:background="#FFFFFF"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
+        android:id="@+id/include"
         layout="@layout/content_main"
-        android:layout_height="376dp"/>
+        android:layout_width="match_parent"
+        android:layout_height="626dp"
+        android:layout_marginTop="150dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+    <Space
+        android:id="@+id/space"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:layout_anchor="@+id/appBarLayout"
+        app:layout_anchorGravity="top|center" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="265dp"
+        android:layout_height="181dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="150dp"
+        app:srcCompat="@drawable/logo" />
+
+    \
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

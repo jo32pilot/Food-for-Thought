@@ -9,6 +9,8 @@ Author: John Li
 
 import requests
 from recipe_scrapers import scrape_me
+from firebase_admin import firestore
+from .etc import IngredientParser
 
 class ScraperBase():
     """ Base class for recipe scrapers.
@@ -45,22 +47,49 @@ class ScraperBase():
         self.base_link = base_link
         self.links = set()
         self.recipes = dict()
+        self.ingredients = dict()
 
     def scrape(self):
         """ Parses the links in the links set for the recipe information. """
+        # TODO Temp key, need to make better later
+        recipe_key = 0
+
+        # go through every link
         for link in self.links:
             scraper = scrape_me(link)
+            recipe_ingredients = []
+
+            # for every ingredient 
+            for ingredient in scraper.ingredients():
+
+                # parse ingredients
+                parsed_list = IngredientParser(ingredient).parse()
+                recipe_ingredients.append({
+                    'ingredient': ingredient,
+                    'parsed_ingredient': parsed_list
+                })
+
+                # add recipe key to list of recipes containing this ingredient
+                for option_ingredient in parsed_list:
+                    if option_ingredient in self.ingredients:
+                        self.ingredients[option_ingredient]['recipes'].append(recipe_key)
+                    else:
+                        self.ingredients[option_ingredient] = {
+                            'recipes': [recipe_key]
+                        }
             try:
+                # create entry
                 recipe = {
                     'name': scraper.title(),
                     'total_time': scraper.total_time(),
                     'yield': scraper.yields(),
-                    'ingredients': scraper.ingredients(),
+                    'ingredients': recipe_ingredients,
                     'instructions': scraper.instructions(),
                     'image': scraper.image(),
                     'user_created': ''
                 }
-                self.recipes[link] = recipe
+                self.recipes[recipe_key] = recipe
+                recipe_key += 1
             except (AttributeError, NotImplementedError) as e: 
                 continue
                 # Log later
@@ -74,13 +103,23 @@ class ScraperBase():
             db: databse to upload to.
         
         """
-        recipe_key = 0
+        # write recipes to db
         recipes_ref = db.collection('recipes')
-        for link, recipe in self.recipes.items():
-            # TODO Temp key, need to make better leter
-            recipe_ref = recipes_ref.document(f'{recipe_key}')
+        for key, recipe in self.recipes.items():
+            recipe_ref = recipes_ref.document(f'{key}')
             recipe_ref.set(recipe)
-            recipe_key += 1
+
+        # write ingredients to db
+        ingredients_ref = db.collection('ingredients')
+        for ingredient in self.ingredients:
+            ingredient_doc = ingredients_ref.document(ingredient)
+            ingredient_exists = ingredient_doc.get().exists
+
+            # merge with existing recipes if doc already exists in db
+            if ingredient_exists:
+                ingredient_doc.update({'recipes': firestore.ArrayUnion(ingredient['recipes'])})
+            else:
+                ingredient_doc.set(ingredient)
 
     def _print_recipes(self):
         """ Prints recipes dictionary for testing / debugging. """
