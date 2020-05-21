@@ -33,6 +33,7 @@ public class HomeActivity  extends AppCompatActivity implements NavigationView.O
         setContentView(R.layout.activity_home);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Food For Thought");
         drawerLayout = findViewById(R.id.drawer);
         // Initializes navbar
         navigationView = findViewById(R.id.navigationView);
