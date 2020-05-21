@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ShoppingFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/viewshoppinglistbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
+            android:text="View Shopping List" />
+
+        <Button
+            android:id="@+id/additemtoshoppinglistbutton"
+            android:layout_width="match_parent"
+            android:layout_height="61dp"
+            android:layout_marginTop="5dp"
+            android:text="Add Item to Shopping List" />
+
+        <Button
+            android:id="@+id/removeitemfromshoppinglistbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remove Item from Shopping List" />
+
+        <Button
+            android:id="@+id/addmissingingredientsbutton"
+            android:layout_width="436dp"
+            android:layout_height="wrap_content"
+            android:text="Add Missing Ingredients" />
+
+        <Button
+            android:id="@+id/shareshoppinglistbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share Shopping List"
+            tools:text="Share Shopping List" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
