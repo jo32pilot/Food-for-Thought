@@ -260,5 +260,12 @@ public class Database {
         db.collection(collection).get().addOnCompleteListener(onComplete);
     }
 
+    /**
+     * Returns reference to database instance.
+     * @return the database instance of this object.
+     */
+    public FirebaseFirestore getDB(){
+        return db;
+    }
 
 }

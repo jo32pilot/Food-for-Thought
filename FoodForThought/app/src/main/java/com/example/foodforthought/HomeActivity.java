@@ -19,10 +19,10 @@ import com.google.android.material.navigation.NavigationView.OnNavigationItemSel
 // Activity that hosts fragments for recipe, inventory, and shopping pages
 public class HomeActivity  extends AppCompatActivity{
     // Object declarations for activity class
-//    DrawerLayout drawerLayout;
+    // DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
     Toolbar toolbar;
-//    NavigationView navigationView;
+    // NavigationView navigationView;
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
