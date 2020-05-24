@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/HomeItem"
-        android:icon="@drawable/ic_homeicon"
+        android:icon="@drawable/homeicon"
         android:title="@string/home" />
 
     <item android:id="@+id/RecipeItem"
-        android:icon="@drawable/ic_add_recipe"
-        android:title="Add Recipe"/>
+        android:icon="@drawable/forkandknife"
+        android:title="Recipes"/>
 
     <item android:id="@+id/InventoryItem"
-        android:icon="@drawable/ic_savedrecipe"
+        android:icon="@drawable/clipboard"
         android:title="Inventory" />
 
     <item android:id="@+id/ShoppingItem"
-        android:icon="@drawable/ic_shareicon"
+        android:icon="@drawable/shoppingcart"
         android:title="Shopping" />
 
     <item android:id="@+id/UserProfileItem"
-        android:icon="@drawable/ic_message"
-        android:title="UserProfile" />
+        android:icon="@drawable/shareiconimage"
+        android:title="Profile" />
 
 </menu>
