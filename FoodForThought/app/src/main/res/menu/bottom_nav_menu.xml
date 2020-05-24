@@ -13,12 +13,17 @@
         android:icon="@drawable/ic_savedrecipe"
         android:title="Inventory" />
 
-    <item android:id="@+id/ShoppingItem"
-        android:icon="@drawable/ic_shareicon"
-        android:title="Shopping" />
 
     <item android:id="@+id/UserProfileItem"
         android:icon="@drawable/ic_message"
         android:title="UserProfile" />
 
+    <item android:id="@+id/ShoppingItem"
+        android:icon="@drawable/ic_action_shopping_cart"
+        android:title="Shopping" />
+
+   <!--- <item android:id="@+id/ShoppingItem"
+        android:icon="@drawable/ic_shareicon"
+        android:title="Shopping" />
+  -->
 </menu>

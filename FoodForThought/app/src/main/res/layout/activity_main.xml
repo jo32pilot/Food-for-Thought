@@ -49,6 +49,4 @@
         android:layout_marginTop="150dp"
         app:srcCompat="@drawable/logo" />
 
-    \
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
