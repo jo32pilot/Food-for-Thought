@@ -1,23 +1,22 @@
+/**
+ * The main page of the app. This fragment displays the user's recipe feed.
+ *
+ * @author John Li
+ */
 package com.example.foodforthought;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -25,16 +24,20 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
+/**
+ * Class to display user's recipe feed.
+ */
 public class MainFragment extends Fragment {
 
-    private List<String> includeIngredients;
+    private List<String> userInventory;
 
+    private static final int INIT_PQ_CAP = 20;
 
     /**
      * Class to store the number of matching queried ingredients a recipe has.
@@ -42,7 +45,7 @@ public class MainFragment extends Fragment {
     protected class Recipe{
         private String id;
         private Map<String, Object> recipe;
-        private int matches;
+        private double matches;
 
         /**
          * Initializes number of queried ingredients that the recipe contains, as well as other
@@ -54,31 +57,46 @@ public class MainFragment extends Fragment {
         public Recipe(String id, Map<String, Object> recipe, List<String> toMatch){
             this.id = id;
             this.recipe = recipe;
-            this.matches = 0;
-            List<String> all_ingredients = (List<String>) recipe.get("all_ingredients");
+            double countMatches = 0;
 
-            // For each ingredient in the recipe
-            for(String ingredient : all_ingredients){
+            // Stick all of the recipe's ingredients into a HashSet for O(1) lookup.
+            HashSet<String> allIngredients =
+                    new HashSet<>((List<String>) recipe.get("all_ingredients"));
 
-                // For each query ingredient
-                for(String queryIngredient : toMatch){
-                    if(ingredient.equals(queryIngredient)){
-                        this.matches++;
-                        break;
-                    }
+            // For each query ingredient
+            for(String queryIngredient : toMatch){
+                // if in HashSet, then this recipe contains an ingredient in the user's inventory.
+                if(allIngredients.contains(queryIngredient)){
+                    countMatches++;
                 }
             }
+
+            // Compute ratio of num query ingredients in recipe to num ingredients in recipe.
+            this.matches = countMatches / (double) allIngredients.size();
+
         }
 
+        /**
+         * Returns the recipe id.
+         * @return the recipe id.
+         */
         public String getId() {
             return id;
         }
 
+        /**
+         * Returns the recipe info.
+         * @return the recipe info.
+         */
         public Map<String, Object> getRecipe() {
             return recipe;
         }
 
-        public int getMatches() {
+        /**
+         * The ratio of how many query ingredients are in the recipe.
+         * @return the ratio of how many query ingredients are in the recipe.
+         */
+        public double getMatches() {
             return matches;
         }
     }
@@ -108,13 +126,17 @@ public class MainFragment extends Fragment {
         String userIngredientsId = "user_ingredients_id_" + uid;
         Database db = new Database();
 
-
+        // Listener for when we've received recipes from the database.
         OnCompleteListener<QuerySnapshot> onGetRecipes = new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
                     StringBuilder res = new StringBuilder();
-                    PriorityQueue<Recipe> matchingRecipes = new PriorityQueue<>(20, new Comparator<Recipe>() {
+
+                    // Comparator for priority queue. If the ratio of user owned ingredients in the
+                    // a recipe to the number of ingredients in that recipe is larger, then
+                    // the recipe is "larger" / has higher priority.
+                    Comparator<Recipe> recipeComparator = new Comparator<Recipe>() {
                         @Override
                         public int compare(Recipe o1, Recipe o2) {
                             if(o1.getMatches() > o2.getMatches()){
@@ -125,17 +147,29 @@ public class MainFragment extends Fragment {
                             }
                             return 0;
                         }
-                    });
+                    };
 
+                    PriorityQueue<Recipe> matchingRecipes =
+                            new PriorityQueue<>(INIT_PQ_CAP, recipeComparator);
+
+                    // Fill priority queue with recipes.
                     for(QueryDocumentSnapshot doc : task.getResult()){
-                        matchingRecipes.offer(new Recipe(doc.getId(), doc.getData(), includeIngredients));
+                        matchingRecipes.offer(new Recipe(doc.getId(), doc.getData(), userInventory));
                     }
+
+                    // While the queue isn't empty, keep popping recipes.
                     while(matchingRecipes.size() > 0){
                         Recipe currHighest = matchingRecipes.poll();
-                        res.append(currHighest.getId()).append(" => ").append(currHighest.getRecipe().get("name")).append("\n");
+
+                        // For debugging / testing
+                        System.out.println(currHighest.getMatches());
+
+                        // For debugging / testing
+                        res.append(currHighest.getId()).append(" => ")
+                                .append(currHighest.getRecipe().get("name")).append("\n");
                     }
                     recipeFeed.setText(res.toString());
-                    System.out.println(res);
+
                 }
                 else{
                     Toast.makeText(getContext(),
@@ -145,14 +179,17 @@ public class MainFragment extends Fragment {
             }
         };
 
+        // Listener for when we've received the user's ingredients.
         OnCompleteListener<DocumentSnapshot> onGetUserIngredients = new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     CollectionReference recipesRef = db.getDB().collection("recipes");
                     DocumentSnapshot userIngredients = task.getResult();
-                    includeIngredients = (List<String>) userIngredients.get("inventory");
-                    recipesRef.whereArrayContainsAny("all_ingredients", includeIngredients)
+                    userInventory = (List<String>) userIngredients.get("inventory");
+
+                    // Begin second query to get recipes based on user's inventory.
+                    recipesRef.whereArrayContainsAny("all_ingredients", userInventory)
                             .get()
                             .addOnCompleteListener(onGetRecipes);
 
@@ -165,6 +202,7 @@ public class MainFragment extends Fragment {
             }
         };
 
+        // Where it all starts
         db.getDocument("user_ingredients", userIngredientsId, onGetUserIngredients);
 
     }
