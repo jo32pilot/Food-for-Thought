@@ -18,7 +18,7 @@
         android:title="Shopping" />
 
     <item android:id="@+id/UserProfileItem"
-        android:icon="@drawable/shareiconimage"
+        android:icon="@drawable/ic_message"
         android:title="Profile" />
 
 </menu>
