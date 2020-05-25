@@ -628,7 +628,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/checkBox11"
+                        android:id="@+id/checkBox110"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Item 10"
@@ -637,26 +637,26 @@
                         android:textStyle="normal" />
 
                     <EditText
-                        android:id="@+id/editText111"
+                        android:id="@+id/editText1111"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="5dp"
-                        android:layout_toStartOf="@+id/imageButton111"
+                        android:layout_toStartOf="@+id/imageButton1111"
                         android:ems="10"
                         android:inputType="textPersonName"
                         android:text="0" />
 
                     <ImageButton
-                        android:id="@+id/imageButton111"
+                        android:id="@+id/imageButton1111"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginEnd="20dp"
-                        android:layout_toStartOf="@+id/imageButton211"
+                        android:layout_toStartOf="@+id/imageButton222"
                         android:background="#FFFFFF"
                         app:srcCompat="@drawable/ic_action_add" />
 
                     <ImageButton
-                        android:id="@+id/imageButton211"
+                        android:id="@+id/imageButton222"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_alignParentEnd="true"
