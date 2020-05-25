@@ -2,6 +2,8 @@ package com.example.foodforthought;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+
 import com.example.foodforthought.MainFragment;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -27,6 +29,8 @@ public class HomeActivity  extends AppCompatActivity{
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
+
+
      // onCreate instantiates objects with objects from UI and assigns them to the above declarations
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,7 @@ public class HomeActivity  extends AppCompatActivity{
         // Initializes navbar
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
-
-        // Load default fragment a.k.a. the first fragment after the login page is the main feed fragment
+        //Load default fragment a.k.a. the first fragment after the login page is the main feed fragment
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container_fragment, new MainFragment());
@@ -93,4 +96,5 @@ public class HomeActivity  extends AppCompatActivity{
                     return true;
                 }
             };
+
 }
