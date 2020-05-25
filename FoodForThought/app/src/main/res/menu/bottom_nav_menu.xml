@@ -22,8 +22,4 @@
         android:icon="@drawable/ic_action_shopping_cart"
         android:title="Shopping" />
 
-   <!--- <item android:id="@+id/ShoppingItem"
-        android:icon="@drawable/ic_shareicon"
-        android:title="Shopping" />
-  -->
 </menu>
