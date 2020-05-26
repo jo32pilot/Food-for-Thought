@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ShoppingFragment">
 
     <LinearLayout
@@ -28,18 +29,10 @@
             android:padding="10dp">
 
             <ImageButton
-                android:id="@+id/imageView0"
-                android:layout_width="62dp"
-                android:layout_height="51dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="0dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="0dp"
-                android:layout_marginBottom="8dp"
-                android:layout_toStartOf="@+id/searchIngredients"
-                android:background="#FFFFFF"
-                app:srcCompat="@drawable/ic_action_search" />
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_search" />
 
             <EditText
                 android:id="@+id/searchIngredients"
@@ -50,7 +43,8 @@
                 android:layout_marginEnd="55dp"
                 android:layout_marginBottom="10dp"
                 android:layout_toStartOf="@+id/imageView2"
-                android:hint="@string/search_ingredients" />
+                android:hint="@string/search_ingredients"
+                android:imeOptions="actionGo" />
 
             <ImageButton
                 android:id="@+id/imageView2"
@@ -123,6 +117,7 @@
             android:layout_centerHorizontal="true">
 
             <LinearLayout
+                android:id="@+id/shoppingListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -132,7 +127,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox1"
@@ -177,7 +173,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox2"
@@ -222,7 +219,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox3"
@@ -267,7 +265,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox4"
@@ -312,7 +311,8 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox5"
@@ -357,7 +357,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox6"
@@ -401,7 +403,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox7"
@@ -446,7 +450,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox8"
@@ -491,7 +497,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox91"
@@ -536,7 +544,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox111"
@@ -581,7 +591,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox222"
@@ -625,7 +637,9 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
 
                     <CheckBox
                         android:id="@+id/checkBox9"
