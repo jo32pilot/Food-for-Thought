@@ -13,6 +13,7 @@
         android:icon="@drawable/clipboard"
         android:title="Inventory" />
 
+
     <item android:id="@+id/ShoppingItem"
         android:icon="@drawable/shoppingcart"
         android:title="Shopping" />

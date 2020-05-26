@@ -58,7 +58,6 @@ class ScraperBase():
         for link in self.links:
             scraper = scrape_me(link)
             recipe_ingredients = []
-            all_parsed = []
 
             # for every ingredient 
             for ingredient in scraper.ingredients():
@@ -72,14 +71,12 @@ class ScraperBase():
 
                 # add recipe key to list of recipes containing this ingredient
                 for option_ingredient in parsed_list:
-                    all_parsed.append(option_ingredient)
                     if option_ingredient in self.ingredients:
                         self.ingredients[option_ingredient]['recipes'].append(recipe_key)
                     else:
                         self.ingredients[option_ingredient] = {
                             'recipes': [recipe_key]
                         }
-
             try:
                 # create entry
                 recipe = {
@@ -87,7 +84,6 @@ class ScraperBase():
                     'total_time': scraper.total_time(),
                     'yield': scraper.yields(),
                     'ingredients': recipe_ingredients,
-                    'all_ingredients': all_ingredients,
                     'instructions': scraper.instructions(),
                     'image': scraper.image(),
                     'user_created': ''

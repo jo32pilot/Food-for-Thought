@@ -14,20 +14,32 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.example.foodforthought.Misc.Recipe;
+import com.example.foodforthought.Misc.Database;
+import com.example.foodforthought.Misc.RecipeAdapter;
 
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
@@ -36,176 +48,142 @@ import java.util.PriorityQueue;
 public class MainFragment extends Fragment {
 
     private List<String> userInventory;
+    private List<String> images;
+    private RecyclerView recyclerView;
+    private RecipeAdapter recipeAdapter;
+    private List<Recipe> recipeList;
+    private List<String> followingList;
+    private Database db = new Database();
 
     private static final int INIT_PQ_CAP = 20;
 
-    /**
-     * Class to store the number of matching queried ingredients a recipe has.
-     */
-    protected class Recipe{
-        private String id;
-        private Map<String, Object> recipe;
-        private double matches;
-
-        /**
-         * Initializes number of queried ingredients that the recipe contains, as well as other
-         * instance variables.
-         * @param id Database Id of the recipe
-         * @param recipe A mapping of the details of the recipe.
-         * @param toMatch A list of the queried ingredients.
-         */
-        public Recipe(String id, Map<String, Object> recipe, List<String> toMatch){
-            this.id = id;
-            this.recipe = recipe;
-            double countMatches = 0;
-
-            // Stick all of the recipe's ingredients into a HashSet for O(1) lookup.
-            HashSet<String> allIngredients =
-                    new HashSet<>((List<String>) recipe.get("all_ingredients"));
-
-            // For each query ingredient
-            for(String queryIngredient : toMatch){
-                // if in HashSet, then this recipe contains an ingredient in the user's inventory.
-                if(allIngredients.contains(queryIngredient)){
-                    countMatches++;
-                }
-            }
-
-            // Compute ratio of num query ingredients in recipe to num ingredients in recipe.
-            this.matches = countMatches / (double) allIngredients.size();
-
-        }
-
-        /**
-         * Returns the recipe id.
-         * @return the recipe id.
-         */
-        public String getId() {
-            return id;
-        }
-
-        /**
-         * Returns the recipe info.
-         * @return the recipe info.
-         */
-        public Map<String, Object> getRecipe() {
-            return recipe;
-        }
-
-        /**
-         * The ratio of how many query ingredients are in the recipe.
-         * @return the ratio of how many query ingredients are in the recipe.
-         */
-        public double getMatches() {
-            return matches;
-        }
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.test_recipe_feed, container, false);
+        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setHasFixedSize(true);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        TextView recipeFeed = view.findViewById(R.id.testText);
+
+        // If user isn't logged in or has logged out.
+        if (user == null) {
+            NavHostFragment.findNavController(MainFragment.this)
+                    .navigate(R.id.action_SecondFragment_to_FirstFragment);
+        }
+        else {
+            String uid = user.getUid();
+            String userIngredientsId = "user_ingredients_id_" + uid;
+
+            // Where it all starts
+            db.getDocument("user_ingredients", userIngredientsId, onGetUserIngredients);
+        }
         return view;
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        TextView recipeFeed = view.findViewById(R.id.testText);
-
-        // If user isn't logged in or has logged out.
-        if(user == null){
-            // TODO redirect to login page
-        }
-
-        String uid = user.getUid();
-        String userIngredientsId = "user_ingredients_id_" + uid;
-        Database db = new Database();
-
-        // Listener for when we've received recipes from the database.
-        OnCompleteListener<QuerySnapshot> onGetRecipes = new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    StringBuilder res = new StringBuilder();
-
-                    // Comparator for priority queue. If the ratio of user owned ingredients in the
-                    // a recipe to the number of ingredients in that recipe is larger, then
-                    // the recipe is "larger" / has higher priority.
-                    Comparator<Recipe> recipeComparator = new Comparator<Recipe>() {
-                        @Override
-                        public int compare(Recipe o1, Recipe o2) {
-                            if(o1.getMatches() > o2.getMatches()){
-                                return -1;
-                            }
-                            else if(o1.getMatches() < o2.getMatches()){
-                                return 1;
-                            }
-                            return 0;
-                        }
-                    };
-
-                    PriorityQueue<Recipe> matchingRecipes =
-                            new PriorityQueue<>(INIT_PQ_CAP, recipeComparator);
-
-                    // Fill priority queue with recipes.
-                    for(QueryDocumentSnapshot doc : task.getResult()){
-                        matchingRecipes.offer(new Recipe(doc.getId(), doc.getData(), userInventory));
-                    }
-
-                    // While the queue isn't empty, keep popping recipes.
-                    while(matchingRecipes.size() > 0){
-                        Recipe currHighest = matchingRecipes.poll();
-
-                        // For debugging / testing
-                        System.out.println(currHighest.getMatches());
-
-                        // For debugging / testing
-                        res.append(currHighest.getId()).append(" => ")
-                                .append(currHighest.getRecipe().get("name")).append("\n");
-                    }
-                    recipeFeed.setText(res.toString());
-
-                }
-                else{
-                    Toast.makeText(getContext(),
-                            "Error ! " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        // Listener for when we've received the user's ingredients.
-        OnCompleteListener<DocumentSnapshot> onGetUserIngredients = new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    CollectionReference recipesRef = db.getDB().collection("recipes");
-                    DocumentSnapshot userIngredients = task.getResult();
-                    userInventory = (List<String>) userIngredients.get("inventory");
-
-                    // Begin second query to get recipes based on user's inventory.
-                    recipesRef.whereArrayContainsAny("all_ingredients", userInventory)
-                            .get()
-                            .addOnCompleteListener(onGetRecipes);
-
-                }
-                else{
-                    Toast.makeText(getContext(),
-                            "Error ! " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
-
-        // Where it all starts
-        db.getDocument("user_ingredients", userIngredientsId, onGetUserIngredients);
-
     }
 
+    // Listener for when we've received recipes from the database.
+    OnCompleteListener<QuerySnapshot> onGetRecipes = new OnCompleteListener<QuerySnapshot>() {
+        @Override
+        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            if (task.isSuccessful()) {
+                StringBuilder res = new StringBuilder();
+                recipeList = new ArrayList<>();
+
+                // Comparator for priority queue. If the ratio of user owned ingredients in the
+                // a recipe to the number of ingredients in that recipe is larger, then
+                // the recipe is "larger" / has higher priority.
+                Comparator<Recipe> recipeComparator = new Comparator<Recipe>() {
+                    @Override
+                    public int compare(Recipe o1, Recipe o2) {
+                        if (o1.getMatches() > o2.getMatches()) {
+                            return -1;
+                        } else if (o1.getMatches() < o2.getMatches()) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+                };
+
+                PriorityQueue<Recipe> matchingRecipes =
+                        new PriorityQueue<>(INIT_PQ_CAP, recipeComparator);
+
+                // Fill priority queue with recipes.
+                for (QueryDocumentSnapshot doc : task.getResult()) {
+                    matchingRecipes.offer(new Recipe(doc.getId(), doc.getData(), userInventory));
+                }
+
+                // While the queue isn't empty, keep popping recipes.
+                while (matchingRecipes.size() > 0) {
+                    Recipe currHighest = matchingRecipes.poll();
+                    recipeList.add(currHighest);
+
+                    // For debugging / testing
+//                    System.out.println(currHighest.getMatches());
+                    // For debugging / testing
+//                    res.append(currHighest.getId()).append(" => ")
+//                            .append(currHighest.getRecipe().get("name")).append("\n");
+                }
+//                    recipeFeed.setText(res.toString());
+                recipeAdapter = new RecipeAdapter(getContext(), recipeList);
+                recyclerView.setAdapter(recipeAdapter);
+
+            } else {
+                Toast.makeText(getContext(),
+                        "Error ! " + task.getException().getMessage(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+
+    // Listener for when we've received the user's ingredients.
+    OnCompleteListener<DocumentSnapshot> onGetUserIngredients = new OnCompleteListener<DocumentSnapshot>() {
+        @Override
+        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            if (task.isSuccessful()) {
+                CollectionReference recipesRef = db.getDB().collection("recipes");
+                DocumentSnapshot userIngredients = task.getResult();
+                if (userIngredients != null) {
+                    userInventory = (List<String>) userIngredients.get("inventory");
+                    try {
+                        // Begin second query to get recipes based on user's inventory.
+                        if (userInventory != null) {
+                            recipesRef.whereArrayContainsAny("all_ingredients", userInventory)
+                                    .get()
+                                    .addOnCompleteListener(onGetRecipes);
+                        }
+                    }
+                    catch(Exception e){
+                        FragmentManager fragmentManager = getFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
+                        fragmentTransaction.commit();
+                    }
+                }
+                else {
+                    NavHostFragment.findNavController(MainFragment.this)
+                            .navigate(R.id.maintologin);
+
+                }
+            } else {
+                NavHostFragment.findNavController(MainFragment.this)
+                        .navigate(R.id.maintologin);
+            }
+        }
+    };
 
 }
