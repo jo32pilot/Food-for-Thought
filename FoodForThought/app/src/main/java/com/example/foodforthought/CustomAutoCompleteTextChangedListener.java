@@ -22,8 +22,7 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
     private Context context;
     private FirebaseFirestore db;
 
-
-    private static final int MIN_CHAR = 3;
+    private static final int MAX_DOCS = 10;
 
     public CustomAutoCompleteTextChangedListener(Fragment frag, Context context){
         this.frag = frag;
@@ -48,9 +47,9 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
         OnCompleteListener<QuerySnapshot> onGetIngredients = new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     ArrayList<String> suggestions = new ArrayList<>();
-                    for(QueryDocumentSnapshot ingredient : task.getResult()){
+                    for (QueryDocumentSnapshot ingredient : task.getResult()) {
                         suggestions.add((String) ingredient.get("name"));
                     }
 
@@ -59,8 +58,7 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
                     addRecipeFragment.adapter = new ArrayAdapter<>(context,
                             android.R.layout.simple_dropdown_item_1line, addRecipeFragment.suggestions);
                     addRecipeFragment.ingredient.setAdapter(addRecipeFragment.adapter);
-                }
-                else{
+                } else {
                     System.out.println("OOP");
                     // TODO have toast send some text (something like couldn't find ingredients)
                 }
@@ -68,20 +66,9 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
         };
 
         db.collection("ingredients")
-                .whereGreaterThanOrEqualTo("name",
-                        userInput.toString()).get().addOnCompleteListener(onGetIngredients);
-
-        /*
-        MainActivity mainActivity = ((MainActivity) context);
-
-        // query the database based on the user input
-        mainActivity.item = mainActivity.getItemsFromDb(userInput.toString());
-
-        // update the adapater
-        mainActivity.myAdapter.notifyDataSetChanged();
-        mainActivity.myAdapter = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_dropdown_item_1line, mainActivity.item);
-        mainActivity.myAutoComplete.setAdapter(mainActivity.myAdapter);
-        */
+                .whereGreaterThanOrEqualTo("name", userInput.toString())
+                .limit(MAX_DOCS)
+                .get()
+                .addOnCompleteListener(onGetIngredients);
     }
-
 }
