@@ -5,10 +5,12 @@
  * @author John Li
  */
 
-package com.example.foodforthought;
+package com.example.foodforthought.Misc;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.foodforthought.DefaultFailListener;
+import com.example.foodforthought.DefaultSuccessListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -260,5 +262,12 @@ public class Database {
         db.collection(collection).get().addOnCompleteListener(onComplete);
     }
 
+    /**
+     * Returns reference to database instance.
+     * @return the database instance of this object.
+     */
+    public FirebaseFirestore getDB(){
+        return db;
+    }
 
 }
