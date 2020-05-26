@@ -1,7 +1,12 @@
 package com.example.foodforthought;
 
+import android.graphics.Color;
+import android.graphics.ColorSpace;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -19,6 +24,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -58,6 +64,7 @@ public class ShoppingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 createItem(view);
+                searchIngredients.setText("");
             }
         });
 
@@ -98,57 +105,108 @@ public class ShoppingFragment extends Fragment {
    }
 
     protected void createItem(@NonNull View view) {
+        // Get layout to put the new row into
         LinearLayout shoppingListLayout = view.findViewById(R.id.shoppingListLayout);
 
-        RelativeLayout linearLayout = new RelativeLayout(this.getContext());
-        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
+        //create new row
+        RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
+        relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
+        //Create all items of new row
         CheckBox checkBox = new CheckBox(this.getContext());
         ImageButton minusButton = new ImageButton(this.getContext());
         ImageButton plusButton = new ImageButton(this.getContext());
         EditText amount = new EditText(this.getContext());
 
-        linearLayout.addView(checkBox);
-        linearLayout.addView(amount);
-        linearLayout.addView(plusButton);
-        linearLayout.addView(minusButton);
-        shoppingListLayout.addView(linearLayout);
+        //Set valid IDs
+        checkBox.setId(View.generateViewId());
+        minusButton.setId(View.generateViewId());
+        plusButton.setId(View.generateViewId());
+        amount.setId(View.generateViewId());
 
+        //add items of new row into new row
+        relativeLayout.addView(checkBox);
+        relativeLayout.addView(amount);
+        relativeLayout.addView(plusButton);
+        relativeLayout.addView(minusButton);
+        //add row to list
+        shoppingListLayout.addView(relativeLayout);
+
+        //Set parameters for checkbox (left side)
         RelativeLayout.LayoutParams checkParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         checkParams.addRule(RelativeLayout.ALIGN_PARENT_START);
         checkBox.setLayoutParams(checkParams);
+        //Set text to ingredient
         checkBox.setText(searchIngredients.getText());
+        //Set size of text
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
 
+        //Set parameters for minus button (right side)
         RelativeLayout.LayoutParams minusParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         minusParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-        minusParams.setMargins(0,0,20,0);
+        minusParams.setMarginEnd(20);
         minusButton.setLayoutParams(minusParams);
+        //Set image
         minusButton.setImageResource(R.drawable.ic_action_min);
 
+        //Set parameters for plus button (left of minus button)
         RelativeLayout.LayoutParams plusParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        plusParams.addRule(RelativeLayout.RIGHT_OF, minusButton.getId());
-        minusParams.setMargins(0,0,20,0);
+        Log.d("MinusButton ID: ", String.valueOf(minusButton.getId()));
+        plusParams.addRule(RelativeLayout.START_OF, minusButton.getId());
+        plusParams.setMarginEnd(20);
         plusButton.setLayoutParams(plusParams);
+        //Set image
         plusButton.setImageResource(R.drawable.ic_action_add);
 
+        //Set parameters for amount of (left of plus button)
         RelativeLayout.LayoutParams amountParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        minusParams.setMargins(0,0,10,0);
-        amountParams.addRule(RelativeLayout.RIGHT_OF, plusButton.getId());
+        amountParams.addRule(RelativeLayout.START_OF, plusButton.getId());
+        amountParams.setMarginEnd(20);
         amount.setLayoutParams(amountParams);
+        //Move Text of number to center (hopefully)
         amount.setGravity(Gravity.CENTER);
-        amount.setInputType(InputType.TYPE_CLASS_TEXT);
+        //Set input type to numbers
+        amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        //Set base amount to 1
         amount.setText("1");
+
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!checkBox.isChecked() ){
+                    checkBox.setTextColor(Color.parseColor("#000000"));
+                    checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                }
+                else {
+                    checkBox.setTextColor(Color.parseColor("#D3D3D3"));
+                    checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+            }
+        });
+        plusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int temp = Integer.parseInt(amount.getText().toString());
+                amount.setText(String.valueOf(temp + 1));
+            }
+        });
+        minusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int temp = Integer.parseInt(amount.getText().toString());
+                amount.setText(String.valueOf(temp - 1));
+            }
+        });
     }
 
 }
