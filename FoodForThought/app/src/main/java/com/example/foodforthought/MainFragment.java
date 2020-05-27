@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.foodforthought.util.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -187,6 +188,11 @@ public class MainFragment extends Fragment {
                     CollectionReference recipesRef = db.getDB().collection("recipes");
                     DocumentSnapshot userIngredients = task.getResult();
                     userInventory = (List<String>) userIngredients.get("inventory");
+
+                    if(userInventory.isEmpty()){
+                        //TODO need to give them other recipes.
+                        return;
+                    }
 
                     // Begin second query to get recipes based on user's inventory.
                     recipesRef.whereArrayContainsAny("all_ingredients", userInventory)

@@ -1,4 +1,4 @@
-package com.example.foodforthought;
+package com.example.foodforthought.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

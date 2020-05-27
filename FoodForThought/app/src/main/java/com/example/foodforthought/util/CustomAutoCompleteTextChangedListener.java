@@ -1,4 +1,4 @@
-package com.example.foodforthought;
+package com.example.foodforthought.util;
 
 import android.content.Context;
 import android.text.Editable;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.foodforthought.AddRecipeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,7 +44,6 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
 
         AddRecipeFragment addRecipeFragment = (AddRecipeFragment) frag;
 
-        System.out.println("TEXT CHANGED");
         OnCompleteListener<QuerySnapshot> onGetIngredients = new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -53,13 +53,12 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
                         suggestions.add((String) ingredient.get("name"));
                     }
 
-                    addRecipeFragment.suggestions = suggestions;
-                    addRecipeFragment.adapter.notifyDataSetChanged();
-                    addRecipeFragment.adapter = new ArrayAdapter<>(context,
-                            android.R.layout.simple_dropdown_item_1line, addRecipeFragment.suggestions);
-                    addRecipeFragment.ingredient.setAdapter(addRecipeFragment.adapter);
+                    addRecipeFragment.setSuggestions(suggestions);
+                    addRecipeFragment.getAdapter().notifyDataSetChanged();
+                    addRecipeFragment.setAdapter(new ArrayAdapter<>(context,
+                            android.R.layout.simple_dropdown_item_1line, addRecipeFragment.getSuggestions()));
+                    addRecipeFragment.getIngredient().setAdapter(addRecipeFragment.getAdapter());
                 } else {
-                    System.out.println("OOP");
                     // TODO have toast send some text (something like couldn't find ingredients)
                 }
             }

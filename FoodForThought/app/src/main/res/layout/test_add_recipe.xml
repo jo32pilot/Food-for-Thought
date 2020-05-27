@@ -10,14 +10,14 @@
         android:id="@+id/recipe_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="83dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="109dp"
+        android:layout_marginBottom="15dp"
         android:ems="10"
+        android:hint="Recipe Name"
         android:inputType="textPersonName"
-        android:text="Recipe Name"
-        app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+        app:layout_constraintBottom_toTopOf="@+id/time"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,99 +26,163 @@
         android:id="@+id/add_ingredient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="133dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="190dp"
+        android:layout_marginBottom="23dp"
         android:text="Add"
-        app:layout_constraintBottom_toTopOf="@+id/add_instruction"
+        app:layout_constraintBottom_toTopOf="@+id/ingredients_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ingredients_input"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <EditText
-        android:id="@+id/steps_input"
+        android:id="@+id/instruction_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="83dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginBottom="60dp"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="11dp"
         android:ems="10"
+        android:hint="Steps"
         android:inputType="textPersonName"
-        android:text="Steps"
-        app:layout_constraintBottom_toTopOf="@+id/done_button"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/instructions_list"
+        app:layout_constraintEnd_toStartOf="@+id/add_instruction"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ingredients_input" />
+        app:layout_constraintTop_toBottomOf="@+id/ingredients_list" />
 
     <Button
         android:id="@+id/add_instruction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="307dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="312dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginBottom="11dp"
         android:text="Add"
+        app:layout_constraintBottom_toTopOf="@+id/instructions_list"
+        app:layout_constraintStart_toEndOf="@+id/instruction_input"
+        app:layout_constraintTop_toBottomOf="@+id/ingredients_list" />
+
+    <com.example.foodforthought.util.CustomAutoCompleteView
+        android:id="@+id/ingredients_input"
+        android:layout_width="214dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="89dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="4dp"
+        android:completionThreshold="3"
+        android:hint="@string/search_ingredients"
+        app:layout_constraintBottom_toTopOf="@+id/ingredients_list"
+        app:layout_constraintEnd_toStartOf="@+id/add_ingredient"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time" />
+
+    <ListView
+        android:id="@+id/ingredients_list"
+        android:layout_width="407dp"
+        android:layout_height="140dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredients_input" />
+
+    <ListView
+        android:id="@+id/instructions_list"
+        android:layout_width="414dp"
+        android:layout_height="184dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_ingredient"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/add_instruction">
+
+    </ListView>
+
+    <EditText
+        android:id="@+id/time"
+        android:layout_width="64dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="19dp"
+        android:ems="10"
+        android:hint="00"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="47dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="34dp"
+        android:text="Minutes"
+        app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+        app:layout_constraintEnd_toStartOf="@+id/servings"
+        app:layout_constraintStart_toEndOf="@+id/time"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+
+    <EditText
+        android:id="@+id/servings"
+        android:layout_width="55dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="34dp"
+        android:ems="10"
+        android:hint="00"
+        android:inputType="number"
+        app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="8dp"
+        android:text="serving(s)"
+        app:layout_constraintBottom_toTopOf="@+id/add_ingredient"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/servings"
+        app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
 
     <Button
         android:id="@+id/done_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="208dp"
-        android:layout_marginTop="190dp"
-        android:layout_marginEnd="115dp"
-        android:layout_marginBottom="20dp"
-        android:text="Done"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/steps_input" />
-
-    <com.example.foodforthought.CustomAutoCompleteView
-        android:id="@+id/ingredients_input"
-        android:layout_width="214dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="83dp"
+        android:layout_marginStart="7dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="204dp"
-        android:completionThreshold="3"
-        android:text="Ingredient"
-        app:layout_constraintBottom_toTopOf="@+id/steps_input"
-        app:layout_constraintEnd_toStartOf="@+id/add_ingredient"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recipe_name"/>
-
-    <ListView
-        android:id="@+id/ingredients_list"
-        android:layout_width="409dp"
-        android:layout_height="185dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/add_instruction"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="67dp"
+        android:text="Done"
+        app:layout_constraintBottom_toTopOf="@+id/textView4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/add_ingredient" />
+        app:layout_constraintStart_toEndOf="@+id/recipe_name"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
-        android:id="@+id/steps_list"
-        android:layout_width="409dp"
-        android:layout_height="244dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
-        app:layout_constraintBottom_toTopOf="@+id/done_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/steps_input" />
+    <Button
+        android:id="@+id/clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="clear"
+        tools:layout_editor_absoluteY="29dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

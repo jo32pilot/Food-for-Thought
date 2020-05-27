@@ -5,7 +5,7 @@
  * @author John Li
  */
 
-package com.example.foodforthought;
+package com.example.foodforthought.util;
 
 import androidx.fragment.app.Fragment;
 
@@ -16,7 +16,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
