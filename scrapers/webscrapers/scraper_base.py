@@ -75,6 +75,7 @@ class ScraperBase():
                         self.ingredients[option_ingredient]['recipes'].append(recipe_key)
                     else:
                         self.ingredients[option_ingredient] = {
+                            'name': option_ingredient,
                             'recipes': [recipe_key]
                         }
             try:

@@ -28,7 +28,7 @@ public class HomeActivity  extends AppCompatActivity{
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
-
+    AddRecipeFragment addRecipeFragment = new AddRecipeFragment();
 
 
      // onCreate instantiates objects with objects from UI and assigns them to the above declarations
@@ -64,7 +64,7 @@ public class HomeActivity  extends AppCompatActivity{
                     if (item.getItemId() == R.id.RecipeItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, new AddRecipeFragment());
+                        fragmentTransaction.replace(R.id.container_fragment, addRecipeFragment);
                         fragmentTransaction.commit();
 
                     }
