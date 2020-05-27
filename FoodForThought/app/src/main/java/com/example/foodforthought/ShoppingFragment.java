@@ -1,5 +1,6 @@
 package com.example.foodforthought;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.ColorSpace;
 import android.graphics.Paint;
@@ -36,9 +37,18 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+
 public class ShoppingFragment extends Fragment {
     EditText searchIngredients;
     ImageButton searchButton;
+    ArrayList<RelativeLayout> list = new ArrayList<>();
+    LinearLayout shoppingListLayout;
 
     @Nullable
     @Override
@@ -60,6 +70,7 @@ public class ShoppingFragment extends Fragment {
             // TODO redirect to login page
         }
 
+        //Add new item to list
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +78,12 @@ public class ShoppingFragment extends Fragment {
                 searchIngredients.setText("");
             }
         });
+
+       shoppingListLayout = view.findViewById(R.id.shoppingListLayout);
+
+       /*for(int i =0 ; i < list.size(); i++){
+            shoppingListLayout.addView(list.get(i));
+        }*/
 
        //String uid = user.getUid();
         //String userIngredientsId = "user_ingredients_id_" + uid;
@@ -104,12 +121,24 @@ public class ShoppingFragment extends Fragment {
         });*/
    }
 
-    protected void createItem(@NonNull View view) {
-        // Get layout to put the new row into
-        LinearLayout shoppingListLayout = view.findViewById(R.id.shoppingListLayout);
+    /*@Override
+    public void onPause() {
 
+        super.onPause();
+        writeObjectInCache(this.getContext(), "list", list);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        list = (ArrayList<RelativeLayout>) readObjectFromCache(this.getContext(), "list");
+    }*/
+
+    protected void createItem(@NonNull View view) {
         //create new row
-        RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
+        list.add(new RelativeLayout(this.getContext()));
+        RelativeLayout relativeLayout = list.get(list.size()-1);
+        relativeLayout.setId(View.generateViewId());
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -180,33 +209,66 @@ public class ShoppingFragment extends Fragment {
         //Set base amount to 1
         amount.setText("1");
 
+        //What to do if checkbox is clicked
         checkBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!checkBox.isChecked() ){
+                    //Make black and not striked through
                     checkBox.setTextColor(Color.parseColor("#000000"));
                     checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
                 }
                 else {
+                    //Strike through and make gray
                     checkBox.setTextColor(Color.parseColor("#D3D3D3"));
                     checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
             }
         });
+        //What to do if plus buton is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //increment counter
                 int temp = Integer.parseInt(amount.getText().toString());
                 amount.setText(String.valueOf(temp + 1));
             }
         });
+        //What to do if minus button is clicked
         minusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //decrease counter
                 int temp = Integer.parseInt(amount.getText().toString());
                 amount.setText(String.valueOf(temp - 1));
             }
         });
+
     }
 
+    public static boolean writeObjectInCache(Context context, String key, Object object) {
+        try {
+            FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(object);
+            oos.close();
+            fos.close();
+        } catch (IOException ex) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    public static Object readObjectFromCache(Context context, String key) {
+        try {
+            FileInputStream fis = context.openFileInput(key);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            Object object = ois.readObject();
+            return object;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
 }
