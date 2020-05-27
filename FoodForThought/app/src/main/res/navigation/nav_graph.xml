@@ -25,4 +25,14 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/ThirdFragment"
+        android:name="com.example.foodforthought.MainFragment"
+        android:label="Third Fragment"
+        tools:layout="@layout/fragment_main">
+
+        <action
+            android:id="@+id/maintologin"
+            app:destination="@id/FirstFragment" />
+    </fragment>
 </navigation>

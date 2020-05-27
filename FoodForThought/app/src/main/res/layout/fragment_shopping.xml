@@ -5,45 +5,684 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ShoppingFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/viewshoppinglistbutton"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/box"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <ImageButton
+                android:id="@+id/searchButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_search" />
+
+            <EditText
+                android:id="@+id/searchIngredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="55dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toStartOf="@+id/imageView2"
+                android:hint="@string/search_ingredients"
+                android:imeOptions="actionGo" />
+
+            <ImageButton
+                android:id="@+id/imageView2"
+                android:layout_width="45dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="8dp"
+                android:layout_toStartOf="@+id/profile_image"
+                android:background="#FFFFFF"
+                app:srcCompat="@drawable/ic_action_dot" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/profilepic" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="380dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/shoppingList"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="35dp"
+                android:text="Shopping List"
+                android:textColor="#FD999A"
+                android:textSize="30sp"
+                android:textStyle="normal" />
+
+            <ImageButton
+                android:id="@+id/imageButton2"
+                android:layout_width="90dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="15dp"
+                android:background="#FFFFFF"
+                app:srcCompat="@drawable/ic_action_color_add" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/horizontalLine"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="20dp"
+            android:background="#FD999A"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="no text" />
+
+        <ScrollView
+            android:id="@+id/scroll_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:text="View Shopping List" />
+            android:layout_centerHorizontal="true">
 
-        <Button
-            android:id="@+id/additemtoshoppinglistbutton"
-            android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:layout_marginTop="5dp"
-            android:text="Add Item to Shopping List" />
+            <LinearLayout
+                android:id="@+id/shoppingListLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/removeitemfromshoppinglistbutton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Remove Item from Shopping List" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
-        <Button
-            android:id="@+id/addmissingingredientsbutton"
-            android:layout_width="436dp"
-            android:layout_height="wrap_content"
-            android:text="Add Missing Ingredients" />
+                    <CheckBox
+                        android:id="@+id/checkBox1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 1"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
 
-        <Button
-            android:id="@+id/shareshoppinglistbutton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Share Shopping List"
-            tools:text="Share Shopping List" />
+                    <EditText
+                        android:id="@+id/editText11"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton11"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton11"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton21"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton21"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 2"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText12"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton12"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton12"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton22"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton22"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 3"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText3"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton13"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton13"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton23"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton23"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 4"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText4"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton14"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton14"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton24"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton24"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 5"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText5"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton15"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton15"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton25"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton25"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 6"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText6"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton16"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton16"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton26"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton26"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 7"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText7"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton17"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton17"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton27"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton27"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 8"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText8"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton18"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton18"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton28"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton28"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox91"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 9"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText9"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton19"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton19"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton29"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton29"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 10"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText111"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton111"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton111"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton1111"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton1111"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox222"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 10"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText222"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton222"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton222"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton2222"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton2222"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="gone">
+
+                    <CheckBox
+                        android:id="@+id/checkBox9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Item 10"
+                        android:textColor="#878181"
+                        android:textSize="30sp"
+                        android:textStyle="normal" />
+
+                    <EditText
+                        android:id="@+id/editText10"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:layout_toStartOf="@+id/imageButton10"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="0" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton10"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_toStartOf="@+id/imageButton20"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_add" />
+
+                    <ImageButton
+                        android:id="@+id/imageButton20"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp"
+                        android:background="#FFFFFF"
+                        app:srcCompat="@drawable/ic_action_min" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
 
     </LinearLayout>
 
