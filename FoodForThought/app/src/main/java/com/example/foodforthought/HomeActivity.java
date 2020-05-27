@@ -79,13 +79,13 @@ public class HomeActivity  extends AppCompatActivity{
                     }
 
                     // Switches to main feed page when shopping button clicked in navbar
-                    if (item.getItemId() == R.id.ShoppingItem){
+                    /*if (item.getItemId() == R.id.ShoppingItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
                         fragmentTransaction.commit();
 
-                    }
+                    }*/
                     if (item.getItemId() == R.id.UserProfileItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
