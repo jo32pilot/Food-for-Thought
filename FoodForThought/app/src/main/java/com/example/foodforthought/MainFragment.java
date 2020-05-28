@@ -64,6 +64,8 @@ public class MainFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>());
+        recyclerView.setAdapter(recipeAdapter);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 //        TextView recipeFeed = view.findViewById(R.id.testText);
@@ -161,13 +163,10 @@ public class MainFragment extends Fragment {
                         }
                     }
                     catch(Exception e){
-                        FragmentManager fragmentManager = getFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
-                        fragmentTransaction.commit();
                     }
                 }
                 else {
+
                     NavHostFragment.findNavController(MainFragment.this)
                             .navigate(R.id.maintologin);
 
