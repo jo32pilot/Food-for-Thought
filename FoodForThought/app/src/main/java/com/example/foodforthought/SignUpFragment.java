@@ -30,7 +30,7 @@ import java.util.Map;
 
 public class SignUpFragment extends Fragment {
     static final int GOOGLE_SIGN_IN = 123;
-    EditText mFirstName, mLastName, mEmail, mPassword;
+    EditText mFirstName, mLastName, mEmail, mPassword, mConfirm;
     FirebaseAuth fAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -51,6 +51,7 @@ public class SignUpFragment extends Fragment {
         mLastName = view.findViewById(R.id.lastNameRegister);
         mEmail = view.findViewById(R.id.emailRegister);
         mPassword = view.findViewById(R.id.passwordRegister);
+        mConfirm = view.findViewById(R.id.passwordRegister2);
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -65,6 +66,7 @@ public class SignUpFragment extends Fragment {
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
+                String confirm = mConfirm.getText().toString().trim();
                 final String firstName = mFirstName.getText().toString().trim();
                 final String lastName = mLastName.getText().toString().trim();
 
@@ -78,6 +80,10 @@ public class SignUpFragment extends Fragment {
                 }
                 if(password.length() < 6) {
                     mPassword.setError("Password must be at least 6 characters long.");
+                    return;
+                }
+                if(!password.equals(confirm)) {
+                    mPassword.setError("Passwords did not match.");
                     return;
                 }
 
