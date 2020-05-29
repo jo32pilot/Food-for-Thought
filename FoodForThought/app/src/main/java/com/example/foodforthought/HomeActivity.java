@@ -19,7 +19,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener;
 
 // Activity that hosts fragments for recipe, inventory, and shopping pages
-public class HomeActivity  extends AppCompatActivity{
+public class HomeActivity extends AppCompatActivity {
     // Object declarations for activity class
 //    DrawerLayout drawerLayout;
     ActionBarDrawerToggle actionBarDrawerToggle;
@@ -41,12 +41,14 @@ public class HomeActivity  extends AppCompatActivity{
         // Initializes navbar
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
-        //Load default fragment a.k.a. the first fragment after the login page is the main feed fragment
+        // Load default fragment a.k.a. the first fragment after the login page is the main feed fragment
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container_fragment, new MainFragment());
         fragmentTransaction.commit();
     }
+
+
     // Switch between items on the bottom navbar
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -66,7 +68,6 @@ public class HomeActivity  extends AppCompatActivity{
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container_fragment, addRecipeFragment);
                         fragmentTransaction.commit();
-
                     }
 
                     // Switches to main feed page when inventory button clicked in navbar
@@ -75,7 +76,6 @@ public class HomeActivity  extends AppCompatActivity{
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container_fragment, new InventoryFragment());
                         fragmentTransaction.commit();
-
                     }
 
                     // Switches to main feed page when shopping button clicked in navbar
@@ -84,14 +84,12 @@ public class HomeActivity  extends AppCompatActivity{
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
                         fragmentTransaction.commit();
-
                     }
                     if (item.getItemId() == R.id.UserProfileItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.container_fragment, new UserProfileFragment());
                         fragmentTransaction.commit();
-
                     }
                     return true;
                 }

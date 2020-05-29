@@ -28,7 +28,6 @@ import java.util.Map;
  * - Queried document reads: Query system to get documents based on user specified criteria.
  */
 public class Database {
-
     FirebaseFirestore db;
 
     /**
