@@ -34,6 +34,7 @@ import com.example.foodforthought.Misc.RecipeAdapter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
@@ -153,7 +154,13 @@ public class MainFragment extends Fragment {
                 CollectionReference recipesRef = db.getDB().collection("recipes");
                 DocumentSnapshot userIngredients = task.getResult();
                 if (userIngredients != null) {
-                    userInventory = (List<String>) userIngredients.get("inventory");
+
+                    // Get user's inventory which is stored as a map (ingredient name -> amount)
+                    Map<String, Object> invMap = (Map<String, Object>) userIngredients.get("inventory");
+
+                    // Get all ingredient names
+                    userInventory = new ArrayList<String>(invMap.keySet());
+
                     try {
                         // Begin second query to get recipes based on user's inventory.
                         if (userInventory != null) {

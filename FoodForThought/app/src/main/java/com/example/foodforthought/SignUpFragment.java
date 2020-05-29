@@ -111,8 +111,8 @@ public class SignUpFragment extends Fragment {
     }
 
     private void updateDB (FirebaseUser us, String first, String last) {
-        List<String> inventory_l = new ArrayList<String>();
-        List<String> shopping_l = new ArrayList<String>();
+        Map<String, Integer> inventory_m = new HashMap<>();
+        Map<String, Integer> shopping_m = new HashMap<>();
         List<String> favourite_l = new ArrayList<String>();
         List<String> liked_l = new ArrayList<String>();
         List<String> disliked_l = new ArrayList<String>();
@@ -142,14 +142,9 @@ public class SignUpFragment extends Fragment {
                     }
                 });
 
-        inventory_l.add("inventory 1");
-        inventory_l.add("inventory 2");
-        shopping_l.add("shopping 1");
-        shopping_l.add("shopping 2");
-
         Map<String, Object> user_ingredients = new HashMap<>();
-        user_ingredients.put("inventory", inventory_l);
-        user_ingredients.put("shopping_list", shopping_l);
+        user_ingredients.put("inventory", inventory_m);
+        user_ingredients.put("shopping_list", shopping_m);
 
         //user_ingredients collection
         db.collection("user_ingredients")
@@ -167,13 +162,6 @@ public class SignUpFragment extends Fragment {
                         System.out.println("Failed");
                     }
                 });
-
-
-        favourite_l.add("favourite recipe");
-        liked_l.add("liked recipe");
-        disliked_l.add("disliked recipe");
-        saved_l.add("saved recipe");
-        self_made_l.add("self made recipe");
 
         Map<String, Object> user_recipes = new HashMap<>();
         user_recipes.put("favourite", favourite_l);

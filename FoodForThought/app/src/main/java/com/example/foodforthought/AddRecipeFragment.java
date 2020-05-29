@@ -301,6 +301,9 @@ public class AddRecipeFragment extends Fragment {
         recipe.put("total_time", time);
         recipe.put("user_created", user);
         recipe.put("yield", servings + " servings(s)");
+        recipe.put("likes", 0);
+        recipe.put("dislikes", 0);
+        recipe.put("comments", new ArrayList<Map<String, String>>());
         return recipe;
     }
 

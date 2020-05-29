@@ -85,9 +85,12 @@ class ScraperBase():
                     'total_time': scraper.total_time(),
                     'yield': scraper.yields(),
                     'ingredients': recipe_ingredients,
-                    'instructions': scraper.instructions(),
+                    'instructions': scraper.instructions().split('.'),
                     'image': scraper.image(),
-                    'user_created': ''
+                    'user_created': '',
+                    'likes': 0,
+                    'dislikes': 0,
+                    'comments': [{}]
                 }
                 self.recipes[recipe_key] = recipe
                 recipe_key += 1
