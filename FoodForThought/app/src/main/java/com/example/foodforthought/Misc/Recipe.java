@@ -1,5 +1,7 @@
 package com.example.foodforthought.Misc;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -7,12 +9,15 @@ import java.util.Map;
 /**
  * Class to store the number of matching queried ingredients a recipe has.
  */
-public class Recipe{
+public class Recipe implements Serializable {
     private String id;
     private Map<String, Object> recipe;
     private double matches;
     private String img;
     private String name;
+    private String servingSize;
+    private ArrayList<Map<String, String>> ingredients;
+    private ArrayList<String> instructions;
 
     /**
      * Initializes number of queried ingredients that the recipe contains, as well as other
@@ -28,11 +33,9 @@ public class Recipe{
         this.name = (String) recipe.get("name");
         double countMatches = 0;
 
-
         // Stick all of the recipe's ingredients into a HashSet for O(1) lookup.
         HashSet<String> allIngredients =
                 new HashSet<>((List<String>) recipe.get("all_ingredients"));
-
 
         // For each query ingredient
         for(String queryIngredient : toMatch){
@@ -45,6 +48,11 @@ public class Recipe{
         // Compute ratio of num query ingredients in recipe to num ingredients in recipe.
         this.matches = countMatches / (double) allIngredients.size();
 
+        this.servingSize = (String) recipe.get("yield");
+
+        this.ingredients = (ArrayList<Map<String, String>>) recipe.get("ingredients");
+
+        this.instructions = (ArrayList<String>) recipe.get("instructions");
     }
 
     /**
@@ -69,10 +77,9 @@ public class Recipe{
      * @return the recipe URL
      */
     public String getURL(){
-
-
         return img;
     }
+
 
     /**
      * Returns the recipe info.
@@ -82,6 +89,7 @@ public class Recipe{
         return recipe;
     }
 
+
     /**
      * The ratio of how many query ingredients are in the recipe.
      * @return the ratio of how many query ingredients are in the recipe.
@@ -89,4 +97,20 @@ public class Recipe{
     public double getMatches() {
         return matches;
     }
+
+
+    /**
+     *
+     */
+    public String getYield() { return servingSize; }
+
+    /**
+     *
+     */
+    public ArrayList<Map<String, String>> getIngredients() { return ingredients; }
+
+    /**
+     *
+     */
+    public ArrayList<String> getInstructions() { return instructions; }
 }

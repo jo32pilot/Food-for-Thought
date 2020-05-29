@@ -2,8 +2,8 @@
     <string name="app_name">Food For Thought</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="login_fragment_label">Login Fragment</string>
+    <string name="signup_fragment_label">Sign Up Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -24,4 +24,6 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string name="search_ingredients">Search Ingredients</string>
+    <string name="main_fragment_label">Main Fragment</string>
+    <string name="inventory_fragment_label">Inventory Fragment</string>
 </resources>

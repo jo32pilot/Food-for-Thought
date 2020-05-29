@@ -9,10 +9,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +51,8 @@ public class MainFragment extends Fragment {
     private List<String> followingList;
     private Database db = new Database();
 
+    private View view;
+
     private static final int INIT_PQ_CAP = 20;
 
 
@@ -55,7 +61,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        view = inflater.inflate(R.layout.fragment_main, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setHasFixedSize(true);
@@ -88,6 +94,7 @@ public class MainFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
+
 
     // Listener for when we've received recipes from the database.
     OnCompleteListener<QuerySnapshot> onGetRecipes = new OnCompleteListener<QuerySnapshot>() {
@@ -134,7 +141,6 @@ public class MainFragment extends Fragment {
 //                    recipeFeed.setText(res.toString());
                 recipeAdapter = new RecipeAdapter(getContext(), recipeList);
                 recyclerView.setAdapter(recipeAdapter);
-
             } else {
                 Toast.makeText(getContext(),
                         "Error ! " + task.getException().getMessage(),
@@ -167,7 +173,6 @@ public class MainFragment extends Fragment {
 
                     NavHostFragment.findNavController(MainFragment.this)
                             .navigate(R.id.action_MainFragment_to_LoginFragment);
-
                 }
             } else {
                 NavHostFragment.findNavController(MainFragment.this)

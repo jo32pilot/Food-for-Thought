@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/arrowlogo"/>
+
+        <TextView
+            android:id="@+id/recipePageTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Buche De Noel"
+            android:textColor="#FD999A"
+            android:textSize="24dp"/>
+
+        <ImageButton
+            android:id="@+id/fancyButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="50dp"
+            android:src="@drawable/ic_action_dot"
+            android:backgroundTint="#ffffff"/>
+
+        <ImageButton
+            android:id="@+id/plusButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/ic_action_add" />
+
+        <ImageButton
+            android:id="@+id/heartButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/ic_shareicon" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/separator"
+        android:gravity="center"
+        android:layout_width="400dp"
+        android:layout_height="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="#FD999A"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:layout_marginBottom="66dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/recipeImage"
+                android:layout_width="match_parent"
+                android:layout_height="158dp"
+                android:src="@drawable/buchedenoel" />
+
+            <TextView
+                android:id="@+id/recipeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Buche De Noel"
+                android:textSize="24sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp" />
+
+            <TextView
+                android:id="@+id/recipeAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="By: sourdoughstarter"
+                android:textColor="#FD999A" />
+
+            <TextView
+                android:id="@+id/servingSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Serves 4" />
+
+            <TextView
+                android:id="@+id/recipeDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Buche De Noel is a rich, chocolate cake."
+                android:textColor="#FD999A" />
+
+            <LinearLayout
+                android:id="@+id/recipeIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/recipeInstructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/separator2"
+                android:gravity="center"
+                android:layout_width="400dp"
+                android:layout_height="5dp"
+                android:layout_marginTop="10dp"
+                android:background="#FD999A"/>
+
+            <LinearLayout
+                android:id="@+id/recipeComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="35dp">
+
+                <LinearLayout
+                    android:id="@+id/commentHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Comments: "
+                        android:textColor="#FD999A"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/numComments"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="182"
+                        android:textSize="18dp" />
+
+                    <ImageButton
+                        android:id="@+id/addCommentButton"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:padding="0dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="200dp"
+                        android:scaleType="fitCenter"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/commentOne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/userImage1"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/profilepic" />
+
+                    <TextView
+                        android:id="@+id/commentText1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="Wow this recipe is great!" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/commentTwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/userImage2"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/buchedenoel" />
+
+                    <TextView
+                        android:id="@+id/commentText2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="I hate it BADD :[ !!" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/commentThree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:id="@+id/userImage3"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:src="@drawable/buchedenoel" />
+
+                    <TextView
+                        android:id="@+id/commentText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="its okay i guess... my grandma makes it better" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
