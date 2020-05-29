@@ -44,7 +44,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
     private ImageView save;
     private Context rContext;
     private List<Recipe> rPost;
-    private RatingBar ratingBar;
+    private TextView numLikes;
+    private TextView numDislikes;
 
     private FirebaseUser firebaseUser;
 
@@ -73,6 +74,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
 
         Picasso.with(rContext).load(recipe.getURL()).into(recipeImage);
         recipeName.setText(recipe.getName());
+
+        numLikes.setText(""+recipe.getLikes());
+        numDislikes.setText(""+recipe.getDislikes());
 
         // go to recipe page when clicked on
         recipeName.setOnClickListener(new View.OnClickListener() {
@@ -114,7 +118,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
 
             recipeImage = itemView.findViewById(R.id.post_image);
             recipeName = itemView.findViewById(R.id.recipetitle);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
+            numLikes = itemView.findViewById(R.id.numLikes);
+            numDislikes = itemView.findViewById(R.id.numDislikes);
             save = itemView.findViewById(R.id.save);
         }
     }

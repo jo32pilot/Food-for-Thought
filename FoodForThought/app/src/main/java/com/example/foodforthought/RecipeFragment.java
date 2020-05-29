@@ -308,7 +308,6 @@ public class RecipeFragment extends Fragment {
             }
         });
 
-
         // recipe name
         TextView recipeName = view.findViewById(R.id.recipeName);
         recipeName.setText(recipe.getName());
@@ -340,6 +339,10 @@ public class RecipeFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             checkBox.setLayoutParams(params);
             checkBox.setText(ingredients.get(i).get("ingredient"));
+
+            //checkBox.setEnabled(false);
+            //checkBox.setChecked(true);
+
             recipeIngredients.addView(checkBox);
         }
 
