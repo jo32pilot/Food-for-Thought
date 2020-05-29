@@ -21,6 +21,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -68,10 +70,243 @@ public class RecipeFragment extends Fragment {
         TextView dislikes = view.findViewById(R.id.numDislikes);
         dislikes.setText(""+recipe.getDislikes());
 
-        // like action
+        // color either like or dislike button
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        OnCompleteListener<DocumentSnapshot> thumbColor = new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
 
+                    ArrayList<String> likedRecipes = (ArrayList<String>) doc.get("liked");
+                    for(int i = 0; i < likedRecipes.size(); i++) {
+                        if(recipe.getId().equals(likedRecipes.get(i))) {
+                            // color like button
+                            TextView likes = view.findViewById(R.id.numLikes);
+                            likes.setTypeface(null, Typeface.BOLD);
+                            return;
+                        }
+                    }
+
+                    ArrayList<String> dislikedRecipes = (ArrayList<String>) doc.get("disliked");
+                    for(int i = 0; i < dislikedRecipes.size(); i++) {
+                        if(recipe.getId().equals(likedRecipes.get(i))) {
+                            // color dislike button
+                            TextView dislikes = view.findViewById(R.id.numDislikes);
+                            dislikes.setTypeface(null, Typeface.BOLD);
+                            return;
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(getContext(),
+                            "Error ! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), thumbColor);
+
+
+        // like action
+        OnCompleteListener<DocumentSnapshot> onLike = new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    DocumentSnapshot doc = task.getResult();
+
+                    boolean inLiked = false;
+                    ArrayList<String> likedRecipes = (ArrayList<String>) doc.get("liked");
+                    for(int i = 0; i < likedRecipes.size(); i++) {
+                        if(recipe.getId().equals(likedRecipes.get(i))) {
+                            inLiked = true;
+                            break;
+                        }
+                    }
+
+                    boolean inDisliked = false;
+                    ArrayList<String> dislikedRecipes = (ArrayList<String>) doc.get("disliked");
+                    for(int i = 0; i < dislikedRecipes.size(); i++) {
+                        if(recipe.getId().equals(dislikedRecipes.get(i))) {
+                            inDisliked = true;
+                            break;
+                        }
+                    }
+
+                    if (inLiked) {
+                        // do nothing
+                        return;
+                    }
+                    else if (inDisliked) {
+                        // remove from disliked, add to liked
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("disliked", FieldValue.arrayRemove(recipe.getId()));
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this, "Deleted From Disliked",
+                                "Failed to delete from disliked!");
+
+                        ArrayList<String> addLiked = (ArrayList<String>)doc.get("liked");
+                        addLiked.add(recipe.getId());
+                        Map<String, Object> map2 = new HashMap<String, Object>();
+                        map2.put("liked", addLiked);
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map2, RecipeFragment.this, "Added to Liked",
+                                "Failed to add to liked!");
+
+                        long numDislikes = recipe.getDislikes();
+                        numDislikes--;
+                        recipe.setDislikes(numDislikes);
+                        long numLikes = recipe.getLikes();
+                        numLikes++;
+                        recipe.setLikes(numLikes);
+                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
+                               RecipeFragment.this, "successfully liked recipe",
+                               "failure to like recipe");
+                    }
+                    else {
+                        // not liked or disliked
+                        // add to liked
+                        ArrayList<String> addLiked = (ArrayList<String>)doc.get("liked");
+                        addLiked.add(recipe.getId());
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("liked", addLiked);
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this, "Added to Liked",
+                                "Failed to add to liked!");
+
+                        long numLikes = recipe.getLikes();
+                        numLikes++;
+                        recipe.setLikes(numLikes);
+                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
+                               RecipeFragment.this, "successfully liked recipe",
+                               "failure to like recipe");
+                    }
+
+                    // visual update
+                    TextView likes = view.findViewById(R.id.numLikes);
+                    likes.setText(""+recipe.getLikes());
+                    likes.setTypeface(null, Typeface.BOLD);
+                    TextView dislikes = view.findViewById(R.id.numDislikes);
+                    dislikes.setText(""+recipe.getDislikes());
+                    dislikes.setTypeface(null, Typeface.NORMAL);
+                }
+                else {
+                    Toast.makeText(getContext(),
+                            "Error ! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        ImageButton likeButton = view.findViewById(R.id.likeButton);
+        likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), onLike);
+            }
+        });
 
         // dislike action
+        OnCompleteListener<DocumentSnapshot> onDislike = new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    DocumentSnapshot doc = task.getResult();
+
+                    boolean inLiked = false;
+                    ArrayList<String> likedRecipes = (ArrayList<String>) doc.get("liked");
+                    for(int i = 0; i < likedRecipes.size(); i++) {
+                        if(recipe.getId().equals(likedRecipes.get(i))) {
+                            inLiked = true;
+                            break;
+                        }
+                    }
+
+                    boolean inDisliked = false;
+                    ArrayList<String> dislikedRecipes = (ArrayList<String>) doc.get("disliked");
+                    for(int i = 0; i < dislikedRecipes.size(); i++) {
+                        if(recipe.getId().equals(dislikedRecipes.get(i))) {
+                            inDisliked = true;
+                            break;
+                        }
+                    }
+
+                    if (inDisliked) {
+                        // do nothing
+                        return;
+                    }
+                    else if (inLiked) {
+                        // remove from liked, add to disliked
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("liked", FieldValue.arrayRemove(recipe.getId()));
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this, "Deleted From Liked",
+                                "Failed to delete from Liked!");
+
+
+
+                        ArrayList<String> addDisliked = (ArrayList<String>)doc.get("disliked");
+                        addDisliked.add(recipe.getId());
+                        Map<String, Object> map2 = new HashMap<String, Object>();
+                        map2.put("disliked", addDisliked);
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map2, RecipeFragment.this, "Added to Disliked",
+                                "Failed to add to disliked!");
+
+                        long numDislikes = recipe.getDislikes();
+                        numDislikes++;
+                        recipe.setDislikes(numDislikes);
+                        long numLikes = recipe.getLikes();
+                        numLikes--;
+                        recipe.setLikes(numLikes);
+                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
+                                RecipeFragment.this, "successfully disliked recipe",
+                                "failure to dislike recipe");
+                    }
+                    else {
+                        // not liked or disliked
+                        // add to liked
+                        ArrayList<String> addDisliked = (ArrayList<String>)doc.get("disliked");
+                        addDisliked.add(recipe.getId());
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("disliked", addDisliked);
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this, "Added to Disliked",
+                                "Failed to add to disliked!");
+
+                        long numDislikes = recipe.getDislikes();
+                        numDislikes++;
+                        recipe.setDislikes(numDislikes);
+                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
+                                RecipeFragment.this, "successfully disliked recipe",
+                                "failure to dislike recipe");
+                    }
+
+                    // visual update
+                    TextView likes = view.findViewById(R.id.numLikes);
+                    likes.setText(""+recipe.getLikes());
+                    likes.setTypeface(null, Typeface.NORMAL);
+                    TextView dislikes = view.findViewById(R.id.numDislikes);
+                    dislikes.setText(""+recipe.getDislikes());
+                    dislikes.setTypeface(null, Typeface.BOLD);
+                }
+                else {
+                    Toast.makeText(getContext(),
+                            "Error ! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        ImageButton dislikeButton = view.findViewById(R.id.dislikeButton);
+        dislikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), onDislike);
+            }
+        });
 
 
         // recipe name
@@ -94,10 +329,6 @@ public class RecipeFragment extends Fragment {
         // total time
         TextView totalTime = view.findViewById(R.id.totalTime);
         totalTime.setText("" + recipe.getTime() + " minutes");
-
-        // description not implemented
-        TextView description = view.findViewById(R.id.recipeDescription);
-        description.setText("placeholder description");
 
         // ingredients
         LinearLayout recipeIngredients = view.findViewById(R.id.recipeIngredients);
@@ -261,37 +492,6 @@ public class RecipeFragment extends Fragment {
                                 RecipeFragment.this, "successfully added comment",
                                 "failure to add comment");
                         db.getDocument("users", firebaseUser.getUid(), onGetUser);
-
-
-                        /*
-                        // get comment section view
-                        LinearLayout commentSection = view.findViewById(R.id.recipeComments);
-
-                        // create new comment
-                        LinearLayout newComment = new LinearLayout(view.getContext());
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.MATCH_PARENT);
-                        newComment.setLayoutParams(params);
-
-                        // create user profile
-                        ImageView userProfile = new ImageView(view.getContext());
-                        userProfile.setImageResource(R.drawable.profilepic);
-                        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(150, 150);
-                        userProfile.setLayoutParams(imageParams);
-
-                        // create user comment text
-                        TextView userText = new TextView((view.getContext()));
-                        userText.setText(userInput);
-
-                        // add user comment text and user profile to the comment
-                        newComment.addView(userProfile);
-                        newComment.addView(userText);
-
-                        // add the comment to the comment section
-                        commentSection.addView(newComment);
-
-                        TextView numComments = view.findViewById(R.id.numComments);
-                        numComments.setText(++numberOfComments + ""); */
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -317,10 +517,12 @@ public class RecipeFragment extends Fragment {
     private Map<String, Object> getRecipeMap(Recipe r, String comment){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        Map<String, String> hash = new HashMap<>();
-        hash.put("comment", comment);
-        hash.put("userid", user.getUid());
-        r.getComments().add(hash);
+        if(comment != "") {
+            Map<String, String> hash = new HashMap<>();
+            hash.put("comment", comment);
+            hash.put("userid", user.getUid());
+            r.getComments().add(hash);
+        }
 
         Map<String, Object> recipe = new HashMap<>();
         recipe.put("all_ingredients", r.getAllIngredients());

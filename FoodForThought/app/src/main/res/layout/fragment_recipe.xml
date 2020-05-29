@@ -105,7 +105,8 @@
             <LinearLayout
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="51dp">
+                android:layout_height="51dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -174,18 +175,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="5 minutes" />
-
-            <TextView
-                android:id="@+id/recipeDescription"
-                android:layout_width="300dp"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:autoSizeTextType="uniform"
-                android:autoSizeMinTextSize="12sp"
-                android:autoSizeMaxTextSize="100sp"
-                android:autoSizeStepGranularity="2sp"
-                android:text="Buche De Noel is a rich, chocolate cake."
-                android:textColor="#FD999A" />
 
             <LinearLayout
                 android:id="@+id/recipeIngredients"

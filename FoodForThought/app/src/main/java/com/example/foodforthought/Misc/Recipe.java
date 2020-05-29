@@ -154,4 +154,12 @@ public class Recipe implements Serializable {
     public long getLikes() { return likes; }
 
     public long getDislikes() { return dislikes; }
+
+    public void setLikes(long likes) {
+        this.likes = likes;
+    }
+
+    public void setDislikes(long dislikes) {
+        this.dislikes = dislikes;
+    }
 }
