@@ -18,6 +18,12 @@ public class Recipe implements Serializable {
     private String servingSize;
     private ArrayList<Map<String, String>> ingredients;
     private ArrayList<String> instructions;
+    private String author;
+    private ArrayList<String> allIngredients;
+    private long time;
+    private ArrayList<Map<String, String>> comments;
+    private long likes;
+    private long dislikes;
 
     /**
      * Initializes number of queried ingredients that the recipe contains, as well as other
@@ -53,6 +59,27 @@ public class Recipe implements Serializable {
         this.ingredients = (ArrayList<Map<String, String>>) recipe.get("ingredients");
 
         this.instructions = (ArrayList<String>) recipe.get("instructions");
+
+        this.author = (String)recipe.get("user_created");
+
+        this.allIngredients = (ArrayList<String>) recipe.get("all_ingredients");
+
+        this.time = (long)recipe.get("total_time");
+
+        this.comments = (ArrayList<Map<String, String>>) recipe.get("comments");
+        if (this.comments == null) {
+            this.comments = new ArrayList<Map<String, String>> ();
+        }
+
+        if(recipe.get("likes") != null)
+            this.likes = (long)recipe.get("likes");
+        else
+            this.likes = 0;
+
+        if(recipe.get("dislikes") != null)
+            this.dislikes = (long)recipe.get("dislikes");
+        else
+            this.dislikes = 0;
     }
 
     /**
@@ -98,7 +125,6 @@ public class Recipe implements Serializable {
         return matches;
     }
 
-
     /**
      *
      */
@@ -113,4 +139,19 @@ public class Recipe implements Serializable {
      *
      */
     public ArrayList<String> getInstructions() { return instructions; }
+
+    /**
+     *
+     */
+    public String getAuthor() { return author; }
+
+    public ArrayList<String> getAllIngredients() { return allIngredients; }
+
+    public long getTime() { return time; }
+
+    public ArrayList<Map<String, String>> getComments() { return comments; }
+
+    public long getLikes() { return likes; }
+
+    public long getDislikes() { return dislikes; }
 }

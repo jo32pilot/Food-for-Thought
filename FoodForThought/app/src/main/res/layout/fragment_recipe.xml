@@ -27,12 +27,15 @@
 
         <TextView
             android:id="@+id/recipePageTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
             android:gravity="center"
-            android:text="Buche De Noel"
-            android:textColor="#FD999A"
-            android:textSize="24dp"/>
+            android:text="Food Title"
+            android:textColor="#FD999A"/>
 
         <ImageButton
             android:id="@+id/fancyButton"
@@ -40,7 +43,6 @@
             android:layout_height="50dp"
             android:padding="0dp"
             android:scaleType="fitCenter"
-            android:layout_marginLeft="50dp"
             android:src="@drawable/ic_action_dot"
             android:backgroundTint="#ffffff"/>
 
@@ -91,21 +93,73 @@
 
             <TextView
                 android:id="@+id/recipeName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Buche De Noel"
-                android:textSize="24sp" />
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeStepGranularity="2sp"
+                android:text="Food Title"/>
 
-            <RatingBar
+            <LinearLayout
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
-                android:layout_height="51dp" />
+                android:layout_height="51dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="25dp">
+                <ImageButton
+                    android:id="@+id/likeButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:padding="0dp"
+                    android:scaleType="fitCenter"
+                    android:backgroundTint="#ffffff"
+                    android:src="@drawable/ic_thumb_up_black_24dp"/>
+                <TextView
+                    android:id="@+id/numLikes"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="62"
+                    android:gravity="center"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="25dp">
+                    <ImageButton
+                        android:id="@+id/dislikeButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:padding="0dp"
+                        android:scaleType="fitCenter"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_thumb_down_black_24dp"/>
+                    <TextView
+                        android:id="@+id/numDislikes"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="13"
+                        android:gravity="center"/>
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/recipeAuthor"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_width="200dp"
+                android:layout_height="25dp"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeStepGranularity="2sp"
                 android:text="By: sourdoughstarter"
                 android:textColor="#FD999A" />
 
@@ -116,9 +170,20 @@
                 android:text="Serves 4" />
 
             <TextView
-                android:id="@+id/recipeDescription"
+                android:id="@+id/totalTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="5 minutes" />
+
+            <TextView
+                android:id="@+id/recipeDescription"
+                android:layout_width="300dp"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeStepGranularity="2sp"
                 android:text="Buche De Noel is a rich, chocolate cake."
                 android:textColor="#FD999A" />
 
@@ -128,6 +193,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="35dp"
                 android:orientation="vertical">
 
             </LinearLayout>
@@ -138,6 +204,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="35dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="35dp"
                 android:orientation="vertical">
 
             </LinearLayout>
@@ -157,6 +224,7 @@
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:layout_marginRight="35dp"
                 android:layout_marginLeft="35dp">
 
                 <LinearLayout
@@ -189,67 +257,7 @@
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_action_add" />
                 </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/commentOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/userImage1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/profilepic" />
-
-                    <TextView
-                        android:id="@+id/commentText1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="Wow this recipe is great!" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/commentTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/userImage2"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/buchedenoel" />
-
-                    <TextView
-                        android:id="@+id/commentText2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="I hate it BADD :[ !!" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/commentThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:id="@+id/userImage3"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/buchedenoel" />
-
-                    <TextView
-                        android:id="@+id/commentText3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:text="its okay i guess... my grandma makes it better" />
-
-                </LinearLayout>
-
             </LinearLayout>
-
-
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>
