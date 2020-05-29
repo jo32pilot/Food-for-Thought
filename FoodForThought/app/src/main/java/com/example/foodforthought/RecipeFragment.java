@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -358,19 +359,23 @@ public class RecipeFragment extends Fragment {
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
             params.setMargins(0,0,0,10);
+            instruction.setOrientation(LinearLayout.HORIZONTAL);
+            instruction.setGravity(Gravity.CENTER_VERTICAL);
             instruction.setLayoutParams(params);
 
             TextView step = new TextView(getContext());
             LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
             step.setLayoutParams(params2);
-            step.setText("Step " + (i+1) + ") ");
+            step.setText("Step " + (i+1) + ")");
             step.setTextColor(Color.parseColor("#FD999A"));
 
             TextView infoText = new TextView(getContext());
             LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
+            params3.setMargins(10,0,0,0);
             infoText.setLayoutParams(params3);
+            infoText.setGravity(Gravity.LEFT);
             infoText.setText(instructions.get(i));
 
             instruction.addView(step);
