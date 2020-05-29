@@ -9,35 +9,84 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="56dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/insertingredientbutton"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/box"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <SearchView
+                android:id="@+id/searchInv"
+                android:layout_width="362dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/search_ingredients"
+                android:imeOptions="actionGo" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="380dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/pantryList"
+                android:layout_width="222dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginRight="35dp"
+                android:text="Pantry"
+                android:textColor="#FD999A"
+                android:textSize="30sp"
+                android:textStyle="normal" />
+
+        </RelativeLayout>
+        <EditText
+            android:id="@+id/horizontalLine"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="20dp"
+            android:background="#FD999A"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="no text" />
+
+        <ScrollView
+            android:id="@+id/scroll_list_inv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
-            android:text="Insert Ingredients" />
+            android:layout_centerHorizontal="true">
 
-        <Button
-            android:id="@+id/userecipebutton"
-            android:layout_width="match_parent"
-            android:layout_height="61dp"
-            android:layout_marginTop="5dp"
-            android:text="Use Recipe" />
+            <LinearLayout
+                android:id="@+id/pantryListLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/updateinventorybutton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Manually Update Inventory" />
-
-        <Button
-            android:id="@+id/expirationdatebutton"
-            android:layout_width="436dp"
-            android:layout_height="wrap_content"
-            android:text="Display Expiration Date" />
-
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

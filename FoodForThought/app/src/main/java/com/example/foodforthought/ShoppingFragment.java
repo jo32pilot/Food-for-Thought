@@ -2,40 +2,28 @@ package com.example.foodforthought;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.ColorSpace;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.method.TransformationMethod;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,9 +33,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 public class ShoppingFragment extends Fragment {
-    EditText searchIngredients;
-    ImageButton searchButton;
-    ArrayList<RelativeLayout> list = new ArrayList<>();
+    SearchView searchShopping;
+    ArrayList<String> items = new ArrayList<>();
+    ArrayList<String> amounts = new ArrayList<>();
     LinearLayout shoppingListLayout;
 
     @Nullable
@@ -62,8 +50,7 @@ public class ShoppingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        searchIngredients = view.findViewById(R.id.searchIngredients);
-        searchButton = view.findViewById(R.id.searchButton);
+        searchShopping = view.findViewById(R.id.searchShopping);
 
         // If user isn't logged in or has logged out.
         if(user == null){
@@ -71,73 +58,66 @@ public class ShoppingFragment extends Fragment {
         }
 
         //Add new item to list
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        searchShopping.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onClick(View v) {
-                createItem(view);
-                searchIngredients.setText("");
+            public boolean onQueryTextSubmit(String query) {
+                createItem(query, "1");
+                searchShopping.setQuery("", false);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 
        shoppingListLayout = view.findViewById(R.id.shoppingListLayout);
 
-       /*for(int i =0 ; i < list.size(); i++){
-            shoppingListLayout.addView(list.get(i));
-        }*/
 
-       //String uid = user.getUid();
-        //String userIngredientsId = "user_ingredients_id_" + uid;
-        //Database db = new Database();
-
-
-
-       /*// Listener for when we've received ingredients from the database.
-       OnCompleteListener<QuerySnapshot> onGetIngredients = new OnCompleteListener<QuerySnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-               if (task.isSuccessful()) {
-                   for(QueryDocumentSnapshot doc : task.getResult()){
-                       Log.d("Ingredients List: ", (String) doc.get("name"));
-                   }
-
-               }
-           }
-       };
-
-       CollectionReference ingredientsRef = db.getDB().collection("ingredients");
-       ingredientsRef.orderBy("name")
-               .limit(10)
-               .get()
-               .addOnCompleteListener(onGetIngredients);
-
-       searchIngredients.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_GO){
-                    return true;
-                }
-                return false;
-            }
-        });*/
    }
 
     /*@Override
     public void onPause() {
-
         super.onPause();
-        writeObjectInCache(this.getContext(), "list", list);
+        createLists();
+        writeObjectInCache(getContext(), "items", items);
+        writeObjectInCache(getContext(), "amounts", amounts);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        list = (ArrayList<RelativeLayout>) readObjectFromCache(this.getContext(), "list");
+        items = (ArrayList<String>) readObjectFromCache(getContext(), "items");
+        amounts = (ArrayList<String>) readObjectFromCache(getContext(), "amounts");
+        if(items != null && amounts != null ){
+            setupScreen();
+        }
+    }
+
+    protected void setupScreen(){
+        for(int i = 0; i < items.size(); i++){
+            createItem(items.get(i), amounts.get(i));
+        }
+    }
+
+    protected void createLists(){
+        int max = shoppingListLayout.getChildCount();
+        for(int i = 0; i < max; i++){
+            RelativeLayout tempLayout = new RelativeLayout(this.getContext());
+            if(shoppingListLayout.getChildAt(i) instanceof RelativeLayout){
+                tempLayout = (RelativeLayout) shoppingListLayout.getChildAt(i);
+            }
+            CheckBox tempCheck = (CheckBox) tempLayout.getChildAt(0);
+            items.add(tempCheck.getText().toString());
+            EditText tempAmount = (EditText) tempLayout.getChildAt(1);
+            amounts.add(tempAmount.getText().toString());
+        }
     }*/
 
-    protected void createItem(@NonNull View view) {
+    protected void createItem(String query, String amount1) {
         //create new row
-        list.add(new RelativeLayout(this.getContext()));
-        RelativeLayout relativeLayout = list.get(list.size()-1);
+        RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
         relativeLayout.setId(View.generateViewId());
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -170,7 +150,7 @@ public class ShoppingFragment extends Fragment {
         checkParams.addRule(RelativeLayout.ALIGN_PARENT_START);
         checkBox.setLayoutParams(checkParams);
         //Set text to ingredient
-        checkBox.setText(searchIngredients.getText());
+        checkBox.setText(query);
         //Set size of text
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
 
@@ -207,7 +187,7 @@ public class ShoppingFragment extends Fragment {
         //Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         //Set base amount to 1
-        amount.setText("1");
+        amount.setText(amount1);
 
         //What to do if checkbox is clicked
         checkBox.setOnClickListener(new View.OnClickListener() {
