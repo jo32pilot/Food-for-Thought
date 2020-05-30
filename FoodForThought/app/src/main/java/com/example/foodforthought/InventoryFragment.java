@@ -1,6 +1,9 @@
 package com.example.foodforthought;
 
+import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.text.InputType;
 import android.util.Log;
 import android.util.TypedValue;
@@ -8,14 +11,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.CheckBox;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.TextView;
+import android.widget.SimpleCursorAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,18 +32,21 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InventoryFragment extends Fragment {
 
     private SearchView searchIngredients;
     private LinearLayout pantryListLayout;
     private Database db = new Database();
-    private List<String> userInventory;
-    private List<String> userInventoryAmts;
-
-
+    private Map<String, Object> userInventory;
+    private String userIngredientsId;
+    private CollectionReference inventoryRef;
+    private SimpleCursorAdapter mAdapter;
+    private String[] SUGGESTIONS = new String[10];
 
     @Nullable
     @Override
@@ -51,7 +56,6 @@ public class InventoryFragment extends Fragment {
         pantryListLayout = view.findViewById(R.id.pantryListLayout);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        TextView recipeFeed = view.findViewById(R.id.testText);
 
         // If user isn't logged in or has logged out.
         if (user == null) {
@@ -60,10 +64,22 @@ public class InventoryFragment extends Fragment {
         }
 
         String uid = user.getUid();
-        String userIngredientsId = "user_ingredients_id_" + uid;
+        userIngredientsId = "user_ingredients_id_" + uid;
 
         // Where it all starts
-        db.getDocument("user_ingredients", userIngredientsId, onGetUserIngredients);
+        db.getDocument("user_ingredients", userIngredientsId, onGetUserInventory);
+
+        inventoryRef = db.getDB().collection("ingredients");
+
+
+        final String[] from = new String[] {"ingredient"};
+        final int[] to = new int[] {android.R.id.text1};
+        mAdapter = new SimpleCursorAdapter(getActivity(),
+                android.R.layout.simple_list_item_1,
+                null,
+                from,
+                to,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 
         return view;
     }
@@ -72,47 +88,83 @@ public class InventoryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        searchIngredients.setSuggestionsAdapter(mAdapter);
+        searchIngredients.setIconifiedByDefault(false);
+
+        searchIngredients.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Cursor cursor = (Cursor) mAdapter.getItem(position);
+                String txt = cursor.getString(cursor.getColumnIndex("ingredient"));
+                searchIngredients.setQuery(txt, true);
+                return false;
+            }
+        });
 
         searchIngredients.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                if(query != null) {
+                    userInventory.put(query, "1");
+                    createItem(query, "1");
+                    searchIngredients.setQuery("", false);
+                    return true;
+                }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // db.getDocument("ingredients", onGetAllIngredients); (Look at John's code to double check)
-                // searchIngredients.getSuggestionsAdapter();
+                inventoryRef.whereGreaterThanOrEqualTo("name", newText)
+                        .limit(10)
+                        .get()
+                        .addOnCompleteListener(onGetAllIngredients);
                 return true;
             }
         });
 
     }
 
-    OnCompleteListener<DocumentSnapshot> onGetAllIngredients = new OnCompleteListener<DocumentSnapshot>() {
+    private void populateAdapter() {
+        final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "ingredient" });
+        for (int i=0; i<SUGGESTIONS.length; i++) {
+            c.addRow(new Object[] {i, SUGGESTIONS[i]});
+        }
+        mAdapter.changeCursor(c);
+    }
+
+    OnCompleteListener<QuerySnapshot> onGetAllIngredients = new OnCompleteListener<QuerySnapshot>() {
         @Override
-        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-            if(task.isSuccessful()){
-                //Get all ingredients that start with newText
-                //Limit to 10
-                //Put into suggestionsAdapter
-                //Only allow clicking on suggestions?
+        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+            int i = 0;
+            for(QueryDocumentSnapshot doc : task.getResult()){
+                SUGGESTIONS[i] = doc.getId().toString();
+                i++;
             }
+            populateAdapter();
         }
     };
 
     // Listener for when we've received the user's ingredients.
-    OnCompleteListener<DocumentSnapshot> onGetUserIngredients = new OnCompleteListener<DocumentSnapshot>() {
+    OnCompleteListener<DocumentSnapshot> onGetUserInventory = new OnCompleteListener<DocumentSnapshot>() {
 
         @Override
         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
             if(task.isSuccessful()){
                 DocumentSnapshot userIngredients = task.getResult();
                 if(userIngredients != null){
-                    userInventory = (List<String>) userIngredients.get("inventory");
-                    userInventoryAmts = (List<String>) userIngredients.get("inventory_amount");
-                    if(userInventory != null && userInventoryAmts != null){
+                    userInventory = (Map<String, Object>) userIngredients.get("inventory");
+                    if(userInventory != null ){
                         setUpScreen();
+                    }
+                    else{
+                        userInventory = new HashMap<>();
                     }
                 }
             }
@@ -120,12 +172,15 @@ public class InventoryFragment extends Fragment {
     };
 
     protected void setUpScreen(){
-        for(int i = 0; i < userInventory.size(); i++){
-            createItem(userInventory.get(i), userInventoryAmts.get(i));
+        for(String key : userInventory.keySet()){
+            createItem(key, userInventory.get(key).toString());
         }
     }
 
     private void createItem(String name, String number){
+        Map<String, Object> updatedMap = new HashMap<>();
+        updatedMap.put("inventory", userInventory);
+        db.update("user_ingredients", userIngredientsId, updatedMap, this, "success", "failure");
         RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
         relativeLayout.setId(View.generateViewId());
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
@@ -207,6 +262,9 @@ public class InventoryFragment extends Fragment {
                 //increment counter
                 int temp = Integer.parseInt(amount.getText().toString());
                 amount.setText(String.valueOf(temp + 1));
+                Map<String, Object> map = new HashMap<>();
+                map.put("inventory." + name, temp + 1);
+                db.update("user_ingredients", userIngredientsId, map, InventoryFragment.this, "", "Could not update");
             }
         });
 
@@ -217,39 +275,11 @@ public class InventoryFragment extends Fragment {
                 //decrease counter
                 int temp = Integer.parseInt(amount.getText().toString());
                 amount.setText(String.valueOf(temp - 1));
+                Map<String, Object> map = new HashMap<>();
+                map.put("inventory." + name, temp - 1);
+                db.update("user_ingredients", userIngredientsId, map, InventoryFragment.this, "", "Could not update");
             }
         });
 
     }
-
-
-
-       /*// Listener for when we've received ingredients from the database.
-       OnCompleteListener<QuerySnapshot> onGetIngredients = new OnCompleteListener<QuerySnapshot>() {
-           @Override
-           public void onComplete(@NonNull Task<QuerySnapshot> task) {
-               if (task.isSuccessful()) {
-                   for(QueryDocumentSnapshot doc : task.getResult()){
-                       Log.d("Ingredients List: ", (String) doc.get("name"));
-                   }
-
-               }
-           }
-       };
-
-       CollectionReference ingredientsRef = db.getDB().collection("ingredients");
-       ingredientsRef.orderBy("name")
-               .limit(10)
-               .get()
-               .addOnCompleteListener(onGetIngredients);
-
-       searchIngredients.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_GO){
-                    return true;
-                }
-                return false;
-            }
-        });*/
 }
