@@ -45,4 +45,14 @@
             android:id="@+id/action_InventoryFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/ShoppingFragment"
+        android:name="com.example.foodforthought.ShoppingFragment"
+        android:label="@string/shopping_fragment_label"
+        tools:layout="@layout/fragment_shopping">
+
+        <action
+            android:id="@+id/action_ShoppingFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
 </navigation>

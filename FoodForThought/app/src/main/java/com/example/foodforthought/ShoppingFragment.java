@@ -21,9 +21,14 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
+import com.example.foodforthought.Misc.Database;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -31,17 +36,36 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ShoppingFragment extends Fragment {
-    SearchView searchShopping;
-    ArrayList<String> items = new ArrayList<>();
-    ArrayList<String> amounts = new ArrayList<>();
-    LinearLayout shoppingListLayout;
+    private SearchView searchShopping;
+    private ArrayList<String> items = new ArrayList<>();
+    private ArrayList<String> amounts = new ArrayList<>();
+    private LinearLayout shoppingListLayout;
+    private Database db = new Database();
+    private String userIngredientsId;
+    private Map<String, Object> shopping_list = new HashMap<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopping, container, false);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        searchShopping = view.findViewById(R.id.searchShopping);
+
+        // If user isn't logged in or has logged out.
+        if(user == null){
+            NavHostFragment.findNavController(ShoppingFragment.this)
+                    .navigate(R.id.action_ShoppingFragment_to_LoginFragment);        }
+
+        String uid = user.getUid();
+        userIngredientsId = "user_ingredients_id_" + uid;
+
+        db.getDocument("user_ingredients", userIngredientsId, onGetShoppingList);
+
         return view;
     }
 
@@ -49,21 +73,17 @@ public class ShoppingFragment extends Fragment {
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        searchShopping = view.findViewById(R.id.searchShopping);
-
-        // If user isn't logged in or has logged out.
-        if(user == null){
-            // TODO redirect to login page
-        }
-
         //Add new item to list
         searchShopping.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                createItem(query, "1");
-                searchShopping.setQuery("", false);
-                return true;
+                if(query != null) {
+                    shopping_list.put(query, "1");
+                    createItem(query, "1");
+                    searchShopping.setQuery("", false);
+                    return true;
+                }
+                return false;
             }
 
             @Override
@@ -77,46 +97,39 @@ public class ShoppingFragment extends Fragment {
 
    }
 
-    /*@Override
-    public void onPause() {
-        super.onPause();
-        createLists();
-        writeObjectInCache(getContext(), "items", items);
-        writeObjectInCache(getContext(), "amounts", amounts);
-    }
-
     @Override
-    public void onResume() {
-        super.onResume();
-        items = (ArrayList<String>) readObjectFromCache(getContext(), "items");
-        amounts = (ArrayList<String>) readObjectFromCache(getContext(), "amounts");
-        if(items != null && amounts != null ){
-            setupScreen();
-        }
+    public void onStop() {
+        super.onStop();
+        //db.update("user_ingredients", userIngredientsId, shopping_list, this, "success", "failure");
     }
 
-    protected void setupScreen(){
-        for(int i = 0; i < items.size(); i++){
-            createItem(items.get(i), amounts.get(i));
-        }
-    }
+    OnCompleteListener<DocumentSnapshot> onGetShoppingList = new OnCompleteListener<DocumentSnapshot>() {
 
-    protected void createLists(){
-        int max = shoppingListLayout.getChildCount();
-        for(int i = 0; i < max; i++){
-            RelativeLayout tempLayout = new RelativeLayout(this.getContext());
-            if(shoppingListLayout.getChildAt(i) instanceof RelativeLayout){
-                tempLayout = (RelativeLayout) shoppingListLayout.getChildAt(i);
+        @Override
+        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            if(task.isSuccessful()){
+                DocumentSnapshot userIngredients = task.getResult();
+                if(userIngredients != null){
+                    shopping_list = (Map<String, Object>) userIngredients.get("shopping_list");
+                    if(shopping_list != null) {
+                        for (String key : shopping_list.keySet()) {
+                            createItem(key, shopping_list.get(key).toString());
+                        }
+                    }
+                    else{
+                        shopping_list = new HashMap<>();
+                    }
+                }
             }
-            CheckBox tempCheck = (CheckBox) tempLayout.getChildAt(0);
-            items.add(tempCheck.getText().toString());
-            EditText tempAmount = (EditText) tempLayout.getChildAt(1);
-            amounts.add(tempAmount.getText().toString());
         }
-    }*/
+    };
+
 
     protected void createItem(String query, String amount1) {
         //create new row
+        Map<String, Object> updatedMap = new HashMap<>();
+        updatedMap.put("shopping_list", shopping_list);
+        db.update("user_ingredients", userIngredientsId, updatedMap, this, "success", "failure");
         RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
         relativeLayout.setId(View.generateViewId());
         relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
@@ -197,11 +210,22 @@ public class ShoppingFragment extends Fragment {
                     //Make black and not striked through
                     checkBox.setTextColor(Color.parseColor("#000000"));
                     checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    shopping_list.put(query, Integer.valueOf(amount.getText().toString()));
+                    Map<String, Object> updatedMap = new HashMap<>();
+                    updatedMap.put("shopping_list", shopping_list);
+                    db.update("user_ingredients", userIngredientsId, updatedMap, ShoppingFragment.this, "", "Could not add");
+
                 }
                 else {
-                    //Strike through and make gray
+                    //Strike through and make gray and move to bottom
                     checkBox.setTextColor(Color.parseColor("#D3D3D3"));
                     checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                    shoppingListLayout.removeView(relativeLayout);
+                    shoppingListLayout.addView(relativeLayout);
+                    shopping_list.remove(query);
+                    Map<String, Object> updatedMap = new HashMap<>();
+                    updatedMap.put("shopping_list", shopping_list);
+                    db.update("user_ingredients", userIngredientsId, updatedMap, ShoppingFragment.this, "", "Could not remove");
                 }
             }
         });
@@ -212,6 +236,9 @@ public class ShoppingFragment extends Fragment {
                 //increment counter
                 int temp = Integer.parseInt(amount.getText().toString());
                 amount.setText(String.valueOf(temp + 1));
+                Map<String, Object> map = new HashMap<>();
+                map.put("shopping_list." + query, temp + 1);
+                db.update("user_ingredients", userIngredientsId, map, ShoppingFragment.this, "success", "failure");
             }
         });
         //What to do if minus button is clicked
@@ -221,34 +248,12 @@ public class ShoppingFragment extends Fragment {
                 //decrease counter
                 int temp = Integer.parseInt(amount.getText().toString());
                 amount.setText(String.valueOf(temp - 1));
+                Map<String, Object> map = new HashMap<>();
+                map.put("shopping_list." + query, temp - 1);
+                db.update("user_ingredients", userIngredientsId, map, ShoppingFragment.this, "success", "failure");
+
             }
         });
 
-    }
-
-    public static boolean writeObjectInCache(Context context, String key, Object object) {
-        try {
-            FileOutputStream fos = context.openFileOutput(key, Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(object);
-            oos.close();
-            fos.close();
-        } catch (IOException ex) {
-            return false;
-        }
-
-        return true;
-    }
-
-
-    public static Object readObjectFromCache(Context context, String key) {
-        try {
-            FileInputStream fis = context.openFileInput(key);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            Object object = ois.readObject();
-            return object;
-        } catch (Exception ex) {
-            return null;
-        }
     }
 }

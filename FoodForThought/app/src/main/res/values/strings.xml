@@ -26,4 +26,5 @@
     <string name="search_ingredients">Search Ingredients</string>
     <string name="main_fragment_label">Main Fragment</string>
     <string name="inventory_fragment_label">Inventory Fragment</string>
+    <string name="shopping_fragment_label">Shopping Fragment</string>
 </resources>
