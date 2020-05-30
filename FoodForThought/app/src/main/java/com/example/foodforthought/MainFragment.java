@@ -162,8 +162,14 @@ public class MainFragment extends Fragment {
                     // Get user's inventory which is stored as a map (ingredient name -> amount)
                     Map<String, Object> invMap = (Map<String, Object>) userIngredients.get("inventory");
 
-                    // Get all ingredient names
-                    userInventory = new ArrayList<String>(invMap.keySet());
+                    if(invMap == null){
+                        userInventory = new ArrayList<>();
+                    }
+                    else{
+                        // Get all ingredient names
+                        userInventory = new ArrayList<String>(invMap.keySet());
+                    }
+
 
                     try {
                         // Begin second query to get recipes based on user's inventory.
