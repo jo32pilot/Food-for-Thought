@@ -210,6 +210,10 @@ public class ShoppingFragment extends Fragment {
                     //Make black and not striked through
                     checkBox.setTextColor(Color.parseColor("#000000"));
                     checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+                    shopping_list.put(query, Integer.valueOf(amount.getText().toString()));
+                    Map<String, Object> updatedMap = new HashMap<>();
+                    updatedMap.put("shopping_list", shopping_list);
+                    db.update("user_ingredients", userIngredientsId, updatedMap, ShoppingFragment.this, "", "Could not add");
 
                 }
                 else {
@@ -218,6 +222,10 @@ public class ShoppingFragment extends Fragment {
                     checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     shoppingListLayout.removeView(relativeLayout);
                     shoppingListLayout.addView(relativeLayout);
+                    shopping_list.remove(query);
+                    Map<String, Object> updatedMap = new HashMap<>();
+                    updatedMap.put("shopping_list", shopping_list);
+                    db.update("user_ingredients", userIngredientsId, updatedMap, ShoppingFragment.this, "", "Could not remove");
                 }
             }
         });
