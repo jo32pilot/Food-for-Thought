@@ -105,10 +105,13 @@ public class InventoryFragment extends Fragment {
                 Cursor cursor = (Cursor) mAdapter.getItem(position);
                 String txt = cursor.getString(cursor.getColumnIndex("ingredient"));
                 if(txt != null) {
-                    userInventory.put(txt, "1");
-                    createItem(txt, "1");
-                    searchIngredients.setQuery("", false);
-                    return true;
+                    if(userInventory.containsKey(txt)){}
+                    else {
+                        userInventory.put(txt, "1");
+                        createItem(txt, "1");
+                        searchIngredients.setQuery("", false);
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -182,7 +185,7 @@ public class InventoryFragment extends Fragment {
         }
     }
 
-    private void createItem(String name, String number){
+    private void createItem(String name, String number) {
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("inventory", userInventory);
         db.update("user_ingredients", userIngredientsId, updatedMap,
@@ -197,128 +200,128 @@ public class InventoryFragment extends Fragment {
         LinearLayout amountLayout = new LinearLayout(this.getContext());
         amountLayout.setId(View.generateViewId());
         LinearLayout.LayoutParams amountLayoutParams =
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        amountLayoutParams.gravity = RelativeLayout.ALIGN_PARENT_END;
-        amountLayout.setLayoutParams(amountLayoutParams);
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+            amountLayoutParams.gravity = RelativeLayout.ALIGN_PARENT_END;
+            amountLayout.setLayoutParams(amountLayoutParams);
 
-        //Create all items of new row
-        TextView item = new TextView(this.getContext());
-        ImageButton minusButton = new ImageButton(this.getContext());
-        ImageButton plusButton = new ImageButton(this.getContext());
-        EditText amount = new EditText(this.getContext());
+            //Create all items of new row
+            TextView item = new TextView(this.getContext());
+            ImageButton minusButton = new ImageButton(this.getContext());
+            ImageButton plusButton = new ImageButton(this.getContext());
+            EditText amount = new EditText(this.getContext());
 
-        //Set valid IDs
-        item.setId(View.generateViewId());
-        minusButton.setId(View.generateViewId());
-        plusButton.setId(View.generateViewId());
-        amount.setId(View.generateViewId());
+            //Set valid IDs
+            item.setId(View.generateViewId());
+            minusButton.setId(View.generateViewId());
+            plusButton.setId(View.generateViewId());
+            amount.setId(View.generateViewId());
 
-        //add items of new row into new row
-        linearLayout.addView(item);
-        amountLayout.addView(amount);
-        amountLayout.addView(plusButton);
-        amountLayout.addView(minusButton);
-        linearLayout.addView(amountLayout);
+            //add items of new row into new row
+            linearLayout.addView(item);
+            amountLayout.addView(amount);
+            amountLayout.addView(plusButton);
+            amountLayout.addView(minusButton);
+            linearLayout.addView(amountLayout);
 
-        //add row to list
-        pantryListLayout.addView(linearLayout);
+            //add row to list
+            pantryListLayout.addView(linearLayout);
 
-        //Set parameters for item
-        item.setLayoutParams(new LinearLayout.LayoutParams(
-            900,ViewGroup.LayoutParams.WRAP_CONTENT));
-        //Set text to ingredient
-        item.setText(name);
-        //Set size of text
-        item.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+            //Set parameters for item
+            final float scale = getContext().getResources().getDisplayMetrics().density;
+            int pixels = (int) (250 * scale + 0.5f);
 
-        //Set image
-        minusButton.setImageResource(R.drawable.ic_action_min);
+            item.setLayoutParams(new LinearLayout.LayoutParams(
+                    pixels, ViewGroup.LayoutParams.WRAP_CONTENT));
+            //Set text to ingredient
+            item.setText(name);
+            //Set size of text
+            item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
-        //Set image
-        plusButton.setImageResource(R.drawable.ic_action_add);
+            //Set image
+            minusButton.setImageResource(R.drawable.ic_action_min);
 
-        //Move Text of number to center (hopefully)
-        amount.setGravity(Gravity.CENTER);
-        //Set input type to numbers
-        amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
-        //Set base amount to 1
-        amount.setText(number);
-        amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-        amount.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //Set image
+            plusButton.setImageResource(R.drawable.ic_action_add);
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if(s == null){
+            //Move Text of number to center (hopefully)
+            amount.setGravity(Gravity.CENTER);
+            //Set input type to numbers
+            amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            //Set base amount to 1
+            amount.setText(number);
+            amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            amount.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
                 }
-                else if(s.toString().isEmpty()){
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 }
-                else if(Integer.valueOf(s.toString()) <= 0){
-                    userInventory.remove(name);
-                    Map<String, Object> updatedMap = new HashMap<>();
-                    updatedMap.put("inventory", userInventory);
-                    db.update("user_ingredients", userIngredientsId, updatedMap,
-                            InventoryFragment.this,
-                            "Could not remove. Please try again", onSuccessListener);
-                    pantryListLayout.removeView(linearLayout);
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s == null) {
+
+                    } else if (s.toString().isEmpty()) {
+
+                    } else if (Integer.valueOf(s.toString()) <= 0) {
+                        userInventory.remove(name);
+                        Map<String, Object> updatedMap = new HashMap<>();
+                        updatedMap.put("inventory", userInventory);
+                        db.update("user_ingredients", userIngredientsId, updatedMap,
+                                InventoryFragment.this,
+                                "Could not remove. Please try again", onSuccessListener);
+                        pantryListLayout.removeView(linearLayout);
+                    } else {
+                        int temp = Integer.valueOf(s.toString());
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("inventory." + name, temp);
+                        db.update("user_ingredients", userIngredientsId,
+                                map, InventoryFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                    }
                 }
-                else{
-                    int temp = Integer.valueOf(s.toString());
+            });
+
+            //What to do if plus buton is clicked
+            plusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //increment counter
+                    int temp = Integer.parseInt(amount.getText().toString());
+                    amount.setText(String.valueOf(temp + 1));
                     Map<String, Object> map = new HashMap<>();
-                    map.put("inventory." + name, temp);
-                    db.update("user_ingredients", userIngredientsId,
-                            map, InventoryFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                    map.put("inventory." + name, temp + 1);
+                    db.update("user_ingredients", userIngredientsId, map,
+                            InventoryFragment.this,
+                            "Could not update amount. Please try again", onSuccessListener);
                 }
-            }
-        });
+            });
 
-        //What to do if plus buton is clicked
-        plusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //increment counter
-                int temp = Integer.parseInt(amount.getText().toString());
-                amount.setText(String.valueOf(temp + 1));
-                Map<String, Object> map = new HashMap<>();
-                map.put("inventory." + name, temp + 1);
-                db.update("user_ingredients", userIngredientsId, map,
-                        InventoryFragment.this,
-                        "Could not update amount. Please try again", onSuccessListener);
-            }
-        });
-
-        //What to do if minus button is clicked
-        minusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //decrease counter
-                int temp = Integer.parseInt(amount.getText().toString());
-                Map<String, Object> map = new HashMap<>();
-                map.put("inventory." + name, temp - 1);
-                db.update("user_ingredients", userIngredientsId, map,
-                        InventoryFragment.this,
-                        "Could not update amount. Please try again", onSuccessListener);
-                amount.setText(String.valueOf(temp - 1));
-            }
-        });
+            //What to do if minus button is clicked
+            minusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //decrease counter
+                    int temp = Integer.parseInt(amount.getText().toString());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("inventory." + name, temp - 1);
+                    db.update("user_ingredients", userIngredientsId, map,
+                            InventoryFragment.this,
+                            "Could not update amount. Please try again", onSuccessListener);
+                    amount.setText(String.valueOf(temp - 1));
+                }
+            });
 
     }
 
     OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
-        @Override
-        public void onSuccess(Void aVoid) {
+            @Override
+            public void onSuccess(Void aVoid) {
 
-        }
+            }
     };
 }
