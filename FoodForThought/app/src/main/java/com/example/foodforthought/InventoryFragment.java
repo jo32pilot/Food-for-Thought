@@ -30,6 +30,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.foodforthought.Misc.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -187,7 +188,7 @@ public class InventoryFragment extends Fragment {
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("inventory", userInventory);
         db.update("user_ingredients", userIngredientsId, updatedMap,
-                this, "success", "failure");
+                this, "Could not create item. Please try again", onSuccessListener);
         LinearLayout linearLayout = new LinearLayout(this.getContext());
         linearLayout.setId(View.generateViewId());
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
@@ -270,8 +271,8 @@ public class InventoryFragment extends Fragment {
                     Map<String, Object> updatedMap = new HashMap<>();
                     updatedMap.put("inventory", userInventory);
                     db.update("user_ingredients", userIngredientsId, updatedMap,
-                            InventoryFragment.this, "",
-                            "Could not remove");
+                            InventoryFragment.this,
+                            "Could not remove. Please try again", onSuccessListener);
                     pantryListLayout.removeView(linearLayout);
                 }
             }
@@ -288,8 +289,8 @@ public class InventoryFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("inventory." + name, temp + 1);
                 db.update("user_ingredients", userIngredientsId, map,
-                        InventoryFragment.this, "",
-                        "Could not update");
+                        InventoryFragment.this,
+                        "Could not update amount. Please try again", onSuccessListener);
             }
         });
 
@@ -302,11 +303,18 @@ public class InventoryFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("inventory." + name, temp - 1);
                 db.update("user_ingredients", userIngredientsId, map,
-                        InventoryFragment.this, "",
-                        "Could not update");
+                        InventoryFragment.this,
+                        "Could not update amount. Please try again", onSuccessListener);
                 amount.setText(String.valueOf(temp - 1));
             }
         });
 
     }
+
+    OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+
+        }
+    };
 }

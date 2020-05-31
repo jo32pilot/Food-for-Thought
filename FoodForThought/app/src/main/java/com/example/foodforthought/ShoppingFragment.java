@@ -35,6 +35,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.foodforthought.Misc.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -189,13 +190,12 @@ public class ShoppingFragment extends Fragment {
         }
     };
 
-
     protected void createItem(String query, String amount1) {
         //create new row
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("shopping_list", shopping_list);
         db.update("user_ingredients", userIngredientsId, updatedMap,
-                this, "success", "failure");
+                this,  "Could not create item", onSuccessListener);
         LinearLayout linearLayout = new LinearLayout(this.getContext());
         linearLayout.setId(View.generateViewId());
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
@@ -278,8 +278,8 @@ public class ShoppingFragment extends Fragment {
                     Map<String, Object> updatedMap = new HashMap<>();
                     updatedMap.put("shopping_list", shopping_list);
                     db.update("user_ingredients", userIngredientsId, updatedMap,
-                            ShoppingFragment.this, "",
-                            "Could not remove");
+                            ShoppingFragment.this,
+                            "Could not remove. Please try again", onSuccessListener);
                     shoppingListLayout.removeView(linearLayout);
                 }
             }
@@ -312,15 +312,15 @@ public class ShoppingFragment extends Fragment {
                     updateInventory.put("inventory." + query, Integer.valueOf(amount.getText().toString()));
                     updatedMap.put("shopping_list", shopping_list);
                     db.update("user_ingredients", userIngredientsId,
-                            updatedMap, ShoppingFragment.this, "",
-                            "Could not remove");
+                            updatedMap, ShoppingFragment.this,
+                            "Could not remove", onSuccessListener);
                     db.update("user_ingredients", userIngredientsId,
-                            updateInventory, ShoppingFragment.this, "",
-                            "Could not add to inventory");
+                            updateInventory, ShoppingFragment.this,
+                            "Could not add to inventory", onSuccessListener);
                 }
             }
         });
-        //What to do if plus buton is clicked
+        //What to do if plus button is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -330,8 +330,8 @@ public class ShoppingFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("shopping_list." + query, temp + 1);
                 db.update("user_ingredients", userIngredientsId,
-                        map, ShoppingFragment.this, "success",
-                        "failure");
+                        map, ShoppingFragment.this,
+                        "Could not update amount. Please try again", onSuccessListener);
             }
         });
         //What to do if minus button is clicked
@@ -343,12 +343,18 @@ public class ShoppingFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("shopping_list." + query, temp - 1);
                 db.update("user_ingredients", userIngredientsId,
-                        map, ShoppingFragment.this, "success",
-                        "failure");
+                        map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
                 amount.setText(String.valueOf(temp - 1));
 
             }
         });
 
     }
+
+    OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+
+        }
+    };
 }
