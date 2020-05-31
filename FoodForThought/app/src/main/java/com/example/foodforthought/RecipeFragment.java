@@ -5,12 +5,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -45,7 +47,6 @@ public class RecipeFragment extends Fragment {
 
     private Database db = new Database();
     private String userInput = "";
-
     private int userNumber = 0;
 
     @Nullable
@@ -246,8 +247,6 @@ public class RecipeFragment extends Fragment {
                                 map, RecipeFragment.this, "Deleted From Liked",
                                 "Failed to delete from Liked!");
 
-
-
                         ArrayList<String> addDisliked = (ArrayList<String>)doc.get("disliked");
                         addDisliked.add(recipe.getId());
                         Map<String, Object> map2 = new HashMap<String, Object>();
@@ -331,21 +330,148 @@ public class RecipeFragment extends Fragment {
         totalTime.setText("" + recipe.getTime() + " minutes");
 
         // ingredients
-        LinearLayout recipeIngredients = view.findViewById(R.id.recipeIngredients);
-        ArrayList<Map<String, String>> ingredients = recipe.getIngredients();
-        for(int i = 0; i < ingredients.size(); i++) {
-            // create a new checkbox
-            CheckBox checkBox = new CheckBox(view.getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            checkBox.setLayoutParams(params);
-            checkBox.setText(ingredients.get(i).get("ingredient"));
+        OnCompleteListener<DocumentSnapshot> onGetUserInventory= new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
 
-            //checkBox.setEnabled(false);
-            //checkBox.setChecked(true);
+                    boolean hasAllIngredients = true;
 
-            recipeIngredients.addView(checkBox);
-        }
+                    LinearLayout recipeIngredients = view.findViewById(R.id.recipeIngredients);
+                    ArrayList<Map<String, Object>> ingredients = recipe.getIngredients();
+                    Map<String, Object> inventory = (Map<String, Object>) doc.get("inventory");
+                    for(int i = 0; i < ingredients.size(); i++) {
+                        // create a new checkbox
+                        CheckBox checkBox = new CheckBox(view.getContext());
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        checkBox.setLayoutParams(params);
+                        checkBox.setText((String)ingredients.get(i).get("ingredient"));
+
+                        checkBox.setEnabled(false);
+
+                        if(ingredients.get(i).get("parsed_ingredient") instanceof String) {
+                            if (inventory.containsKey(ingredients.get(i).get("parsed_ingredient")))
+                                checkBox.setChecked(true);
+                            else
+                                hasAllIngredients = false;
+                        }
+                        else {
+                            // its an array of parsed ingredients
+                            ArrayList<String> parsed = (ArrayList<String>)ingredients.get(i).get("parsed_ingredient");
+                            boolean hasIngredients = true;
+                            for (int j = 0; j < parsed.size(); j++) {
+                                if(!inventory.containsKey(parsed.get(j)))
+                                    hasIngredients = false;
+                            }
+                            if(hasIngredients)
+                                checkBox.setChecked(true);
+                            else
+                                hasAllIngredients = false;
+                        }
+                        recipeIngredients.addView(checkBox);
+                    }
+
+                    // add "Make" button
+                    if(hasAllIngredients) {
+                        Button button = new Button(getContext());
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 150);
+                        button.setLayoutParams(params);
+                        button.setGravity(Gravity.CENTER);
+                        button.setText("MAKE");
+
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // get rid of used inventory
+                                for(int i = 0; i < ingredients.size(); i ++) {
+                                    if(ingredients.get(i).get("parsed_ingredient") instanceof String) {
+                                        // it is a single ingredient
+                                        String parsedIngredient = (String)ingredients.get(i).get("parsed_ingredient");
+
+                                        long num;
+                                        if(inventory.get(parsedIngredient) instanceof String) {
+                                            num = Long.parseLong((String)inventory.get(parsedIngredient));
+                                        }
+                                        else {
+                                            // its a long
+                                            num = (long)inventory.get(parsedIngredient);
+                                        }
+                                        if (inventory.containsKey(parsedIngredient) &&
+                                            num > 0) {
+                                            num--;
+
+                                            if(num == 0) {
+                                                inventory.remove(parsedIngredient);
+                                            }
+                                            else {
+                                                inventory.put(parsedIngredient, num);
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        // its an array of parsed ingredients
+                                        ArrayList<String> parsedIngredients = (ArrayList<String>)ingredients.get(i).get("parsed_ingredient");
+                                        for(int j = 0; j < parsedIngredients.size(); j++) {
+                                            String thisIngredient = parsedIngredients.get(j);
+                                            long num;
+                                            if(inventory.get(thisIngredient) instanceof String) {
+                                                num = Long.parseLong((String)inventory.get(thisIngredient));
+                                            }
+                                            else {
+                                                // its a long
+                                                num = (long)inventory.get(thisIngredient);
+                                            }
+                                            if (inventory.containsKey(thisIngredient) &&
+                                                    num > 0) {
+                                                num--;
+
+                                                if(num == 0) {
+                                                    inventory.remove(thisIngredient);
+                                                }
+                                                else {
+                                                    inventory.put(thisIngredient, num);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // now inventory has updated values
+                                // need to push changes to database
+                                Map<String, Object> hash = new HashMap<>();
+                                hash.put("inventory", inventory);
+                                db.update("user_ingredients", "user_ingredients_id_"+firebaseUser.getUid(),
+                                        hash, RecipeFragment.this, "Updated Inventory",
+                                        "Failed to Update Inventory");
+
+                                // reload page
+                                userInput = "";
+                                userNumber = 0;
+                                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                                if (Build.VERSION.SDK_INT >= 26) {
+                                    ft.setReorderingAllowed(false);
+                                }
+                                ft.detach(RecipeFragment.this).attach(RecipeFragment.this).commit();
+                            }
+                        });
+
+                        LinearLayout buttonHolder = view.findViewById(R.id.makeButtonHolder);
+                        buttonHolder.addView(button);
+                    }
+                }
+                else {
+                    Toast.makeText(getContext(),
+                            "Error ! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        // check if the ingredients we have in our inventory
+        db.getDocument("user_ingredients", "user_ingredients_id_"+firebaseUser.getUid(),
+                onGetUserInventory);
+
 
         // instructions
         LinearLayout recipeInstructions = view.findViewById(R.id.recipeInstructions);
@@ -446,8 +572,11 @@ public class RecipeFragment extends Fragment {
                     // add the comment to the comment section
                     commentsSection.addView(newComment);
 
-                    // another comment has been mase
+                    // another comment has been added
                     userNumber++;
+
+                    TextView numComments = view.findViewById(R.id.numComments);
+                    numComments.setText("" + userNumber);
                 }
                 else{
                     Toast.makeText(getContext(),
@@ -456,8 +585,6 @@ public class RecipeFragment extends Fragment {
                 }
             }
         };
-        TextView numComments = view.findViewById(R.id.numComments);
-        numComments.setText("" + recipe.getComments().size());
         for (int i = 0; i < recipe.getComments().size(); i++) {
             db.getDocument("users", recipe.getComments().get(i).get("userid"), onGetUser);
         }

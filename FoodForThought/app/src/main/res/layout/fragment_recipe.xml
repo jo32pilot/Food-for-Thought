@@ -178,6 +178,14 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/makeButtonHolder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -210,7 +218,7 @@
                         android:id="@+id/numComments"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="182"
+                        android:text="0"
                         android:textSize="18dp" />
 
                     <ImageButton
