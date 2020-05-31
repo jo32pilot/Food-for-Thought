@@ -76,8 +76,8 @@ public class ShoppingFragment extends Fragment {
 
         // If user isn't logged in or has logged out.
         if(user == null){
-            NavHostFragment.findNavController(ShoppingFragment.this)
-                    .navigate(R.id.action_ShoppingFragment_to_LoginFragment);        }
+            getActivity().finish();
+        }
 
         String uid = user.getUid();
         userIngredientsId = "user_ingredients_id_" + uid;

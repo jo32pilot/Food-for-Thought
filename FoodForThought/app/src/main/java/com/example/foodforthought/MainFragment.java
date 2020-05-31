@@ -5,6 +5,8 @@
  */
 package com.example.foodforthought;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,7 +69,7 @@ public class MainFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>());
+        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), true);
         recyclerView.setAdapter(recipeAdapter);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -77,8 +77,7 @@ public class MainFragment extends Fragment {
 
         // If user isn't logged in or has logged out.
         if (user == null) {
-            NavHostFragment.findNavController(MainFragment.this)
-                    .navigate(R.id.action_MainFragment_to_LoginFragment);
+            getActivity().finish();
         }
         else {
             String uid = user.getUid();
@@ -140,7 +139,7 @@ public class MainFragment extends Fragment {
 //                            .append(currHighest.getRecipe().get("name")).append("\n");
                 }
 //                    recipeFeed.setText(res.toString());
-                recipeAdapter = new RecipeAdapter(getContext(), recipeList);
+                recipeAdapter = new RecipeAdapter(getContext(), recipeList, true);
                 recyclerView.setAdapter(recipeAdapter);
             } else {
                 Toast.makeText(getContext(),

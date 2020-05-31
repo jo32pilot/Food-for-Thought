@@ -63,10 +63,10 @@ public class HomeActivity extends AppCompatActivity {
                     }
 
                     // Switches to main feed page when recipe button clicked in navbar
-                    if (item.getItemId() == R.id.RecipeItem){
+                    if (item.getItemId() == R.id.SavedRecipesItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, addRecipeFragment);
+                        fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
                         fragmentTransaction.commit();
                     }
 
@@ -85,6 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                         fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
                         fragmentTransaction.commit();
                     }
+
                     if (item.getItemId() == R.id.UserProfileItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();

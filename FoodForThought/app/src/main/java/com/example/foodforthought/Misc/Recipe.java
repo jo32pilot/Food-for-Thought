@@ -16,7 +16,7 @@ public class Recipe implements Serializable {
     private String img;
     private String name;
     private String servingSize;
-    private ArrayList<Map<String, String>> ingredients;
+    private ArrayList<Map<String, Object>> ingredients;
     private ArrayList<String> instructions;
     private String author;
     private ArrayList<String> allIngredients;
@@ -36,6 +36,11 @@ public class Recipe implements Serializable {
         this.id = id;
         this.recipe = recipe;
         this.img = (String) recipe.get("image");
+
+        if(this.img.equals("")) {
+            this.img = "https://image.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg";
+        }
+
         this.name = (String) recipe.get("name");
         double countMatches = 0;
 
@@ -43,11 +48,13 @@ public class Recipe implements Serializable {
         HashSet<String> allIngredients =
                 new HashSet<>((List<String>) recipe.get("all_ingredients"));
 
-        // For each query ingredient
-        for(String queryIngredient : toMatch){
-            // if in HashSet, then this recipe contains an ingredient in the user's inventory.
-            if(allIngredients.contains(queryIngredient)){
-                countMatches++;
+        if(toMatch != null) {
+            // For each query ingredient
+            for (String queryIngredient : toMatch) {
+                // if in HashSet, then this recipe contains an ingredient in the user's inventory.
+                if (allIngredients.contains(queryIngredient)) {
+                    countMatches++;
+                }
             }
         }
 
@@ -56,7 +63,7 @@ public class Recipe implements Serializable {
 
         this.servingSize = (String) recipe.get("yield");
 
-        this.ingredients = (ArrayList<Map<String, String>>) recipe.get("ingredients");
+        this.ingredients = (ArrayList<Map<String, Object>>) recipe.get("ingredients");
 
         this.instructions = (ArrayList<String>) recipe.get("instructions");
 
@@ -133,7 +140,7 @@ public class Recipe implements Serializable {
     /**
      *
      */
-    public ArrayList<Map<String, String>> getIngredients() { return ingredients; }
+    public ArrayList<Map<String, Object>> getIngredients() { return ingredients; }
 
     /**
      *
