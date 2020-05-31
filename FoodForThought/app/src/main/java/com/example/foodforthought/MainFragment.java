@@ -69,7 +69,7 @@ public class MainFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>());
+        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), true);
         recyclerView.setAdapter(recipeAdapter);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -140,7 +140,7 @@ public class MainFragment extends Fragment {
 //                            .append(currHighest.getRecipe().get("name")).append("\n");
                 }
 //                    recipeFeed.setText(res.toString());
-                recipeAdapter = new RecipeAdapter(getContext(), recipeList);
+                recipeAdapter = new RecipeAdapter(getContext(), recipeList, true);
                 recyclerView.setAdapter(recipeAdapter);
             } else {
                 Toast.makeText(getContext(),

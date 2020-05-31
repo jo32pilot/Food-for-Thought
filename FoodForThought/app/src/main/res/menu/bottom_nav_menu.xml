@@ -5,7 +5,7 @@
         android:icon="@drawable/homeicon"
         android:title="@string/home" />
 
-    <item android:id="@+id/RecipeItem"
+    <item android:id="@+id/SavedRecipesItem"
         android:icon="@drawable/forkandknife"
         android:title="Recipes"/>
 
@@ -19,7 +19,7 @@
         android:title="Shopping" />
 
     <item android:id="@+id/UserProfileItem"
-        android:icon="@drawable/ic_message"
+        android:icon="@drawable/ic_profile"
         android:title="Profile" />
 
 </menu>

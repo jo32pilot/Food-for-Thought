@@ -51,11 +51,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
 
     private FirebaseUser firebaseUser;
 
+    private boolean fromMain;
+
     // Constructor for Reciper Adapter which takes in a list of Recipe objects and a context object
     // Context describes current state of application
-    public RecipeAdapter(Context rContext, List<Recipe> rPost){
+    public RecipeAdapter(Context rContext, List<Recipe> rPost, boolean fromMain){
         this.rContext = rContext;
         this.rPost = rPost;
+        this.fromMain = fromMain;
     }
 
 
@@ -92,6 +95,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                 RecipeFragment recipeFragment = new RecipeFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("recipe", recipe);
+                bundle.putBoolean("fromMain", fromMain);
                 recipeFragment.setArguments(bundle);
                 ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container_fragment, recipeFragment)
@@ -127,7 +131,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
             recipeName = itemView.findViewById(R.id.recipetitle);
             numLikes = itemView.findViewById(R.id.numLikes);
             numDislikes = itemView.findViewById(R.id.numDislikes);
-            save = itemView.findViewById(R.id.save);
+            //save = itemView.findViewById(R.id.save);
         }
     }
 }

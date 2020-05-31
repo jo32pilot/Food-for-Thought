@@ -22,7 +22,7 @@
             android:padding="0dp"
             android:scaleType="fitCenter"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/arrowlogo"/>
+            android:src="@drawable/ic_arrow_back_black_24dp"/>
 
         <TextView
             android:id="@+id/recipePageTitle"
@@ -37,7 +37,7 @@
             android:textColor="#FD999A"/>
 
         <ImageButton
-            android:id="@+id/heartButton"
+            android:id="@+id/saveButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="0dp"

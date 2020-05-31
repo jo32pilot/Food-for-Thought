@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -53,6 +54,7 @@ public class RecipeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         // deserialize recipe information
         Bundle bundle = getArguments();
@@ -61,6 +63,82 @@ public class RecipeFragment extends Fragment {
         // page title
         TextView recipePageTitle = view.findViewById(R.id.recipePageTitle);
         recipePageTitle.setText(recipe.getName());
+
+        // color either like or dislike button
+        OnCompleteListener<DocumentSnapshot> saveColor = new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+
+                    ArrayList<String> savedRecipes = (ArrayList<String>) doc.get("saved");
+                    for(int i = 0; i < savedRecipes.size(); i++) {
+                        if(recipe.getId().equals(savedRecipes.get(i))) {
+                            // color like button
+                            ImageButton save = view.findViewById(R.id.saveButton);
+                            save.setImageResource(R.drawable.ic_saved);
+                            return;
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(getContext(),
+                            "Error ! " + task.getException().getMessage(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+        db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), saveColor);
+
+        // save button functionality
+        OnCompleteListener<DocumentSnapshot> onSave = new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task){
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    ArrayList<String> savedRecipes = (ArrayList<String>) doc.get("saved");
+
+                    boolean inSaved = false;
+                    for(int i = 0; i < savedRecipes.size(); i++) {
+                        if(recipe.getId().equals(savedRecipes.get(i))) {
+                            inSaved = true;
+                        }
+                    }
+
+                    if (inSaved) {
+                        // remove from saved
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("saved", FieldValue.arrayRemove(recipe.getId()));
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this, "Deleted From Saved",
+                                "Failed to delete from saved!");
+
+                        ImageButton save = view.findViewById(R.id.saveButton);
+                        save.setImageResource(R.drawable.ic_save);
+                    }
+                    else {
+                        // add to saved
+                        savedRecipes.add(recipe.getId());
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("saved", savedRecipes);
+                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this, "Added to Saved",
+                                "Failed to add to saved!");
+
+                        ImageButton save = view.findViewById(R.id.saveButton);
+                        save.setImageResource(R.drawable.ic_saved);
+                    }
+                }
+            }
+        };
+        ImageButton saveButton = view.findViewById(R.id.saveButton);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // add recipe to user's saved list
+                db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), onSave);
+            }
+        });
+
 
         // image
         ImageView recipeImage = view.findViewById(R.id.recipeImage);
@@ -78,7 +156,6 @@ public class RecipeFragment extends Fragment {
         dislikes.setText(""+recipe.getDislikes());
 
         // color either like or dislike button
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         OnCompleteListener<DocumentSnapshot> thumbColor = new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -97,7 +174,7 @@ public class RecipeFragment extends Fragment {
 
                     ArrayList<String> dislikedRecipes = (ArrayList<String>) doc.get("disliked");
                     for(int i = 0; i < dislikedRecipes.size(); i++) {
-                        if(recipe.getId().equals(likedRecipes.get(i))) {
+                        if(recipe.getId().equals(dislikedRecipes.get(i))) {
                             // color dislike button
                             TextView dislikes = view.findViewById(R.id.numDislikes);
                             dislikes.setTypeface(null, Typeface.BOLD);
@@ -600,7 +677,12 @@ public class RecipeFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
+                if(bundle.getBoolean("fromMain") == true) {
+                    fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
+                }
+                else {
+                    fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
+                }
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

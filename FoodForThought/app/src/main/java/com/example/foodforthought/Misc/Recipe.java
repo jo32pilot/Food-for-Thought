@@ -48,11 +48,13 @@ public class Recipe implements Serializable {
         HashSet<String> allIngredients =
                 new HashSet<>((List<String>) recipe.get("all_ingredients"));
 
-        // For each query ingredient
-        for(String queryIngredient : toMatch){
-            // if in HashSet, then this recipe contains an ingredient in the user's inventory.
-            if(allIngredients.contains(queryIngredient)){
-                countMatches++;
+        if(toMatch != null) {
+            // For each query ingredient
+            for (String queryIngredient : toMatch) {
+                // if in HashSet, then this recipe contains an ingredient in the user's inventory.
+                if (allIngredients.contains(queryIngredient)) {
+                    countMatches++;
+                }
             }
         }
 

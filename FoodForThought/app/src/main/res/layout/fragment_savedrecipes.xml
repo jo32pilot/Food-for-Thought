@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/bar">
 
-
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,12 +30,23 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:textSize="20sp"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="0dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="0dp"
                     android:id="@+id/hometextView"
-                    android:text="Home"
+                    android:text="Saved"
                     android:textColor="@color/colorPrimaryDark"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/hometextView"
+                    android:textSize="20sp"
+                    android:layout_marginStart="150dp"
+                    android:id="@+id/addHomeMade"
+                    android:text="Add Home Made"
+                    android:textColor="@color/colorPrimaryDark"/>
+
 
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
