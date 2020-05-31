@@ -1,5 +1,6 @@
 package com.example.foodforthought;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,18 +12,21 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.foodforthought.Misc.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 // Fragment to load the user profile fragment
 public class UserProfileFragment extends Fragment {
     private TextView name;
     private Database db = new Database();
     private View view;
+    private String user_name;
 
     @Nullable
     @Override
@@ -30,16 +34,36 @@ public class UserProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_userprofile, container, false);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            NavHostFragment.findNavController(UserProfileFragment.this)
+                    .navigate(R.id.action_UserProfileFragment_to_LoginFragment);
+        }
 
         String uid = user.getUid();
         name = view.findViewById(R.id.username);
 
+        db.getDocument("users", uid, onGetName);
+
+        view.findViewById(R.id.LogoutButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+            }
+        });
+
         return view;
     }
 
-    OnCompleteListener onGetName = new OnCompleteListener() {
+    OnCompleteListener<DocumentSnapshot> onGetName = new OnCompleteListener<DocumentSnapshot>() {
         @Override
-        public void onComplete(@NonNull Task task) {
+        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+            if (task.isSuccessful()) {
+                DocumentSnapshot user_profile = task.getResult();
+                user_name = (String) user_profile.get("username");
+                if (user_name != null) {
+                    name.setText(user_name);
+                }
+            }
 
         }
     };
@@ -47,17 +71,5 @@ public class UserProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        view.findViewById(R.id.backtoMainButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
-        });
-
     }
 }

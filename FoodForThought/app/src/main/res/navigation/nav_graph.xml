@@ -55,4 +55,14 @@
             android:id="@+id/action_ShoppingFragment_to_LoginFragment"
             app:destination="@id/LoginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/UserProfileFragment"
+        android:name="com.example.foodforthought.UserProfileFragment"
+        android:label="@string/user_profile_fragment_label"
+        tools:layout="@layout/fragment_userprofile">
+
+        <action
+            android:id="@+id/action_UserProfileFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
 </navigation>
