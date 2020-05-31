@@ -37,6 +37,7 @@ import com.example.foodforthought.Misc.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -238,22 +239,32 @@ public class ShoppingFragment extends Fragment {
 
         //Set checkbox params
         final float scale = getContext().getResources().getDisplayMetrics().density;
-        int pixels = (int) (250 * scale + 0.5f);
+        int checkPixels = (int) (250 * scale + 0.5f);
         checkBox.setLayoutParams(new LinearLayout.LayoutParams(
-                pixels,ViewGroup.LayoutParams.WRAP_CONTENT));
+                checkPixels,ViewGroup.LayoutParams.WRAP_CONTENT));
         //Set text to ingredient
         checkBox.setText(query);
         //Set size of text
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+        checkBox.setGravity(Gravity.BOTTOM);
 
         //Set image for minus button
         minusButton.setImageResource(R.drawable.ic_action_min);
+        int buttonPixels = (int) (40 * scale + 0.5f);
+        minusButton.setLayoutParams(new LinearLayout.LayoutParams(
+                buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //Set image for plus button
         plusButton.setImageResource(R.drawable.ic_action_add);
+        plusButton.setLayoutParams(new LinearLayout.LayoutParams(
+                buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //Move Text of number to center (hopefully)
         amount.setGravity(Gravity.CENTER);
+
+        //Set regular distance for amount text (UI)
+        int amountPixels = (int) (30 * scale + 0.5f);
+        amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
         //Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         //Set base amount to 1
@@ -272,27 +283,24 @@ public class ShoppingFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s == null){
-
-                }
-                else if(s.toString().isEmpty()){
-
-                }
-                else if(Integer.valueOf(s.toString()) <= 0){
-                    shopping_list.remove(query);
-                    Map<String, Object> updatedMap = new HashMap<>();
-                    updatedMap.put("shopping_list", shopping_list);
-                    db.update("user_ingredients", userIngredientsId, updatedMap,
-                            ShoppingFragment.this,
-                            "Could not remove. Please try again", onSuccessListener);
-                    shoppingListLayout.removeView(linearLayout);
-                }
-                else{
-                    int temp = Integer.valueOf(s.toString());
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("shopping_list." + query, temp);
-                    db.update("user_ingredients", userIngredientsId,
-                            map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                if(s != null) {
+                    if (!(s.toString().isEmpty())) {
+                        if (Integer.valueOf(s.toString()) <= 0) {
+                            shopping_list.remove(query);
+                            Map<String, Object> updatedMap = new HashMap<>();
+                            updatedMap.put("shopping_list", shopping_list);
+                            db.update("user_ingredients", userIngredientsId, updatedMap,
+                                    ShoppingFragment.this,
+                                    "Could not remove. Please try again", onSuccessListener);
+                            shoppingListLayout.removeView(linearLayout);
+                        } else {
+                            int temp = Integer.valueOf(s.toString());
+                            Map<String, Object> map = new HashMap<>();
+                            map.put("shopping_list." + query, temp);
+                            db.update("user_ingredients", userIngredientsId,
+                                    map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                        }
+                    }
                 }
             }
         });

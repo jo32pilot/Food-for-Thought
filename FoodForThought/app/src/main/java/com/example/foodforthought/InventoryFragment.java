@@ -229,23 +229,32 @@ public class InventoryFragment extends Fragment {
 
             //Set parameters for item
             final float scale = getContext().getResources().getDisplayMetrics().density;
-            int pixels = (int) (250 * scale + 0.5f);
-
+            int itemPixels = (int) (250 * scale + 0.5f);
             item.setLayoutParams(new LinearLayout.LayoutParams(
-                    pixels, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    itemPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
             //Set text to ingredient
             item.setText(name);
             //Set size of text
             item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+            item.setGravity(Gravity.BOTTOM);
 
             //Set image
             minusButton.setImageResource(R.drawable.ic_action_min);
+            int buttonPixels = (int) (40 * scale + 0.5f);
+            minusButton.setLayoutParams(new LinearLayout.LayoutParams(
+                    buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             //Set image
             plusButton.setImageResource(R.drawable.ic_action_add);
+            plusButton.setLayoutParams(new LinearLayout.LayoutParams(
+                buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             //Move Text of number to center (hopefully)
             amount.setGravity(Gravity.CENTER);
+
+            //Set regular distance for amount text (UI)
+            int amountPixels = (int) (30 * scale + 0.5f);
+            amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
             //Set input type to numbers
             amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
             //Set base amount to 1
