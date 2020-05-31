@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.foodforthought.Misc.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -115,6 +117,9 @@ public class InventoryFragment extends Fragment {
         searchIngredients.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(InventoryFragment.this.getContext(),
+                        "Ingredient not found. Please click a suggestion from the list.",
+                        Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -180,12 +185,22 @@ public class InventoryFragment extends Fragment {
     private void createItem(String name, String number){
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("inventory", userInventory);
-        db.update("user_ingredients", userIngredientsId, updatedMap, this, "success", "failure");
-        RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
-        relativeLayout.setId(View.generateViewId());
-        relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
+        db.update("user_ingredients", userIngredientsId, updatedMap,
+                this, "Could not create item. Please try again", onSuccessListener);
+        LinearLayout linearLayout = new LinearLayout(this.getContext());
+        linearLayout.setId(View.generateViewId());
+        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        //Amount layout for linearlayout
+        LinearLayout amountLayout = new LinearLayout(this.getContext());
+        amountLayout.setId(View.generateViewId());
+        LinearLayout.LayoutParams amountLayoutParams =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        amountLayoutParams.gravity = RelativeLayout.ALIGN_PARENT_END;
+        amountLayout.setLayoutParams(amountLayoutParams);
 
         //Create all items of new row
         TextView item = new TextView(this.getContext());
@@ -200,60 +215,36 @@ public class InventoryFragment extends Fragment {
         amount.setId(View.generateViewId());
 
         //add items of new row into new row
-        relativeLayout.addView(item);
-        relativeLayout.addView(amount);
-        relativeLayout.addView(plusButton);
-        relativeLayout.addView(minusButton);
+        linearLayout.addView(item);
+        amountLayout.addView(amount);
+        amountLayout.addView(plusButton);
+        amountLayout.addView(minusButton);
+        linearLayout.addView(amountLayout);
 
         //add row to list
-        pantryListLayout.addView(relativeLayout);
+        pantryListLayout.addView(linearLayout);
 
-        //Set parameters for checkbox (left side)
-        RelativeLayout.LayoutParams itemParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        itemParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        item.setLayoutParams(itemParams);
+        //Set parameters for item
+        item.setLayoutParams(new LinearLayout.LayoutParams(
+            900,ViewGroup.LayoutParams.WRAP_CONTENT));
         //Set text to ingredient
         item.setText(name);
         //Set size of text
-        item.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        item.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
 
-        //Set parameters for minus button (right side)
-        RelativeLayout.LayoutParams minusParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        minusParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-        minusParams.setMarginEnd(20);
-        minusButton.setLayoutParams(minusParams);
         //Set image
         minusButton.setImageResource(R.drawable.ic_action_min);
 
-        //Set parameters for plus button (left of minus button)
-        RelativeLayout.LayoutParams plusParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        Log.d("MinusButton ID: ", String.valueOf(minusButton.getId()));
-        plusParams.addRule(RelativeLayout.START_OF, minusButton.getId());
-        plusParams.setMarginEnd(20);
-        plusButton.setLayoutParams(plusParams);
         //Set image
         plusButton.setImageResource(R.drawable.ic_action_add);
 
-        //Set parameters for amount of (left of plus button)
-        RelativeLayout.LayoutParams amountParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        amountParams.addRule(RelativeLayout.START_OF, plusButton.getId());
-        amountParams.setMarginEnd(20);
-        amount.setLayoutParams(amountParams);
         //Move Text of number to center (hopefully)
         amount.setGravity(Gravity.CENTER);
         //Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         //Set base amount to 1
         amount.setText(number);
-        amount.setTextSize(25);
+        amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
         amount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -278,13 +269,19 @@ public class InventoryFragment extends Fragment {
                     Map<String, Object> updatedMap = new HashMap<>();
                     updatedMap.put("inventory", userInventory);
                     db.update("user_ingredients", userIngredientsId, updatedMap,
-                            InventoryFragment.this, "",
-                            "Could not remove");
-                    pantryListLayout.removeView(relativeLayout);
+                            InventoryFragment.this,
+                            "Could not remove. Please try again", onSuccessListener);
+                    pantryListLayout.removeView(linearLayout);
+                }
+                else{
+                    int temp = Integer.valueOf(s.toString());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("inventory." + name, temp);
+                    db.update("user_ingredients", userIngredientsId,
+                            map, InventoryFragment.this, "Could not update amount. Please try again", onSuccessListener);
                 }
             }
         });
-
 
         //What to do if plus buton is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {
@@ -296,8 +293,8 @@ public class InventoryFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("inventory." + name, temp + 1);
                 db.update("user_ingredients", userIngredientsId, map,
-                        InventoryFragment.this, "",
-                        "Could not update");
+                        InventoryFragment.this,
+                        "Could not update amount. Please try again", onSuccessListener);
             }
         });
 
@@ -310,11 +307,18 @@ public class InventoryFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("inventory." + name, temp - 1);
                 db.update("user_ingredients", userIngredientsId, map,
-                        InventoryFragment.this, "",
-                        "Could not update");
+                        InventoryFragment.this,
+                        "Could not update amount. Please try again", onSuccessListener);
                 amount.setText(String.valueOf(temp - 1));
             }
         });
 
     }
+
+    OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+
+        }
+    };
 }

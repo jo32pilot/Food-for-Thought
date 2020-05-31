@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.foodforthought.Misc.Database;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,8 +55,6 @@ import java.util.Map;
 
 public class ShoppingFragment extends Fragment {
     private SearchView searchShopping;
-    private ArrayList<String> items = new ArrayList<>();
-    private ArrayList<String> amounts = new ArrayList<>();
     private LinearLayout shoppingListLayout;
     private Database db = new Database();
     private String userIngredientsId;
@@ -129,6 +129,9 @@ public class ShoppingFragment extends Fragment {
         searchShopping.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(ShoppingFragment.this.getContext(),
+                        "Ingredient not found. Please click a suggestion from the list.",
+                        Toast.LENGTH_LONG).show();
                 return false;
             }
 
@@ -185,17 +188,26 @@ public class ShoppingFragment extends Fragment {
         }
     };
 
-
     protected void createItem(String query, String amount1) {
         //create new row
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("shopping_list", shopping_list);
-        db.update("user_ingredients", userIngredientsId, updatedMap, this, "success", "failure");
-        RelativeLayout relativeLayout = new RelativeLayout(this.getContext());
-        relativeLayout.setId(View.generateViewId());
-        relativeLayout.setLayoutParams(new ViewGroup.LayoutParams(
+        db.update("user_ingredients", userIngredientsId, updatedMap,
+                this,  "Could not create item", onSuccessListener);
+        LinearLayout linearLayout = new LinearLayout(this.getContext());
+        linearLayout.setId(View.generateViewId());
+        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        //Amount layout for linearlayout
+        LinearLayout amountLayout = new LinearLayout(this.getContext());
+        amountLayout.setId(View.generateViewId());
+        LinearLayout.LayoutParams amountLayoutParams =
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+        amountLayoutParams.gravity = RelativeLayout.ALIGN_PARENT_END;
+        amountLayout.setLayoutParams(amountLayoutParams);
 
         //Create all items of new row
         CheckBox checkBox = new CheckBox(this.getContext());
@@ -210,59 +222,36 @@ public class ShoppingFragment extends Fragment {
         amount.setId(View.generateViewId());
 
         //add items of new row into new row
-        relativeLayout.addView(checkBox);
-        relativeLayout.addView(amount);
-        relativeLayout.addView(plusButton);
-        relativeLayout.addView(minusButton);
-        //add row to list
-        shoppingListLayout.addView(relativeLayout);
+        linearLayout.addView(checkBox);
+        amountLayout.addView(amount);
+        amountLayout.addView(plusButton);
+        amountLayout.addView(minusButton);
+        linearLayout.addView(amountLayout);
 
-        //Set parameters for checkbox (left side)
-        RelativeLayout.LayoutParams checkParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        checkParams.addRule(RelativeLayout.ALIGN_PARENT_START);
-        checkBox.setLayoutParams(checkParams);
+        //add row to list
+        shoppingListLayout.addView(linearLayout);
+
+        //Set checkbox params
+        checkBox.setLayoutParams(new LinearLayout.LayoutParams(
+                900,ViewGroup.LayoutParams.WRAP_CONTENT));
         //Set text to ingredient
         checkBox.setText(query);
         //Set size of text
-        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,30);
+        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
 
-        //Set parameters for minus button (right side)
-        RelativeLayout.LayoutParams minusParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        minusParams.addRule(RelativeLayout.ALIGN_PARENT_END);
-        minusParams.setMarginEnd(20);
-        minusButton.setLayoutParams(minusParams);
-        //Set image
+        //Set image for minus button
         minusButton.setImageResource(R.drawable.ic_action_min);
 
-        //Set parameters for plus button (left of minus button)
-        RelativeLayout.LayoutParams plusParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        Log.d("MinusButton ID: ", String.valueOf(minusButton.getId()));
-        plusParams.addRule(RelativeLayout.START_OF, minusButton.getId());
-        plusParams.setMarginEnd(20);
-        plusButton.setLayoutParams(plusParams);
-        //Set image
+        //Set image for plus button
         plusButton.setImageResource(R.drawable.ic_action_add);
 
-        //Set parameters for amount of (left of plus button)
-        RelativeLayout.LayoutParams amountParams = new RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        amountParams.addRule(RelativeLayout.START_OF, plusButton.getId());
-        amountParams.setMarginEnd(20);
-        amount.setLayoutParams(amountParams);
         //Move Text of number to center (hopefully)
         amount.setGravity(Gravity.CENTER);
         //Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         //Set base amount to 1
         amount.setText(amount1);
-        amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+        amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
         amount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -287,9 +276,16 @@ public class ShoppingFragment extends Fragment {
                     Map<String, Object> updatedMap = new HashMap<>();
                     updatedMap.put("shopping_list", shopping_list);
                     db.update("user_ingredients", userIngredientsId, updatedMap,
-                            ShoppingFragment.this, "",
-                            "Could not remove");
-                    shoppingListLayout.removeView(relativeLayout);
+                            ShoppingFragment.this,
+                            "Could not remove. Please try again", onSuccessListener);
+                    shoppingListLayout.removeView(linearLayout);
+                }
+                else{
+                    int temp = Integer.valueOf(s.toString());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("shopping_list." + query, temp);
+                    db.update("user_ingredients", userIngredientsId,
+                            map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
                 }
             }
         });
@@ -313,23 +309,23 @@ public class ShoppingFragment extends Fragment {
                     /*//Strike through and make gray and move to bottom
                     checkBox.setTextColor(Color.parseColor("#D3D3D3"));
                     checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);*/
-                    shoppingListLayout.removeView(relativeLayout);
-                    /*shoppingListLayout.addView(relativeLayout);*/
+                    shoppingListLayout.removeView(linearLayout);
+                    /*shoppingListLayout.addView(linearLayout);*/
                     shopping_list.remove(query);
                     Map<String, Object> updatedMap = new HashMap<>();
                     Map<String, Object> updateInventory = new HashMap<>();
                     updateInventory.put("inventory." + query, Integer.valueOf(amount.getText().toString()));
                     updatedMap.put("shopping_list", shopping_list);
                     db.update("user_ingredients", userIngredientsId,
-                            updatedMap, ShoppingFragment.this, "",
-                            "Could not remove");
+                            updatedMap, ShoppingFragment.this,
+                            "Could not remove", onSuccessListener);
                     db.update("user_ingredients", userIngredientsId,
-                            updateInventory, ShoppingFragment.this, "",
-                            "Could not add to inventory");
+                            updateInventory, ShoppingFragment.this,
+                            "Could not add to inventory", onSuccessListener);
                 }
             }
         });
-        //What to do if plus buton is clicked
+        //What to do if plus button is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,8 +335,8 @@ public class ShoppingFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("shopping_list." + query, temp + 1);
                 db.update("user_ingredients", userIngredientsId,
-                        map, ShoppingFragment.this, "success",
-                        "failure");
+                        map, ShoppingFragment.this,
+                        "Could not update amount. Please try again", onSuccessListener);
             }
         });
         //What to do if minus button is clicked
@@ -352,12 +348,18 @@ public class ShoppingFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("shopping_list." + query, temp - 1);
                 db.update("user_ingredients", userIngredientsId,
-                        map, ShoppingFragment.this, "success",
-                        "failure");
+                        map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
                 amount.setText(String.valueOf(temp - 1));
 
             }
         });
 
     }
+
+    OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+
+        }
+    };
 }
