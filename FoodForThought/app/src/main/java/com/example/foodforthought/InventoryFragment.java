@@ -273,9 +273,15 @@ public class InventoryFragment extends Fragment {
                             "Could not remove. Please try again", onSuccessListener);
                     pantryListLayout.removeView(linearLayout);
                 }
+                else{
+                    int temp = Integer.valueOf(s.toString());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("inventory." + name, temp);
+                    db.update("user_ingredients", userIngredientsId,
+                            map, InventoryFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                }
             }
         });
-
 
         //What to do if plus buton is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {

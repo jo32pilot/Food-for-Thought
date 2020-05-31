@@ -55,8 +55,6 @@ import java.util.Map;
 
 public class ShoppingFragment extends Fragment {
     private SearchView searchShopping;
-    private ArrayList<String> items = new ArrayList<>();
-    private ArrayList<String> amounts = new ArrayList<>();
     private LinearLayout shoppingListLayout;
     private Database db = new Database();
     private String userIngredientsId;
@@ -281,6 +279,13 @@ public class ShoppingFragment extends Fragment {
                             ShoppingFragment.this,
                             "Could not remove. Please try again", onSuccessListener);
                     shoppingListLayout.removeView(linearLayout);
+                }
+                else{
+                    int temp = Integer.valueOf(s.toString());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("shopping_list." + query, temp);
+                    db.update("user_ingredients", userIngredientsId,
+                            map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
                 }
             }
         });
