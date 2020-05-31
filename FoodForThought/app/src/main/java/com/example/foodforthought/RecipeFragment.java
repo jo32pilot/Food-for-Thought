@@ -66,10 +66,6 @@ public class RecipeFragment extends Fragment {
         Bundle bundle = getArguments();
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");
 
-        // page title
-        TextView recipePageTitle = view.findViewById(R.id.recipePageTitle);
-        recipePageTitle.setText(recipe.getName());
-
         // color either like or dislike button
         OnCompleteListener<DocumentSnapshot> saveColor = new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -600,78 +596,77 @@ public class RecipeFragment extends Fragment {
 
         // load comments section
         LinearLayout commentsSection = view.findViewById(R.id.recipeComments);
-
         // callback for getting user
         OnCompleteListener<DocumentSnapshot> onGetUser = new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot doc = task.getResult();
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DocumentSnapshot doc = task.getResult();
 
-                    // create user profile
-                    ImageView userProfile = new ImageView(view.getContext());
-                    userProfile.setImageResource(R.drawable.profilepic);
-                    LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(150, 150);
-                    userProfile.setLayoutParams(imageParams);
+                        // create user profile
+                        ImageView userProfile = new ImageView(view.getContext());
+                        userProfile.setImageResource(R.drawable.profilepic);
+                        LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(150, 150);
+                        userProfile.setLayoutParams(imageParams);
 
-                    TextView originalPoster = new TextView(getContext());
-                    originalPoster.setTypeface(null, Typeface.BOLD);
-                    if(doc.exists()){
-                        // create username
-                        originalPoster.setText((String)doc.get("username"));
+                        TextView originalPoster = new TextView(getContext());
+                        originalPoster.setTypeface(null, Typeface.BOLD);
+                        if(doc.exists()){
+                            // create username
+                            originalPoster.setText((String)doc.get("username"));
 
-                        if (doc.get("profilePictureURL") != null) {
-                            Picasso.with(getContext()).load((String)doc.get("profilePictureURL")).into(userProfile);
+                            if (doc.get("profilePictureURL") != null) {
+                                Picasso.with(getContext()).load((String)doc.get("profilePictureURL")).into(userProfile);
+                            }
                         }
+                        else {
+                            // use undefined user name
+                            originalPoster.setText("unknown user");
+                        }
+
+                        // create new comment
+                        LinearLayout newComment = new LinearLayout(view.getContext());
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        params.setMargins(0, 0, 0, 10);
+                        newComment.setLayoutParams(params);
+
+                        // div text section
+                        LinearLayout textSection = new LinearLayout(getContext());
+                        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        params2.setMargins(10, 0, 0, 0);
+                        textSection.setLayoutParams(params2);
+                        textSection.setOrientation(LinearLayout.VERTICAL);
+
+                        // create user comment text
+                        TextView userText = new TextView((view.getContext()));
+                        LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        userText.setLayoutParams(textParams);
+                        userText.setText(recipe.getComments().get(userNumber).get("comment"));
+
+                        // add user comment text and user profile to the comment
+                        newComment.addView(userProfile);
+                        textSection.addView(originalPoster);
+                        textSection.addView(userText);
+                        newComment.addView(textSection);
+
+                        // add the comment to the comment section
+                        commentsSection.addView(newComment);
+
+                        // another comment has been added
+                        userNumber++;
+
+                        TextView numComments = view.findViewById(R.id.numComments);
+                        numComments.setText("" + userNumber);
                     }
-                    else {
-                        // use undefined user name
-                        originalPoster.setText("unknown user");
+                    else{
+                        Toast.makeText(getContext(),
+                                "Error ! " + task.getException().getMessage(),
+                                Toast.LENGTH_SHORT).show();
                     }
-
-                    // create new comment
-                    LinearLayout newComment = new LinearLayout(view.getContext());
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
-                    params.setMargins(0, 0, 0, 10);
-                    newComment.setLayoutParams(params);
-
-                    // div text section
-                    LinearLayout textSection = new LinearLayout(getContext());
-                    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params2.setMargins(10, 0, 0, 0);
-                    textSection.setLayoutParams(params2);
-                    textSection.setOrientation(LinearLayout.VERTICAL);
-
-                    // create user comment text
-                    TextView userText = new TextView((view.getContext()));
-                    LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    userText.setLayoutParams(textParams);
-                    userText.setText(recipe.getComments().get(userNumber).get("comment"));
-
-                    // add user comment text and user profile to the comment
-                    newComment.addView(userProfile);
-                    textSection.addView(originalPoster);
-                    textSection.addView(userText);
-                    newComment.addView(textSection);
-
-                    // add the comment to the comment section
-                    commentsSection.addView(newComment);
-
-                    // another comment has been added
-                    userNumber++;
-
-                    TextView numComments = view.findViewById(R.id.numComments);
-                    numComments.setText("" + userNumber);
                 }
-                else{
-                    Toast.makeText(getContext(),
-                            "Error ! " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
         };
         for (int i = 0; i < recipe.getComments().size(); i++) {
             db.getDocument("users", recipe.getComments().get(i).get("userid"), onGetUser);

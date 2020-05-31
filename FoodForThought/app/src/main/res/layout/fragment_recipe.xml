@@ -24,17 +24,6 @@
             android:backgroundTint="#ffffff"
             android:src="@drawable/ic_arrow_back_black_24dp"/>
 
-        <TextView
-            android:id="@+id/recipePageTitle"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="12sp"
-            android:autoSizeMaxTextSize="100sp"
-            android:autoSizeStepGranularity="2sp"
-            android:gravity="center"
-            android:text="Food Title"
-            android:textColor="#FD999A"/>
 
         <ImageButton
             android:id="@+id/saveButton"
@@ -43,7 +32,8 @@
             android:padding="0dp"
             android:scaleType="fitCenter"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_save" />
+            android:src="@drawable/ic_save"
+            android:layout_marginLeft="310dp"/>
     </LinearLayout>
 
     <View
