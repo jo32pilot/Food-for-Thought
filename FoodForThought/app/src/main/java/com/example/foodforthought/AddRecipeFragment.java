@@ -78,10 +78,10 @@ public class AddRecipeFragment extends Fragment {
         ingredientsList.setAdapter(ingredientsAdapter);
         instructionsList.setAdapter(instructionAdapter);
 
-        // Check if user is not logged in or has logged out
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // If user isn't logged in or has logged out.
         if(user == null){
-            // TODO redirect to login
+            getActivity().finish();
         }
 
         // Get places where there is user input

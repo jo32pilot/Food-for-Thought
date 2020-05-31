@@ -59,11 +59,9 @@ public class InventoryFragment extends Fragment {
         pantryListLayout = view.findViewById(R.id.pantryListLayout);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         // If user isn't logged in or has logged out.
-        if (user == null) {
-            NavHostFragment.findNavController(InventoryFragment.this)
-                    .navigate(R.id.action_InventoryFragment_to_LoginFragment);
+        if(user == null){
+            getActivity().finish();
         }
 
         String uid = user.getUid();

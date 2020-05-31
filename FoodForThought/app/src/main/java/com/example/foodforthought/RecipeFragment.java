@@ -53,6 +53,12 @@ public class RecipeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // If user isn't logged in or has logged out.
+        if(user == null){
+            getActivity().finish();
+        }
+
         // deserialize recipe information
         Bundle bundle = getArguments();
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");

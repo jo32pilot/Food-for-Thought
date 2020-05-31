@@ -35,8 +35,7 @@ public class UserProfileFragment extends Fragment {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            NavHostFragment.findNavController(UserProfileFragment.this)
-                    .navigate(R.id.action_UserProfileFragment_to_LoginFragment);
+            getActivity().finish();
         }
 
         String uid = user.getUid();
@@ -48,6 +47,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
+                getActivity().finish();
             }
         });
 
