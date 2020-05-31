@@ -4,7 +4,9 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.provider.BaseColumns;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -101,7 +104,12 @@ public class InventoryFragment extends Fragment {
             public boolean onSuggestionClick(int position) {
                 Cursor cursor = (Cursor) mAdapter.getItem(position);
                 String txt = cursor.getString(cursor.getColumnIndex("ingredient"));
-                searchIngredients.setQuery(txt, true);
+                if(txt != null) {
+                    userInventory.put(txt, "1");
+                    createItem(txt, "1");
+                    searchIngredients.setQuery("", false);
+                    return true;
+                }
                 return false;
             }
         });
@@ -109,12 +117,6 @@ public class InventoryFragment extends Fragment {
         searchIngredients.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if(query != null) {
-                    userInventory.put(query, "1");
-                    createItem(query, "1");
-                    searchIngredients.setQuery("", false);
-                    return true;
-                }
                 return false;
             }
 
@@ -188,7 +190,7 @@ public class InventoryFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //Create all items of new row
-        EditText item = new EditText(this.getContext());
+        TextView item = new TextView(this.getContext());
         ImageButton minusButton = new ImageButton(this.getContext());
         ImageButton plusButton = new ImageButton(this.getContext());
         EditText amount = new EditText(this.getContext());
@@ -253,6 +255,37 @@ public class InventoryFragment extends Fragment {
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         //Set base amount to 1
         amount.setText(number);
+        amount.setTextSize(25);
+        amount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s == null){
+
+                }
+                else if(s.toString().isEmpty()){
+
+                }
+                else if(Integer.valueOf(s.toString()) <= 0){
+                    userInventory.remove(name);
+                    Map<String, Object> updatedMap = new HashMap<>();
+                    updatedMap.put("inventory", userInventory);
+                    db.update("user_ingredients", userIngredientsId, updatedMap,
+                            InventoryFragment.this, "",
+                            "Could not remove");
+                    pantryListLayout.removeView(relativeLayout);
+                }
+            }
+        });
 
 
         //What to do if plus buton is clicked
@@ -264,7 +297,9 @@ public class InventoryFragment extends Fragment {
                 amount.setText(String.valueOf(temp + 1));
                 Map<String, Object> map = new HashMap<>();
                 map.put("inventory." + name, temp + 1);
-                db.update("user_ingredients", userIngredientsId, map, InventoryFragment.this, "", "Could not update");
+                db.update("user_ingredients", userIngredientsId, map,
+                        InventoryFragment.this, "",
+                        "Could not update");
             }
         });
 
@@ -274,10 +309,12 @@ public class InventoryFragment extends Fragment {
             public void onClick(View v) {
                 //decrease counter
                 int temp = Integer.parseInt(amount.getText().toString());
-                amount.setText(String.valueOf(temp - 1));
                 Map<String, Object> map = new HashMap<>();
                 map.put("inventory." + name, temp - 1);
-                db.update("user_ingredients", userIngredientsId, map, InventoryFragment.this, "", "Could not update");
+                db.update("user_ingredients", userIngredientsId, map,
+                        InventoryFragment.this, "",
+                        "Could not update");
+                amount.setText(String.valueOf(temp - 1));
             }
         });
 
