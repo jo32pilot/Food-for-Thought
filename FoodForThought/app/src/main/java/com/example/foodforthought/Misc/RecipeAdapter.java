@@ -27,6 +27,8 @@ import com.squareup.picasso.Picasso;
 
 import androidx.fragment.app.FragmentTransaction;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +74,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         Recipe recipe = rPost.get(position);
 
-        Picasso.with(rContext).load(recipe.getURL()).into(recipeImage);
+        if(recipe.getURL() != "") {
+            Picasso.with(rContext).load(recipe.getURL()).into(recipeImage);
+        }
+        else{
+            Picasso.with(rContext).load("drawable://" + R.drawable.logo).into(recipeImage);
+        }
         recipeName.setText(recipe.getName());
 
         numLikes.setText(""+recipe.getLikes());

@@ -63,7 +63,12 @@ public class RecipeFragment extends Fragment {
 
         // image
         ImageView recipeImage = view.findViewById(R.id.recipeImage);
-        Picasso.with(getContext()).load(recipe.getURL()).into(recipeImage);
+        if(recipe.getURL() != "") {
+            Picasso.with(getContext()).load(recipe.getURL()).into(recipeImage);
+        }
+        else{
+            Picasso.with(getContext()).load("drawable://" + R.drawable.logo).into(recipeImage);
+        }
 
         // likes and dislikes
         TextView likes = view.findViewById(R.id.numLikes);
