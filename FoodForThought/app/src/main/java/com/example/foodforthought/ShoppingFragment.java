@@ -116,10 +116,15 @@ public class ShoppingFragment extends Fragment {
                Cursor cursor = (Cursor) mAdapter.getItem(position);
                String txt = cursor.getString(cursor.getColumnIndex("ingredient"));
                if(txt != null) {
-                   shopping_list.put(txt, "1");
-                   createItem(txt, "1");
-                   searchShopping.setQuery("", false);
-                   return true;
+                   if(shopping_list.containsKey(txt)){
+
+                   }
+                   else {
+                       shopping_list.put(txt, "1");
+                       createItem(txt, "1");
+                       searchShopping.setQuery("", false);
+                       return true;
+                   }
                }
                return false;
            }
@@ -232,8 +237,10 @@ public class ShoppingFragment extends Fragment {
         shoppingListLayout.addView(linearLayout);
 
         //Set checkbox params
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (250 * scale + 0.5f);
         checkBox.setLayoutParams(new LinearLayout.LayoutParams(
-                900,ViewGroup.LayoutParams.WRAP_CONTENT));
+                pixels,ViewGroup.LayoutParams.WRAP_CONTENT));
         //Set text to ingredient
         checkBox.setText(query);
         //Set size of text
