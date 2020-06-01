@@ -110,9 +110,9 @@ public class MainFragment extends Fragment {
                 Comparator<Recipe> recipeComparator = new Comparator<Recipe>() {
                     @Override
                     public int compare(Recipe o1, Recipe o2) {
-                        if (o1.getMatches() > o2.getMatches()) {
+                        if (o1.getMatches() < o2.getMatches()) {
                             return -1;
-                        } else if (o1.getMatches() < o2.getMatches()) {
+                        } else if (o1.getMatches() > o2.getMatches()) {
                             return 1;
                         }
                         return 0;
@@ -174,6 +174,7 @@ public class MainFragment extends Fragment {
                         // Begin second query to get recipes based on user's inventory.
                         if (userInventory != null) {
                             recipesRef.whereArrayContainsAny("all_ingredients", userInventory)
+                                    .limit(25)
                                     .get()
                                     .addOnCompleteListener(onGetRecipes);
                         }
