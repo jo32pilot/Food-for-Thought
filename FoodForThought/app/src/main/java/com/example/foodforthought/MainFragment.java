@@ -174,7 +174,7 @@ public class MainFragment extends Fragment {
                         // Begin second query to get recipes based on user's inventory.
                         if (userInventory != null) {
                             recipesRef.whereArrayContainsAny("all_ingredients", userInventory)
-                                    .limit(25)
+                                    .limit(50)
                                     .get()
                                     .addOnCompleteListener(onGetRecipes);
                         }

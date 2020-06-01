@@ -104,7 +104,7 @@ public class AddRecipeFragment extends Fragment {
         ingredient = (CustomAutoCompleteView) view.findViewById(R.id.ingredients_input);
         instruction = (EditText) view.findViewById(R.id.instruction_input);
         time = (EditText) view.findViewById(R.id.time);
-        servings = (EditText) view.findViewById(R.id.time);
+        servings = (EditText) view.findViewById(R.id.servings);
 
         // Setup ingredient suggestions from our database
         ingredient.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this, this.getContext()));
@@ -196,6 +196,7 @@ public class AddRecipeFragment extends Fragment {
                     // existing list in the database)
                     Map<String, Object> userRecipesUpdate = new HashMap<>();
                     userRecipesUpdate.put("self_made", FieldValue.arrayUnion(uid + name));
+                    userRecipesUpdate.put("saved", FieldValue.arrayUnion(uid+name));
                     db.update("user_recipes", "user_recipes_id_" + user.getUid(),
                             userRecipesUpdate, AddRecipeFragment.this, "Done!",
                             "Something went wrong!");
@@ -275,7 +276,7 @@ public class AddRecipeFragment extends Fragment {
         view.findViewById(R.id.add_ingredient).setOnClickListener(onIngredientAdd);
         view.findViewById(R.id.add_instruction).setOnClickListener(onInstructionAdd);
         view.findViewById(R.id.done_button).setOnClickListener(onSubmit);
-        view.findViewById(R.id.done_button).setOnClickListener(onClear);
+        view.findViewById(R.id.clear).setOnClickListener(onClear);
     }
 
     /**

@@ -81,7 +81,6 @@
         android:layout_height="76dp">
 
         <TextView
-            android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
@@ -134,7 +133,7 @@
             android:textSize="18sp" />
 
         <EditText
-            android:id="@+id/time"
+            android:id="@+id/servings"
             android:layout_width="64dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="75dp"
