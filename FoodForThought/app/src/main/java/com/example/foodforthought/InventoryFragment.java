@@ -107,8 +107,8 @@ public class InventoryFragment extends Fragment {
                 if(txt != null) {
                     if(userInventory.containsKey(txt)){}
                     else {
-                        userInventory.put(txt, "1");
-                        createItem(txt, "1");
+                        userInventory.put(txt, 1);
+                        createItem(txt, 1);
                         searchIngredients.setQuery("", false);
                         return true;
                     }
@@ -181,11 +181,11 @@ public class InventoryFragment extends Fragment {
 
     protected void setUpScreen(){
         for(String key : userInventory.keySet()){
-            createItem(key, userInventory.get(key).toString());
+            createItem(key, (long) userInventory.get(key));
         }
     }
 
-    private void createItem(String name, String number) {
+    private void createItem(String name, long number) {
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("inventory", userInventory);
         db.update("user_ingredients", userIngredientsId, updatedMap,
@@ -258,7 +258,7 @@ public class InventoryFragment extends Fragment {
             //Set input type to numbers
             amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
             //Set base amount to 1
-            amount.setText(number);
+            amount.setText(String.valueOf(number));
             amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             amount.addTextChangedListener(new TextWatcher() {
                 @Override

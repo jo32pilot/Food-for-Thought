@@ -121,8 +121,8 @@ public class ShoppingFragment extends Fragment {
 
                    }
                    else {
-                       shopping_list.put(txt, "1");
-                       createItem(txt, "1");
+                       shopping_list.put(txt, 1);
+                       createItem(txt, 1);
                        searchShopping.setQuery("", false);
                        return true;
                    }
@@ -183,7 +183,7 @@ public class ShoppingFragment extends Fragment {
                     shopping_list = (Map<String, Object>) userIngredients.get("shopping_list");
                     if(shopping_list != null) {
                         for (String key : shopping_list.keySet()) {
-                            createItem(key, shopping_list.get(key).toString());
+                            createItem(key, (long) shopping_list.get(key));
                         }
                     }
                     else{
@@ -194,7 +194,7 @@ public class ShoppingFragment extends Fragment {
         }
     };
 
-    protected void createItem(String query, String amount1) {
+    protected void createItem(String query, long amount1) {
         //create new row
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("shopping_list", shopping_list);
@@ -268,7 +268,7 @@ public class ShoppingFragment extends Fragment {
         //Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
         //Set base amount to 1
-        amount.setText(amount1);
+        amount.setText(String.valueOf(amount1));
         amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
         amount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -310,20 +310,9 @@ public class ShoppingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!checkBox.isChecked() ){
-                    /*//Make black and not striked through
-                    checkBox.setTextColor(Color.parseColor("#000000"));
-                    checkBox.setPaintFlags(checkBox.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-                    shopping_list.put(query, Integer.valueOf(amount.getText().toString()));
-                    Map<String, Object> updatedMap = new HashMap<>();
-                    updatedMap.put("shopping_list", shopping_list);
-                    db.update("user_ingredients", userIngredientsId,
-                            updatedMap, ShoppingFragment.this,
-                            "", "Could not add");*/
+
                 }
                 else {
-                    /*//Strike through and make gray and move to bottom
-                    checkBox.setTextColor(Color.parseColor("#D3D3D3"));
-                    checkBox.setPaintFlags(checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);*/
                     shoppingListLayout.removeView(linearLayout);
                     /*shoppingListLayout.addView(linearLayout);*/
                     shopping_list.remove(query);
