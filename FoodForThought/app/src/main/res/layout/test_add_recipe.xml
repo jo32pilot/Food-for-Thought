@@ -7,72 +7,202 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="0dp"
-        android:scaleType="fitCenter"
-        android:backgroundTint="#ffffff"
-        android:src="@drawable/ic_arrow_back_black_24dp"/>
+    <TableRow
+        android:layout_width="508dp"
+        android:layout_height="56dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="0dp">
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="58dp"
+            android:layout_height="50dp"
+            android:backgroundTint="#ffffff"
+            android:padding="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back_black_24dp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="226dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Create Recipe"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="508dp"
+        android:layout_height="56dp">
 
         <EditText
             android:id="@+id/recipe_name"
-            android:layout_width="wrap_content"
+            android:layout_width="199dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="89dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginEnd="109dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="15dp"
             android:ems="10"
             android:hint="Recipe Name"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/time"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/done_button"
+            android:layout_width="72dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="67dp"
+            android:text="save"
+            tools:layout_editor_absoluteX="302dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+        <Button
+            android:id="@+id/clear"
+            android:layout_width="72dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="67dp"
+            android:text="clear"
+            tools:layout_editor_absoluteX="302dp"
+            tools:layout_editor_absoluteY="48dp" />
+
+    </TableRow>
+
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="76dp">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Total Time:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/time"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="19dp"
+            android:ems="10"
+            android:hint="    00"
+            android:inputType="number"
+            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+            app:layout_constraintEnd_toStartOf="@+id/textView3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="34dp"
+            android:text="Minutes"
+            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+            app:layout_constraintEnd_toStartOf="@+id/time"
+            app:layout_constraintStart_toEndOf="@+id/time"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="76dp">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Recipe Makes:"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/time"
+            android:layout_width="64dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="19dp"
+            android:ems="10"
+            android:hint="    00"
+            android:inputType="number"
+            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+            app:layout_constraintEnd_toStartOf="@+id/textView3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="34dp"
+            android:text="serving(s)"
+            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
+            app:layout_constraintEnd_toStartOf="@+id/time"
+            app:layout_constraintStart_toEndOf="@+id/time"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
+    </TableRow>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="493dp"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/add_ingredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="23dp"
             android:text="Add"
             app:layout_constraintBottom_toTopOf="@+id/ingredients_list"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ingredients_input"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintStart_toEndOf="@+id/ingredients_input" />
 
         <EditText
             android:id="@+id/instruction_input"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="89dp"
+            android:layout_width="224dp"
+            android:layout_height="47dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="18dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginBottom="11dp"
             android:ems="10"
             android:hint="Steps"
             android:inputType="textPersonName"
             app:layout_constraintBottom_toTopOf="@+id/instructions_list"
             app:layout_constraintEnd_toStartOf="@+id/add_instruction"
+            app:layout_constraintHorizontal_bias="0.52"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ingredients_list" />
+            app:layout_constraintTop_toBottomOf="@+id/ingredients_list"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/add_instruction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="13dp"
             android:layout_marginBottom="11dp"
             android:text="Add"
@@ -84,20 +214,19 @@
             android:id="@+id/ingredients_input"
             android:layout_width="214dp"
             android:layout_height="45dp"
-            android:layout_marginStart="89dp"
-            android:layout_marginTop="19dp"
             android:layout_marginEnd="4dp"
+            android:layout_marginBottom="20dp"
             android:completionThreshold="3"
             android:hint="@string/search_ingredients"
             app:layout_constraintBottom_toTopOf="@+id/ingredients_list"
             app:layout_constraintEnd_toStartOf="@+id/add_ingredient"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/time" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ListView
             android:id="@+id/ingredients_list"
-            android:layout_width="407dp"
-            android:layout_height="140dp"
+            android:layout_width="420dp"
+            android:layout_height="89dp"
             android:layout_marginStart="1dp"
             android:layout_marginEnd="1dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,9 +236,8 @@
 
         <ListView
             android:id="@+id/instructions_list"
-            android:layout_width="414dp"
-            android:layout_height="184dp"
-            android:layout_marginStart="1dp"
+            android:layout_width="405dp"
+            android:layout_height="162dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="1dp"
             android:layout_marginBottom="96dp"
@@ -121,87 +249,15 @@
 
         </ListView>
 
-        <EditText
-            android:id="@+id/time"
-            android:layout_width="64dp"
-            android:layout_height="51dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginBottom="19dp"
-            android:ems="10"
-            android:hint="00"
-            android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
-            app:layout_constraintEnd_toStartOf="@+id/textView3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="47dp"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="34dp"
-            android:text="Minutes"
-            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
-            app:layout_constraintEnd_toStartOf="@+id/servings"
-            app:layout_constraintStart_toEndOf="@+id/time"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
-
-        <EditText
-            android:id="@+id/servings"
-            android:layout_width="55dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="22dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginBottom="34dp"
-            android:ems="10"
-            android:hint="00"
-            android:inputType="number"
-            app:layout_constraintBottom_toTopOf="@+id/ingredients_input"
-            app:layout_constraintEnd_toStartOf="@+id/textView4"
-            app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="47dp"
-            android:layout_marginEnd="68dp"
-            android:layout_marginBottom="8dp"
-            android:text="serving(s)"
-            app:layout_constraintBottom_toTopOf="@+id/add_ingredient"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/servings"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_name" />
-
-        <Button
-            android:id="@+id/done_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="14dp"
-            android:layout_marginBottom="67dp"
-            android:text="Done"
-            app:layout_constraintBottom_toTopOf="@+id/textView4"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/recipe_name"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Button
-            android:id="@+id/clear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="clear"
-            tools:layout_editor_absoluteY="29dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name" />
 
 
 </LinearLayout>

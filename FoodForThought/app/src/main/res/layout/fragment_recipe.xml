@@ -19,21 +19,21 @@
             android:id="@+id/backButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:backgroundTint="#ffffff"
             android:padding="0dp"
             android:scaleType="fitCenter"
-            android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_arrow_back_black_24dp"/>
+            android:src="@drawable/ic_arrow_back_black_24dp" />
 
 
         <ImageButton
             android:id="@+id/saveButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="310dp"
+            android:backgroundTint="#ffffff"
             android:padding="0dp"
             android:scaleType="fitCenter"
-            android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_save"
-            android:layout_marginLeft="310dp"/>
+            android:src="@drawable/ic_save" />
     </LinearLayout>
 
     <View
