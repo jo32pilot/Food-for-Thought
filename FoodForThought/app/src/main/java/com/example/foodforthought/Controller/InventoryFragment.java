@@ -326,10 +326,6 @@ public class InventoryFragment extends Fragment {
 
     }
 
-    OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-
-            }
-    };
+    /* Empty Success Listener to ensure no output is printed out */
+    private OnSuccessListener<Void> onSuccessListener = aVoid -> {};
 }

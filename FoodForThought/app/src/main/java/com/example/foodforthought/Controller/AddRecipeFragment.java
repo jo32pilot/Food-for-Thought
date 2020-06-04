@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Fragment for add recipe functionality. This object is only ever created once
@@ -61,16 +62,14 @@ public class AddRecipeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.test_add_recipe, container, false);
 
+        // Set up Back button to go back to Saved Recipes Tab
         ImageButton back = v.findViewById(R.id.backButton);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-            }
+        back.setOnClickListener(v1 -> {
+            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
         });
 
         // I think this persists data throughout configuration changes like
@@ -89,30 +88,30 @@ public class AddRecipeFragment extends Fragment {
         // or instruction.
         AddListAdapter ingredientsAdapter = new AddListAdapter(ingredients, this.getContext());
         AddListAdapter instructionAdapter = new AddListAdapter(instructions, this.getContext());
-        ListView ingredientsList = (ListView) view.findViewById(R.id.ingredients_list);
-        ListView instructionsList = (ListView) view.findViewById(R.id.instructions_list);
+        ListView ingredientsList = view.findViewById(R.id.ingredients_list);
+        ListView instructionsList = view.findViewById(R.id.instructions_list);
         ingredientsList.setAdapter(ingredientsAdapter);
         instructionsList.setAdapter(instructionAdapter);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        // If user isn't logged in or has logged out.
+        // Check if user isn't logged in or has logged out.
         if(user == null){
-            getActivity().finish();
+            Objects.requireNonNull(getActivity()).finish();
         }
 
-        // Get places where there is user input
-        recipeName = (EditText) view.findViewById(R.id.recipe_name);
+        // Get user input views
+        recipeName = view.findViewById(R.id.recipe_name);
         ingredient = (CustomAutoCompleteView) view.findViewById(R.id.ingredients_input);
-        instruction = (EditText) view.findViewById(R.id.instruction_input);
-        time = (EditText) view.findViewById(R.id.time);
-        servings = (EditText) view.findViewById(R.id.servings);
+        instruction = view.findViewById(R.id.instruction_input);
+        time = view.findViewById(R.id.time);
+        servings = view.findViewById(R.id.servings);
 
         // Setup ingredient suggestions from our database
         ingredient.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this, this.getContext()));
-        adapter = new ArrayAdapter<String>(this.getContext(), android.R.layout.simple_dropdown_item_1line, suggestions);
+        adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getContext()), android.R.layout.simple_dropdown_item_1line, suggestions);
         ingredient.setAdapter(adapter);
 
-        // Completion istener to check if an ingredient exists in our database before
+        // Completion listener to check if an ingredient exists in our database before
         // allowing the user to add the ingredient to their list
         OnCompleteListener<DocumentSnapshot> onExists = new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -132,7 +131,7 @@ public class AddRecipeFragment extends Fragment {
                     }
                 }
                 else{
-                    // TODO proper error logging
+                    // Error logging
                     Toast.makeText(getContext(),
                             "Error ! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -141,73 +140,64 @@ public class AddRecipeFragment extends Fragment {
         };
 
         // Click listener to begin ingredient existence check above.
-        View.OnClickListener onIngredientAdd = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String ingredientText = ingredient.getText().toString();
+        View.OnClickListener onIngredientAdd = v -> {
+            String ingredientText = ingredient.getText().toString();
 
-                // Don't do anything if no input
-                if(ingredientText.isEmpty()) {
-                    return;
-                }
-
-                Database db = new Database();
-                db.getDocument("ingredients", ingredientText, onExists);
+            // Don't do anything if no input
+            if(ingredientText.isEmpty()) {
+                return;
             }
+
+            Database db = new Database();
+            db.getDocument("ingredients", ingredientText, onExists);
         };
 
         // Click listener to add instructions from user input and updates
         // the list view
-        View.OnClickListener onInstructionAdd = new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                String instructionText = instruction.getText().toString();
-                if(instructionText.isEmpty()){
-                    return;
-                }
-                instructions.add(instructionText);
-                instructionAdapter.notifyDataSetChanged();
+        View.OnClickListener onInstructionAdd = v -> {
+            String instructionText = instruction.getText().toString();
+            if(instructionText.isEmpty()){
+                return;
             }
+            instructions.add(instructionText);
+            instructionAdapter.notifyDataSetChanged();
         };
 
-        // completion listener to get user info. We do this purely to get the
+        // Completion listener to get user info. We do this purely to get the
         // name of the user so we can attach it to their custom recipe.
-        OnCompleteListener<DocumentSnapshot> onGetUser = new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
+        OnCompleteListener<DocumentSnapshot> onGetUser = task -> {
+            if(task.isSuccessful()){
 
-                    // Get all relevant data for the recipe
-                    String uid = user.getUid();
-                    String name = recipeName.getText().toString().trim();
-                    String totalTime = time.getText().toString().trim();
-                    String totalServings = servings.getText().toString().trim();
-                    String username = (String) task.getResult().get("username");
+                // Get all relevant data for the recipe
+                String uid = user.getUid();
+                String name = recipeName.getText().toString().trim();
+                String totalTime = time.getText().toString().trim();
+                String totalServings = servings.getText().toString().trim();
+                String username = (String) task.getResult().get("username");
 
-                    Database db = new Database();
+                Database db = new Database();
 
-                    // First write the recipe to our recipes collection
-                    db.write("recipes", uid + name,
-                            getRecipeMap(name, totalTime, username, totalServings),
-                            AddRecipeFragment.this, "", "Something went wrong!");
+                // First write the recipe to our recipes collection
+                db.write("recipes", uid + name,
+                        getRecipeMap(name, totalTime, username, totalServings),
+                        AddRecipeFragment.this, "", "Something went wrong!");
 
-                    // Then write the recipe name to the user's self_made
-                    // recipes list. (Note: FieldValue.arrayUnion returns an
-                    // object that unions the passed in argument(s) with an
-                    // existing list in the database)
-                    Map<String, Object> userRecipesUpdate = new HashMap<>();
-                    userRecipesUpdate.put("self_made", FieldValue.arrayUnion(uid + name));
-                    userRecipesUpdate.put("saved", FieldValue.arrayUnion(uid+name));
-                    db.update("user_recipes", "user_recipes_id_" + user.getUid(),
-                            userRecipesUpdate, AddRecipeFragment.this, "Done!",
-                            "Something went wrong!");
-                }
-                else{
-                    // TODO proper error logging
-                    Toast.makeText(getContext(),
-                            "Error ! " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
-                }
+                // Then write the recipe name to the user's self_made
+                // recipes list. (Note: FieldValue.arrayUnion returns an
+                // object that unions the passed in argument(s) with an
+                // existing list in the database)
+                Map<String, Object> userRecipesUpdate = new HashMap<>();
+                userRecipesUpdate.put("self_made", FieldValue.arrayUnion(uid + name));
+                userRecipesUpdate.put("saved", FieldValue.arrayUnion(uid+name));
+                db.update("user_recipes", "user_recipes_id_" + user.getUid(),
+                        userRecipesUpdate, AddRecipeFragment.this, "Done!",
+                        "Something went wrong!");
+            }
+            else{
+                // Error logging
+                Toast.makeText(getContext(),
+                        "Error ! " + task.getException().getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         };
 
