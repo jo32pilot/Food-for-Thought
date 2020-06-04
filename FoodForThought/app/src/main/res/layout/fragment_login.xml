@@ -64,8 +64,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="New Here? Create Account"
-                android:textAlignment="center" />
+                android:text="@string/new_here_create_account"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="#C91A9DE3" />
         </LinearLayout>
 
     </LinearLayout>
