@@ -1,4 +1,4 @@
-package com.example.foodforthought;
+package com.example.foodforthought.Controller;
 
 import androidx.fragment.app.Fragment;
 import android.os.Bundle;
@@ -12,14 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodforthought.MainFragment;
-import com.example.foodforthought.Misc.Database;
-import com.example.foodforthought.Misc.Recipe;
-import com.example.foodforthought.Misc.RecipeAdapter;
+import com.example.foodforthought.Model.Database;
+import com.example.foodforthought.Model.Recipe;
+import com.example.foodforthought.Model.RecipeAdapter;
 import com.example.foodforthought.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -28,14 +26,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
 
 public class SavedRecipesFragment extends Fragment {
     private List<String> savedRecipes;

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".MainFragment">
+    tools:context=".Controller.MainFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

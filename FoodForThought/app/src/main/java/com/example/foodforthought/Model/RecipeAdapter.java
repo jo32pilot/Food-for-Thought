@@ -1,38 +1,24 @@
-package com.example.foodforthought.Misc;
+package com.example.foodforthought.Model;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.example.foodforthought.MainFragment;
 import com.example.foodforthought.R;
-import com.example.foodforthought.RecipeFragment;
+import com.example.foodforthought.Controller.RecipeFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
-import androidx.fragment.app.FragmentTransaction;
-
-import java.io.File;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Adapter class for the Recipe class

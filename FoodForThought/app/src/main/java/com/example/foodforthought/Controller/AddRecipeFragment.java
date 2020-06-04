@@ -3,7 +3,7 @@
  * @author John Li
  */
 
-package com.example.foodforthought;
+package com.example.foodforthought.Controller;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,10 +22,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.foodforthought.Misc.AddListAdapter;
-import com.example.foodforthought.Misc.CustomAutoCompleteTextChangedListener;
-import com.example.foodforthought.Misc.CustomAutoCompleteView;
-import com.example.foodforthought.Misc.Database;
+import com.example.foodforthought.Model.AddListAdapter;
+import com.example.foodforthought.Model.CustomAutoCompleteTextChangedListener;
+import com.example.foodforthought.Model.CustomAutoCompleteView;
+import com.example.foodforthought.Model.Database;
+import com.example.foodforthought.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

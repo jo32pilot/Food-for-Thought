@@ -6,7 +6,7 @@
     android:gravity="center_horizontal"
     android:background="#F8F8FF"
     android:orientation="vertical"
-    tools:context=".LoginFragment">
+    tools:context=".Controller.LoginFragment">
 
     <TextView
         android:id="@+id/spacer"

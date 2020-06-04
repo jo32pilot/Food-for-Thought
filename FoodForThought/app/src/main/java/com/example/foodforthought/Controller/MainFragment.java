@@ -3,16 +3,12 @@
  *
  * @author John Li
  */
-package com.example.foodforthought;
+package com.example.foodforthought.Controller;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +17,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.foodforthought.Misc.Database;
+import com.example.foodforthought.Model.Database;
+import com.example.foodforthought.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,8 +27,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.example.foodforthought.Misc.Recipe;
-import com.example.foodforthought.Misc.RecipeAdapter;
+import com.example.foodforthought.Model.Recipe;
+import com.example.foodforthought.Model.RecipeAdapter;
 
 import java.util.ArrayList;
 import java.util.Comparator;

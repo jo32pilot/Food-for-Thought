@@ -1,7 +1,8 @@
-package com.example.foodforthought;
+package com.example.foodforthought.Controller;
 
 import android.os.Bundle;
 
+import com.example.foodforthought.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseApp;

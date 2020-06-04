@@ -1,4 +1,4 @@
-package com.example.foodforthought.Misc;
+package com.example.foodforthought.Model;
 
 import android.content.Context;
 import android.text.Editable;
@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.foodforthought.AddRecipeFragment;
+import com.example.foodforthought.Controller.AddRecipeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;

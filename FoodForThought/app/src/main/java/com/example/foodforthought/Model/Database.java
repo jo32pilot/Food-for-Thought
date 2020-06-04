@@ -5,7 +5,7 @@
  * @author John Li
  */
 
-package com.example.foodforthought.Misc;
+package com.example.foodforthought.Model;
 
 import androidx.fragment.app.Fragment;
 

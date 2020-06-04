@@ -209,7 +209,7 @@
             app:layout_constraintStart_toEndOf="@+id/instruction_input"
             app:layout_constraintTop_toBottomOf="@+id/ingredients_list" />
 
-        <com.example.foodforthought.Misc.CustomAutoCompleteView
+        <com.example.foodforthought.Model.CustomAutoCompleteView
             android:id="@+id/ingredients_input"
             android:layout_width="214dp"
             android:layout_height="45dp"

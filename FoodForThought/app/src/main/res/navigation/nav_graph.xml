@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/LoginFragment"
-        android:name="com.example.foodforthought.LoginFragment"
+        android:name="com.example.foodforthought.Controller.LoginFragment"
         android:label="@string/login_fragment_label"
         tools:layout="@layout/login_fragment">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/SignUpFragment"
-        android:name="com.example.foodforthought.SignUpFragment"
+        android:name="com.example.foodforthought.Controller.SignUpFragment"
         android:label="@string/signup_fragment_label"
         tools:layout="@layout/signup_fragment">
 
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/MainFragment"
-        android:name="com.example.foodforthought.MainFragment"
+        android:name="com.example.foodforthought.Controller.MainFragment"
         android:label="@string/main_fragment_label"
         tools:layout="@layout/fragment_main">
 
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/InventoryFragment"
-        android:name="com.example.foodforthought.InventoryFragment"
+        android:name="com.example.foodforthought.Controller.InventoryFragment"
         android:label="@string/inventory_fragment_label"
         tools:layout="@layout/fragment_inventory">
 
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/ShoppingFragment"
-        android:name="com.example.foodforthought.ShoppingFragment"
+        android:name="com.example.foodforthought.Controller.ShoppingFragment"
         android:label="@string/shopping_fragment_label"
         tools:layout="@layout/fragment_shopping">
 
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/UserProfileFragment"
-        android:name="com.example.foodforthought.UserProfileFragment"
+        android:name="com.example.foodforthought.Controller.UserProfileFragment"
         android:label="@string/user_profile_fragment_label"
         tools:layout="@layout/fragment_userprofile">
 

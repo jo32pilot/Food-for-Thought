@@ -1,9 +1,7 @@
-package com.example.foodforthought.Misc;
+package com.example.foodforthought.Model;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.AutoCompleteTextView;
 
 
 public class CustomAutoCompleteView extends androidx.appcompat.widget.AppCompatAutoCompleteTextView {

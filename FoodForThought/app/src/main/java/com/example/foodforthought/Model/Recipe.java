@@ -1,4 +1,4 @@
-package com.example.foodforthought.Misc;
+package com.example.foodforthought.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.foodforthought;
+package com.example.foodforthought.Controller;
 
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -7,7 +7,6 @@ import android.provider.BaseColumns;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,9 +25,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.foodforthought.Misc.Database;
+import com.example.foodforthought.Model.Database;
+import com.example.foodforthought.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
