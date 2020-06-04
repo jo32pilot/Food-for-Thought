@@ -40,6 +40,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class InventoryFragment extends Fragment {
 
@@ -55,7 +56,7 @@ public class InventoryFragment extends Fragment {
     private CollectionReference inventoryRef;
     private SimpleCursorAdapter mAdapter;
     private String[] SUGGESTIONS = new String[10];
-    private final float scale = getContext().getResources().getDisplayMetrics().density;
+    private float scale;
 
 
     @Nullable
@@ -91,6 +92,8 @@ public class InventoryFragment extends Fragment {
                 from,
                 to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+
+        scale = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
 
         return view;
     }
