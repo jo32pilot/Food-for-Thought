@@ -1,132 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Controller.UserProfileFragment">
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="1.0">-->
-
-    <LinearLayout
-        android:id="@+id/linearLayout4"
-        android:layout_width="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        tools:context=".Controller.MainFragment">
 
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="0dp"
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent" />
-    </LinearLayout>
+            android:id="@+id/bar">
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/titleBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary">
 
-        <Button
-            android:id="@+id/LogoutButton"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:backgroundTint="#FFFFFF"
-            android:text="Logout"
-            android:textColor="#FD999A"
-            android:textSize="12sp" />
 
-        <ImageButton
-            android:id="@+id/FollowButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
 
-            android:layout_weight="1"
-            android:backgroundTint="#FFFFFF"
-            android:src="@drawable/followlogo" />
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/TopPostsButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FFFFFF"
-            android:src="@drawable/toppostlogo" />
+<!--                    <View-->
+<!--                        android:id="@+id/divider1"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:layout_above="@+id/LogoutButton"-->
+<!--                        android:layout_marginLeft="0dp"-->
+<!--                        android:layout_marginBottom="5dp"-->
+<!--                        android:background="@color/colorPrimaryDark" />-->
 
-        <ImageButton
-            android:id="@+id/ShareProfileButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="#FFFFFF"
-            android:src="@drawable/shareiconimage" />
-    </LinearLayout>
+                    <Button
+                        android:id="@+id/LogoutButton"
+                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="130dp"
+                        android:layout_marginTop="17dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#FFFFFF"
+                        android:text="Logout"
+                        android:textColor="#FD999A"
+                        android:textSize="12sp" />
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="507dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-        <LinearLayout
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryDark" />
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view3"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:clipToPadding="false"
+            android:layout_below="@id/bar"
+            android:layout_marginTop="15dp"
+            android:scrollbars="vertical"
+            android:layout_marginBottom="35dp"/>
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Buche De Noel"
-                android:textColor="#808080"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/imageView6"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/buchedenoel" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </RelativeLayout>
 
 
 
@@ -134,4 +90,3 @@
 
     <!--    </LinearLayout>-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
