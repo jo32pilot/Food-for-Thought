@@ -74,7 +74,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
         numDislikes.setText(""+recipe.getDislikes());
 
         // go to recipe page when clicked on
-        recipeName.setOnClickListener(new View.OnClickListener() {
+        recipeImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RecipeFragment recipeFragment = new RecipeFragment();
@@ -88,8 +88,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
             }
         });
 
-        // go to recipe page when image is clicked
-        recipeImage.setOnClickListener(new View.OnClickListener() {
+        // go to recipe page when clicked on
+        recipeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 RecipeFragment recipeFragment = new RecipeFragment();
