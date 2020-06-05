@@ -1,8 +1,9 @@
+
 /**
  * File holds functionality for allowing users to add their own recipes.
+ *
  * @author John Li
  */
-
 package com.example.foodforthought.Controller;
 
 import android.os.Bundle;
@@ -47,8 +48,11 @@ import java.util.Objects;
  */
 public class AddRecipeFragment extends Fragment {
 
+    // lists of ingredients and instructions
     ArrayList<String> ingredients = new ArrayList<>();
     ArrayList<String> instructions = new ArrayList<>();
+
+    // text boxes for user input
     EditText recipeName, instruction, time, servings;
 
     // Custom auto completion to suggest ingredients in our database.
@@ -56,10 +60,17 @@ public class AddRecipeFragment extends Fragment {
     ArrayAdapter<String> adapter;
     List<String> suggestions;
 
-
+    /**
+     * Builds the view when the fragment is opened.
+     * @param inflater Inflated view to fit the screen.
+     * @param container What the screen is contained in.
+     * @param savedInstanceState Persists data throughout configuration changes.
+     * @return The fully built view.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // fill screen
         View v = inflater.inflate(R.layout.test_add_recipe, container, false);
 
         // Set up Back button to go back to Saved Recipes Tab
@@ -72,13 +83,17 @@ public class AddRecipeFragment extends Fragment {
             fragmentTransaction.commit();
         });
 
-        // I think this persists data throughout configuration changes like
-        // screen rotations.
+        // persists data throughout configuration changes like screen rotations.
         setRetainInstance(true);
 
         return v;
     }
 
+    /**
+     * Runs after the view is built,
+     * @param view The built view.
+     * @param savedInstanceState Persists data throughout configuration changes.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,8 +108,8 @@ public class AddRecipeFragment extends Fragment {
         ingredientsList.setAdapter(ingredientsAdapter);
         instructionsList.setAdapter(instructionAdapter);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         // Check if user isn't logged in or has logged out.
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
             Objects.requireNonNull(getActivity()).finish();
         }
@@ -119,12 +134,14 @@ public class AddRecipeFragment extends Fragment {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
+                        // add a new ingredient
                         ingredients.add(doc.getId());
 
                         // So that the list view gets updated properly
                         ingredientsAdapter.notifyDataSetChanged();
                     }
                     else{
+                        // error logging
                         Toast.makeText(getContext(),
                                 "Sorry, we can't find this ingredient!",
                                 Toast.LENGTH_SHORT).show();
@@ -148,6 +165,7 @@ public class AddRecipeFragment extends Fragment {
                 return;
             }
 
+            // gets the ingredients from the database, goes to callback function
             Database db = new Database();
             db.getDocument("ingredients", ingredientText, onExists);
         };
@@ -211,17 +229,19 @@ public class AddRecipeFragment extends Fragment {
                 if(task.isSuccessful()){
                     DocumentSnapshot doc = task.getResult();
                     if(doc.exists()){
+                        // if this recipe already exists
                         Toast.makeText(getContext(),
                                 "You already made a recipe with this name!",
                                 Toast.LENGTH_SHORT).show();
                     }
                     else{
+                        // gets the user data from the database
                         Database db = new Database();
                         db.getDocument("users", user.getUid(), onGetUser);
                     }
                 }
                 else{
-                    // TODO proper error logging
+                    // error logging
                     Toast.makeText(getContext(),
                             "Error ! " + task.getException().getMessage(),
                             Toast.LENGTH_SHORT).show();
@@ -239,6 +259,7 @@ public class AddRecipeFragment extends Fragment {
                     return;
                 }
 
+                // when the user presses submit, query the database
                 String uid = user.getUid();
                 String name = uid + recipeName.getText().toString().trim();
                 Database db = new Database();

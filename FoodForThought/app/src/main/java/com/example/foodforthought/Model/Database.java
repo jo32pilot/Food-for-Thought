@@ -236,7 +236,6 @@ public class Database {
                 new DefaultSuccessListener<Void>(successMessage, frag));
     }
 
-
     /**
      * Reads document from database.
      * @param collection Collection of document to read.
