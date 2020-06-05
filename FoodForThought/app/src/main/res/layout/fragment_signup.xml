@@ -8,7 +8,6 @@
     android:background="#F8F8FF"
     tools:context=".Controller.LoginFragment">
 
-
     <TextView
         android:id="@+id/spacer1"
         android:layout_width="match_parent"

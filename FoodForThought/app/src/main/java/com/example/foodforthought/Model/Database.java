@@ -4,7 +4,6 @@
  *
  * @author John Li
  */
-
 package com.example.foodforthought.Model;
 
 import androidx.fragment.app.Fragment;
@@ -264,5 +263,4 @@ public class Database {
     public FirebaseFirestore getDB(){
         return db;
     }
-
 }

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +27,6 @@
                 android:layout_marginBottom="0dp"
                 android:textColor="@color/colorAccent"/>
 
-
         </LinearLayout>
 
         <ImageView
@@ -37,12 +37,10 @@
             android:cropToPadding="true"
             android:id="@+id/post_image" />
 
-
         <RelativeLayout
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:padding="0dp">
-
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -54,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginRight="5dp">
+
                     <ImageButton
                         android:id="@+id/likeButton"
                         android:layout_width="20dp"
@@ -62,12 +61,14 @@
                         android:scaleType="fitCenter"
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_thumb_up_black_24dp"/>
+
                     <TextView
                         android:id="@+id/numLikes"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="62"
                         android:gravity="center"/>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -75,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_marginLeft="5dp">
+
                     <ImageButton
                         android:id="@+id/dislikeButton"
                         android:layout_width="20dp"
@@ -83,18 +85,19 @@
                         android:scaleType="fitCenter"
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_thumb_down_black_24dp"/>
+
                     <TextView
                         android:id="@+id/numDislikes"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="13"
                         android:gravity="center"/>
+
                 </LinearLayout>
 
             </LinearLayout>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 

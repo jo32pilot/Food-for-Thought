@@ -38,7 +38,6 @@
                 android:queryHint="@string/search_ingredients"
                 android:imeOptions="actionGo" />
 
-
         </RelativeLayout>
 
         <RelativeLayout

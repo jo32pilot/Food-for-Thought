@@ -5,21 +5,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-<!--    <include-->
-<!--        layout="@layout/drawer_toolbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content" />-->
-
-<!--    <include-->
-<!--        layout="@layout/drawer_header"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content" />-->
     <FrameLayout
         android:id="@+id/fragment_bottomcontainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_navigation"/>
-    
     
     <include
         layout="@layout/content_main2"
@@ -35,16 +25,5 @@
         app:itemIconTint="@android:color/white"
         app:itemTextColor="@android:color/white"
         android:background="@color/navigationbar_color"/>
-
-<!--    <com.google.android.material.navigation.NavigationView-->
-<!--        android:id="@+id/navigationView"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="start"-->
-<!--        android:fitsSystemWindows="true"-->
-<!--        app:headerLayout="@layout/drawer_header"-->
-<!--        app:menu="@menu/drawer_menu">-->
-
-<!--    </com.google.android.material.navigation.NavigationView>-->
 
 </RelativeLayout>

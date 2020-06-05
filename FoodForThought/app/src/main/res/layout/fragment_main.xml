@@ -19,7 +19,6 @@
             android:id="@+id/titleBar"
             android:background="@color/colorPrimary">
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -45,7 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorPrimaryDark" />
-
 
     </com.google.android.material.appbar.AppBarLayout>
 

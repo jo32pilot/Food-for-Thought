@@ -47,7 +47,6 @@
                     android:text="Add Home Made"
                     android:textColor="@color/colorPrimaryDark"/>
 
-
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
 
@@ -56,7 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorPrimaryDark" />
-
 
     </com.google.android.material.appbar.AppBarLayout>
 
