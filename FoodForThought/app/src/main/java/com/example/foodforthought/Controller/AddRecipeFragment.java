@@ -1,4 +1,3 @@
-
 /**
  * File holds functionality for allowing users to add their own recipes.
  *
@@ -70,7 +69,6 @@ public class AddRecipeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // fill screen
         View v = inflater.inflate(R.layout.test_add_recipe, container, false);
 
         // Set up Back button to go back to Saved Recipes Tab
@@ -129,6 +127,10 @@ public class AddRecipeFragment extends Fragment {
         // Completion listener to check if an ingredient exists in our database before
         // allowing the user to add the ingredient to their list
         OnCompleteListener<DocumentSnapshot> onExists = new OnCompleteListener<DocumentSnapshot>() {
+            /**
+             * Checks if an ingredient exists in the database.
+             * @param task The ingredient info from the database.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
@@ -185,7 +187,6 @@ public class AddRecipeFragment extends Fragment {
         // name of the user so we can attach it to their custom recipe.
         OnCompleteListener<DocumentSnapshot> onGetUser = task -> {
             if(task.isSuccessful()){
-
                 // Get all relevant data for the recipe
                 String uid = user.getUid();
                 String name = recipeName.getText().toString().trim();
@@ -224,6 +225,10 @@ public class AddRecipeFragment extends Fragment {
         // same name as existing recipes, but they cannot create a recipe
         // with the name of a recipe they previously created.
         OnCompleteListener<DocumentSnapshot> onRecipeExists = new OnCompleteListener<DocumentSnapshot>() {
+            /**
+             * Determines if the recipe already exits int he database.
+             * @param task Recipe info from the database.
+             */
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
@@ -251,9 +256,12 @@ public class AddRecipeFragment extends Fragment {
 
         // click listener to begin process of writing the recipe to the database
         View.OnClickListener onSubmit = new View.OnClickListener(){
+            /**
+             * When the submit button is clicked, add this recipe to the database.
+             * @param v The submit button view.
+             */
             @Override
             public void onClick(View v) {
-
                 // Check if all fields are filled in
                 if(!isSubmittable()){
                     return;

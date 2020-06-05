@@ -1,3 +1,8 @@
+/**
+ * File containing the functionality of the shopping list page.
+ *
+ * @author Mebrihit Zere
+ */
 package com.example.foodforthought.Controller;
 
 import android.database.Cursor;
@@ -21,11 +26,9 @@ import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.example.foodforthought.Model.Database;
 import com.example.foodforthought.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,41 +40,53 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controls the shopping page of the app. The shopping list can have ingredients added to it,
+ * removed from it. You can check off and ingredient in the shopping list to show that
+ * you have bought it from the store. When it is checked off, it is added to your inventory.
+ */
 public class ShoppingFragment extends Fragment {
+    // views and variables
     private SearchView searchShopping;
     private LinearLayout shoppingListLayout;
     private Database db = new Database();
     private String userIngredientsId;
     private Map<String, Object> shopping_list = new HashMap<>();
-
     private CollectionReference inventoryRef;
     private SimpleCursorAdapter mAdapter;
     private String[] SUGGESTIONS = new String[10];
 
+    /**
+     * Builds the view when the fragment is opened.
+     * @param inflater Inflated view to fit the screen.
+     * @param container What the screen is contained in.
+     * @param savedInstanceState Persists data throughout configuration changes.
+     * @return The fully built view.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopping, container, false);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        searchShopping = view.findViewById(R.id.searchShopping);
-
         // If user isn't logged in or has logged out.
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
             getActivity().finish();
         }
 
+        // searchbar view
+        searchShopping = view.findViewById(R.id.searchShopping);
+
+        // get the user's shopping list ingredients
         String uid = user.getUid();
         userIngredientsId = "user_ingredients_id_" + uid;
-
         db.getDocument("user_ingredients", userIngredientsId, onGetShoppingList);
 
+        // gets the total list of ingredients from the database
         inventoryRef = db.getDB().collection("ingredients");
-
         final String[] from = new String[] {"ingredient"};
         final int[] to = new int[] {android.R.id.text1};
         mAdapter = new SimpleCursorAdapter(getActivity(),
@@ -84,29 +99,42 @@ public class ShoppingFragment extends Fragment {
         return view;
     }
 
+    /**
+     * After the view is created, give it functionality. Adds search feature, plus/minus feature,
+     * and checkoff feature.
+     * @param view The newly made view.
+     * @param savedInstanceState Persists data throughout configuration changes.
+     */
    @Override
    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        searchShopping.setSuggestionsAdapter(mAdapter);
-        searchShopping.setIconifiedByDefault(false);
-
+       super.onViewCreated(view, savedInstanceState);
+       searchShopping.setSuggestionsAdapter(mAdapter);
+       searchShopping.setIconifiedByDefault(false);
        shoppingListLayout = view.findViewById(R.id.shoppingListLayout);
 
+       // suggest ingredients based on what's in the database
        searchShopping.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+           /**
+            * Defaults out.
+            * @param position Unused.
+            * @return Always false.
+            */
            @Override
            public boolean onSuggestionSelect(int position) {
                return false;
            }
 
+           /**
+            * Suggest and ingredient
+            * @param position The position of the item in the dropdown
+            * @return Success or failure
+            */
            @Override
            public boolean onSuggestionClick(int position) {
                Cursor cursor = (Cursor) mAdapter.getItem(position);
                String txt = cursor.getString(cursor.getColumnIndex("ingredient"));
                if(txt != null) {
-                   if(shopping_list.containsKey(txt)){
-
-                   }
+                   if(shopping_list.containsKey(txt)){ }
                    else {
                        shopping_list.put(txt, 1);
                        createItem(txt, 1);
@@ -118,8 +146,13 @@ public class ShoppingFragment extends Fragment {
            }
        });
 
-        //Add new item to list
+        // Add new item to list
         searchShopping.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            /**
+             * When you submit without clicking from the suggestion list.
+             * @param query The input string.
+             * @return Always fails.
+             */
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Toast.makeText(ShoppingFragment.this.getContext(),
@@ -128,6 +161,12 @@ public class ShoppingFragment extends Fragment {
                 return false;
             }
 
+            /**
+             * When the user changes the input, this changes the suggest recipes
+             * from the database.
+             * @param newText The altered input.
+             * @return Always true.
+             */
             @Override
             public boolean onQueryTextChange(String newText) {
                 inventoryRef.whereGreaterThanOrEqualTo("name", newText)
@@ -139,10 +178,14 @@ public class ShoppingFragment extends Fragment {
         });
    }
 
+    // when the ingredients are gotten from the database
     OnCompleteListener<QuerySnapshot> onGetAllIngredients = new OnCompleteListener<QuerySnapshot>() {
+        /**
+         * After getting all ingredients in the database, suggest some of them.
+         * @param task ingredient info from the database
+         */
         @Override
         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
             int i = 0;
             for(QueryDocumentSnapshot doc : task.getResult()){
                 SUGGESTIONS[i] = doc.getId().toString();
@@ -152,28 +195,37 @@ public class ShoppingFragment extends Fragment {
         }
     };
 
+    /**
+     * Populates the ingredients suggestions with ingredients fitting what the user has
+     * typed so far.
+     */
     private void populateAdapter() {
-        final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "ingredient" });
-        for (int i=0; i<SUGGESTIONS.length; i++) {
+        final MatrixCursor c = new MatrixCursor(new String[] { BaseColumns._ID, "ingredient" });
+        for (int i = 0; i < SUGGESTIONS.length; i++) {
             c.addRow(new Object[] {i, SUGGESTIONS[i]});
         }
         mAdapter.changeCursor(c);
     }
 
+    // once the user's shopping list is retrieved from the database
     OnCompleteListener<DocumentSnapshot> onGetShoppingList = new OnCompleteListener<DocumentSnapshot>() {
-
+        /**
+         * After the shopping list is gotten from the database, build the page based on
+         * the list.
+         * @param task Shopping list info.
+         */
         @Override
         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
             if(task.isSuccessful()){
                 DocumentSnapshot userIngredients = task.getResult();
-                if(userIngredients != null){
+                if(userIngredients != null) {
                     shopping_list = (Map<String, Object>) userIngredients.get("shopping_list");
                     if(shopping_list != null) {
                         for (String key : shopping_list.keySet()) {
                             createItem(key, (long) shopping_list.get(key));
                         }
                     }
-                    else{
+                    else {
                         shopping_list = new HashMap<>();
                     }
                 }
@@ -181,8 +233,13 @@ public class ShoppingFragment extends Fragment {
         }
     };
 
+    /**
+     * Creates a visible shopping list item from data retrieved from the database query.
+     * @param query The name of the item.
+     * @param amount1 The amount of the item.
+     */
     protected void createItem(String query, long amount1) {
-        //create new row
+        // create new row
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("shopping_list", shopping_list);
         db.update("user_ingredients", userIngredientsId, updatedMap,
@@ -193,7 +250,7 @@ public class ShoppingFragment extends Fragment {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        //Amount layout for linearlayout
+        // Amount layout for linear layout
         LinearLayout amountLayout = new LinearLayout(this.getContext());
         amountLayout.setId(View.generateViewId());
         LinearLayout.LayoutParams amountLayoutParams =
@@ -202,36 +259,38 @@ public class ShoppingFragment extends Fragment {
         amountLayoutParams.gravity = RelativeLayout.ALIGN_PARENT_END;
         amountLayout.setLayoutParams(amountLayoutParams);
 
-        //Create all items of new row
+        // Create all items of new row
         CheckBox checkBox = new CheckBox(this.getContext());
         ImageButton minusButton = new ImageButton(this.getContext());
         ImageButton plusButton = new ImageButton(this.getContext());
         EditText amount = new EditText(this.getContext());
 
-        //Set valid IDs
+        // Set valid IDs
         checkBox.setId(View.generateViewId());
         minusButton.setId(View.generateViewId());
         plusButton.setId(View.generateViewId());
         amount.setId(View.generateViewId());
 
-        //add items of new row into new row
+        // add items of new row into new row
         linearLayout.addView(checkBox);
         amountLayout.addView(amount);
         amountLayout.addView(plusButton);
         amountLayout.addView(minusButton);
         linearLayout.addView(amountLayout);
 
-        //add row to list
+        // add row to list
         shoppingListLayout.addView(linearLayout);
 
-        //Set checkbox params
+        // Set checkbox params
         final float scale = getContext().getResources().getDisplayMetrics().density;
         int checkPixels = (int) (250 * scale + 0.5f);
         checkBox.setLayoutParams(new LinearLayout.LayoutParams(
                 checkPixels,ViewGroup.LayoutParams.WRAP_CONTENT));
-        //Set text to ingredient
+
+        // Set text to ingredient
         checkBox.setText(query);
-        //Set size of text
+
+        // Set size of text
         checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
         checkBox.setGravity(Gravity.BOTTOM);
 
@@ -241,33 +300,49 @@ public class ShoppingFragment extends Fragment {
         minusButton.setLayoutParams(new LinearLayout.LayoutParams(
                 buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        //Set image for plus button
+        // Set image for plus button
         plusButton.setImageResource(R.drawable.ic_action_add);
         plusButton.setLayoutParams(new LinearLayout.LayoutParams(
                 buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        //Move Text of number to center (hopefully)
+        // Move Text of number to center (hopefully)
         amount.setGravity(Gravity.CENTER);
 
-        //Set regular distance for amount text (UI)
+        // Set regular distance for amount text (UI)
         int amountPixels = (int) (30 * scale + 0.5f);
         amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
-        //Set input type to numbers
+
+        // Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
-        //Set base amount to 1
+
+        // Set base amount to 1
         amount.setText(String.valueOf(amount1));
         amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
         amount.addTextChangedListener(new TextWatcher() {
+            /**
+             * Defaults out.
+             * @param s Unused
+             * @param start Unused
+             * @param count Unused
+             * @param after Unused
+             */
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-            }
-
+            /**
+             * Defaults out.
+             * @param s Unused
+             * @param start Unused
+             * @param count Unused
+             */
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-            }
-
+            /**
+             * After the text is changed in the searchbar, get different suggestions
+             * for the user.
+             * @param s Search bar input
+             */
             @Override
             public void afterTextChanged(Editable s) {
                 if(s != null) {
@@ -285,7 +360,8 @@ public class ShoppingFragment extends Fragment {
                             Map<String, Object> map = new HashMap<>();
                             map.put("shopping_list." + query, temp);
                             db.update("user_ingredients", userIngredientsId,
-                                    map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                                    map, ShoppingFragment.this,
+                                    "Could not update amount. Please try again", onSuccessListener);
                         }
                     }
                 }
@@ -294,14 +370,16 @@ public class ShoppingFragment extends Fragment {
 
         //What to do if checkbox is clicked
         checkBox.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When the checkbox next to a shopping item is clicked, remove it from
+             * the shopping list and add it to the user inventory list.
+             * @param v Checkoff button view.
+             */
             @Override
             public void onClick(View v) {
-                if(!checkBox.isChecked() ){
-
-                }
+                if(!checkBox.isChecked()) {}
                 else {
                     shoppingListLayout.removeView(linearLayout);
-                    /*shoppingListLayout.addView(linearLayout);*/
                     shopping_list.remove(query);
                     Map<String, Object> updatedMap = new HashMap<>();
                     Map<String, Object> updateInventory = new HashMap<>();
@@ -316,8 +394,13 @@ public class ShoppingFragment extends Fragment {
                 }
             }
         });
+
         //What to do if plus button is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When the plus button is clicked, add more of the ingredient.
+             * @param v The view of the button
+             */
             @Override
             public void onClick(View v) {
                 //increment counter
@@ -330,8 +413,13 @@ public class ShoppingFragment extends Fragment {
                         "Could not update amount. Please try again", onSuccessListener);
             }
         });
+
         //What to do if minus button is clicked
         minusButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When the minus button is clicked, get rid of some of the ingredient.
+             * @param v
+             */
             @Override
             public void onClick(View v) {
                 //decrease counter
@@ -347,7 +435,12 @@ public class ShoppingFragment extends Fragment {
 
     }
 
+    // does nothing
     OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
+        /**
+         * Defaults out
+         * @param aVoid Unused
+         */
         @Override
         public void onSuccess(Void aVoid) {
 

@@ -1,6 +1,6 @@
 /**
- * 
- * @author
+ * File holds functionality for allowing the user to control the navbar at the bottom of
+ * the screen.
  */
 package com.example.foodforthought.Controller;
 
@@ -17,25 +17,26 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.foodforthought.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-// Activity that hosts fragments for recipe, inventory, and shopping pages
+/**
+ * Controls the navbar that switches between the main fragments in the app
+ */
 public class HomeActivity extends AppCompatActivity {
     // Object declarations for activity class
-    // DrawerLayout drawerLayout;
-    ActionBarDrawerToggle actionBarDrawerToggle;
-    Toolbar toolbar;
-    // NavigationView navigationView;
     BottomNavigationView bottomNavigationView;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
-
-    // onCreate instantiates objects with objects from UI and assigns them to the above declarations
+    /**
+     * onCreate instantiates objects with objects from UI and assigns them to the above declarations
+     * @param savedInstanceState Persists data throughout configuration changes.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // Instantiate objects from the UI with objects declared in this class
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         // Initializes navbar
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
@@ -46,10 +47,15 @@ public class HomeActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-
     // Switch between items on the bottom navbar
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
+                /**
+                 * When the user clicks on one of the navbar items.
+                 * @param item Either the profile, shopping screen, pantry, saved recipe list, or
+                 *             home feed.
+                 * @return True if successful.
+                 */
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     // Switches to main feed page when home button clicked in navbar
@@ -84,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
                         fragmentTransaction.commit();
                     }
 
-                    // Switches to shopping page when shopping button clicked in navbar
+                    // Switches to profile page when shopping button clicked in navbar
                     if (item.getItemId() == R.id.UserProfileItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
@@ -94,5 +100,4 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 }
             };
-
 }

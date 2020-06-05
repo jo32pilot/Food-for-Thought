@@ -1,3 +1,8 @@
+/**
+ * File hold functionality for the inventory page of the application.
+ *
+ * @author Ankur Duggal
+ */
 package com.example.foodforthought.Controller;
 
 import android.database.Cursor;
@@ -42,12 +47,19 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * Controls the inventory page of the app. The inventory can have ingredients added to it,
+ * removed from it. The ingredients in your inventory detemine what recipes appear in your
+ * home feed.
+ */
 public class InventoryFragment extends Fragment {
-
+    // constants
     public static final int ITEM_DPI = 250;
     public static final int TEXT_SIZE = 20;
     public static final int BUTTON_DPI = 40;
     public static final int AMOUNT_DPI = 30;
+
+    // global views and variables
     private SearchView searchIngredients;
     private LinearLayout pantryListLayout;
     private Database db = new Database();
@@ -58,17 +70,24 @@ public class InventoryFragment extends Fragment {
     private String[] SUGGESTIONS = new String[10];
     private float scale;
 
-
+     /**
+     * Builds the view when the fragment is opened.
+     * @param inflater Inflated view to fit the screen.
+     * @param container What the screen is contained in.
+     * @param savedInstanceState Persists data throughout configuration changes.
+     * @return The fully built view.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inventory, container, false);
+
+        // searchbar and pantry list views
         searchIngredients = view.findViewById(R.id.searchInv);
         pantryListLayout = view.findViewById(R.id.pantryListLayout);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         // If user isn't logged in or has logged out.
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
             getActivity().finish();
         }
@@ -92,12 +111,16 @@ public class InventoryFragment extends Fragment {
                 from,
                 to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-
         scale = Objects.requireNonNull(getContext()).getResources().getDisplayMetrics().density;
 
         return view;
     }
 
+    /**
+     * After the view is created, give it functionality. Adds search feature, plus/minus feature.
+     * @param view The newly made view.
+     * @param savedInstanceState Persists data throughout configuration changes.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -106,18 +129,25 @@ public class InventoryFragment extends Fragment {
         searchIngredients.setSuggestionsAdapter(mAdapter);
         searchIngredients.setIconifiedByDefault(false);
 
+        // handles the searchbar action listener
         searchIngredients.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            /**
+             * Defaults out.
+             * @param position Unused
+             * @return Always false.
+             */
             @Override
             public boolean onSuggestionSelect(int position) {
                 return false;
             }
 
-            /*
+            /**
              * When suggestion is clicked update database and UI with new item to be added
+             * @param position Postion clicked on.
+             * @return Success or failure.
              */
             @Override
             public boolean onSuggestionClick(int position) {
-
                 // Get Text from cursor to know which suggestion was clicked
                 Cursor cursor = (Cursor) mAdapter.getItem(position);
                 String txt = cursor.getString(cursor.getColumnIndex("ingredient"));
@@ -142,9 +172,11 @@ public class InventoryFragment extends Fragment {
         });
 
         searchIngredients.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            /*
+            /**
              * Not allowing users to put in their own custom ingredients,
-             * they must click a suggestion
+             * they must click a suggestion.
+             * @param query The name of the queries ingredient.
+             * @return Success or failure.
              */
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -154,8 +186,10 @@ public class InventoryFragment extends Fragment {
                 return false;
             }
 
-            /*
-             * Fill in suggestions as text is changed
+            /**
+             * Fill in suggestions as text is changed.
+             * @param newText The changed query text.
+             * @return Success or failure.
              */
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -174,6 +208,7 @@ public class InventoryFragment extends Fragment {
      */
     private void populateAdapter() {
         final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "ingredient" });
+
         // Iterates through all possible suggestions and displays them
         for (int i=0; i<SUGGESTIONS.length; i++) {
             c.addRow(new Object[] {i, SUGGESTIONS[i]});
@@ -183,7 +218,6 @@ public class InventoryFragment extends Fragment {
 
     // Populate Suggestions array to populate the adapter
     OnCompleteListener<QuerySnapshot> onGetAllIngredients = task -> {
-
         int i = 0;
         for(QueryDocumentSnapshot doc : task.getResult()){
             SUGGESTIONS[i] = doc.getId();
@@ -194,11 +228,15 @@ public class InventoryFragment extends Fragment {
 
     // Listener for when we've received the user's ingredients.
     OnCompleteListener<DocumentSnapshot> onGetUserInventory = new OnCompleteListener<DocumentSnapshot>() {
-
+        /**
+         * When the user's inventory is gotten from the database.
+         * @param task The user inventory data.
+         */
         @Override
         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
             if(task.isSuccessful()){
                 DocumentSnapshot userIngredients = task.getResult();
+
                 // get the Ingredients from database to store in local storage and set up UI
                 if(userIngredients != null){
                     userInventory = (Map<String, Object>) userIngredients.get("inventory");
@@ -217,7 +255,7 @@ public class InventoryFragment extends Fragment {
     /**
      * Helper method to setup the UI to show all items in database
      */
-    protected void setUpScreen(){
+    protected void setUpScreen() {
         // Iterate through the local inventory and show them on screen
         for(String key : userInventory.keySet()){
             createItem(key, (long) userInventory.get(key));
@@ -304,15 +342,34 @@ public class InventoryFragment extends Fragment {
 
         // Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+
         // Set base amount to input's value
         amount.setText(String.valueOf(number));
         amount.addTextChangedListener(new TextWatcher() {
+            /**
+             * Defaults out.
+             * @param s Unused.
+             * @param start Unused.
+             * @param count Unused
+             * @param after Unused.
+             */
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            /**
+             * Deaults out.
+             * @param s Unused.
+             * @param start Unused.
+             * @param before Unused.
+             * @param count Unused.
+             */
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
+            /**
+             * Once the text is changed, remove that ingredient in the database.
+             * @param s The edited text.
+             */
             @Override
             public void afterTextChanged(Editable s) {
                 // Null pointer checker
@@ -346,6 +403,11 @@ public class InventoryFragment extends Fragment {
 
         // What to do if plus button is clicked
         plusButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When the plus button is clicked, add one more of the ingredient
+             * to the user's inventory.
+             * @param v The plus button view.
+             */
             @Override
             public void onClick(View v) {
                 // Increment counter
@@ -378,7 +440,6 @@ public class InventoryFragment extends Fragment {
             // Update UI
             amount.setText(String.valueOf(temp - 1));
         });
-
     }
 
     /**
@@ -391,6 +452,6 @@ public class InventoryFragment extends Fragment {
         return pixels;
     }
 
-    /* Empty Success Listener to ensure no output is printed out on success*/
+    // Empty Success Listener to ensure no output is printed out on success
     private OnSuccessListener<Void> onSuccessListener = aVoid -> {};
 }
