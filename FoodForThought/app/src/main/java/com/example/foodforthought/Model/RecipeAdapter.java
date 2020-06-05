@@ -29,7 +29,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
     // Objects of recipe post UI
     private ImageView recipeImage;
     private TextView recipeName;
-    private ImageView save;
     private Context rContext;
     private List<Recipe> rPost;
     private TextView numLikes;
@@ -88,6 +87,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                         .commit();
             }
         });
+
+        // go to recipe page when image is clicked
+        recipeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecipeFragment recipeFragment = new RecipeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recipe", recipe);
+                bundle.putBoolean("fromMain", fromMain);
+                recipeFragment.setArguments(bundle);
+                ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container_fragment, recipeFragment)
+                        .commit();
+            }
+        });
     }
 
     // Returns size of the list of recipes
@@ -117,7 +131,6 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
             recipeName = itemView.findViewById(R.id.recipetitle);
             numLikes = itemView.findViewById(R.id.numLikes);
             numDislikes = itemView.findViewById(R.id.numDislikes);
-            //save = itemView.findViewById(R.id.save);
         }
     }
 }
