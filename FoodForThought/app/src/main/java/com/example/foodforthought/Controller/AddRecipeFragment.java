@@ -188,7 +188,6 @@ public class AddRecipeFragment extends Fragment {
                 // existing list in the database)
                 Map<String, Object> userRecipesUpdate = new HashMap<>();
                 userRecipesUpdate.put("self_made", FieldValue.arrayUnion(uid + name));
-                userRecipesUpdate.put("saved", FieldValue.arrayUnion(uid+name));
                 db.update("user_recipes", "user_recipes_id_" + user.getUid(),
                         userRecipesUpdate, AddRecipeFragment.this, "Done!",
                         "Something went wrong!");
