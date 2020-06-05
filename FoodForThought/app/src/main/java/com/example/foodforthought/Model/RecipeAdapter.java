@@ -75,6 +75,21 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
         numDislikes.setText(""+recipe.getDislikes());
 
         // go to recipe page when clicked on
+        recipeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecipeFragment recipeFragment = new RecipeFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recipe", recipe);
+                bundle.putBoolean("fromMain", fromMain);
+                recipeFragment.setArguments(bundle);
+                ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container_fragment, recipeFragment)
+                        .commit();
+            }
+        });
+
+        // go to recipe page when clicked on
         recipeName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,6 +103,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                         .commit();
             }
         });
+
     }
 
     // Returns size of the list of recipes
