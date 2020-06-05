@@ -9,7 +9,7 @@
         android:id="@+id/LoginFragment"
         android:name="com.example.foodforthought.Controller.LoginFragment"
         android:label="@string/login_fragment_label"
-        tools:layout="@layout/login_fragment">
+        tools:layout="@layout/fragment_login">
 
         <action
             android:id="@+id/action_LoginFragment_to_SingUpFragment"
@@ -19,7 +19,7 @@
         android:id="@+id/SignUpFragment"
         android:name="com.example.foodforthought.Controller.SignUpFragment"
         android:label="@string/signup_fragment_label"
-        tools:layout="@layout/signup_fragment">
+        tools:layout="@layout/fragment_signup">
 
         <action
             android:id="@+id/action_SignUpFragment_to_LoginFragment"

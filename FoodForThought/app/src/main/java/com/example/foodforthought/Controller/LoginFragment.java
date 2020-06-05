@@ -13,9 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.foodforthought.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -28,62 +25,69 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(
-
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.login_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Setup firebase authentication
         fAuth = FirebaseAuth.getInstance();
-        emailId = (EditText) view.findViewById(R.id.emailLogin);
-        passwordId = (EditText) view.findViewById(R.id.passwordLogin);
+        // Get views to read
+        emailId = view.findViewById(R.id.emailLogin);
+        passwordId = view.findViewById(R.id.passwordLogin);
 
-        //check if users already logged in
+        // Check if users already logged in
         if(fAuth.getCurrentUser() != null) {
             Intent intent = new Intent(getActivity(), HomeActivity.class);
             startActivity(intent);
         }
 
-        view.findViewById(R.id.loginButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Clicked");
-                //check if credentials in database
-                if(emailId.getText().toString().isEmpty()) {
-                    Toast.makeText(getContext(),"enter email address",Toast.LENGTH_SHORT).show();
-                }else {
-                    if (emailId.getText().toString().trim().matches(emailPattern)) {
+        view.findViewById(R.id.loginButton).setOnClickListener(v -> {
+            System.out.println("Clicked");
 
-                        String email = emailId.getText().toString().trim();
-                        String password = passwordId.getText().toString().trim();
-                        //log in the user right here
-                        fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()){
-                                    Toast.makeText(getContext(), "Logged in Successfully", Toast.LENGTH_SHORT).show();
+            // Check if no email added
+            if(emailId.getText().toString().isEmpty()) {
+                Toast.makeText(getContext(),"enter email address",Toast.LENGTH_SHORT).show();
+            }else {
+                // Check that it is a valid email address pattern
+                if (emailId.getText().toString().trim().matches(emailPattern)) {
 
-                                    Intent intent = new Intent(getActivity(), HomeActivity.class);
-                                    startActivity(intent);
+                    // Get email and password
+                    String email = emailId.getText().toString().trim();
+                    String password = passwordId.getText().toString().trim();
 
-                                }else {
-                                    Toast.makeText(getContext(), "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                    // Log in the user w/ email and password
+                    fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+                        // If could log in (let user know and log them in)
+                        if(task.isSuccessful()){
+                            Toast.makeText(getContext(), "Logged in Successfully",
+                                    Toast.LENGTH_SHORT).show();
 
-                    } else {
-                        Toast.makeText(getContext(),"Invalid email address", Toast.LENGTH_SHORT).show();
-                    }
+                            Intent intent = new Intent(getActivity(), HomeActivity.class);
+                            startActivity(intent);
+
+                        }
+                        // Let user know log in could not happen
+                        else {
+                            Toast.makeText(getContext(), "Error ! "
+                                    + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+                // Let user know that an invalid email was input
+                else {
+                    Toast.makeText(getContext(),"Invalid email address", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
+        // Move user to sign up page
         view.findViewById(R.id.signUpButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
