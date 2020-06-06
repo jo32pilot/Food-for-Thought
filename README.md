@@ -54,7 +54,7 @@ Test Cases Account (has specific inventory used in Test Cases document, use Popu
 
 1. Once you have the app installed, look for the Food for Thought app among your applications
 2. Tap on the Food for Thought application to run the program
-3. At the home page, select the create account button  
+3. At the login page, select the create account button  
 4. Enter your personal information along with an email address and password
 5. Once you have created an account, return and login with the information you used during sign-up
 
