@@ -40,6 +40,7 @@ Test Cases Account (has specific inventory used in Test Cases document, use Popu
 
 # Installation Instructions: 
 
+Install on physical device
 
 1. From the settings app on your android device, click on Apps & Notifications -> Advanced -> Special app access -> Install unknown apps 
 (Special Note for Samsung phones: click on Apps -> click on the three dots -> Special access -> Install unknown apps)
@@ -48,6 +49,15 @@ Test Cases Account (has specific inventory used in Test Cases document, use Popu
 3. From your phone, click [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing) to download the APK file or download it from the github repository under the Install folder. 
 4. Select the APK file and open file with Package installer
 5. Select Food For Thought from your apps to run the application
+
+OR using ADB (emulator or physical)
+
+1. Click [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing) to download the APK file or download it from the github repository under the Install folder. 
+2. Launch the emulator or connect an Android phone with USB debugging on.
+3. Make sure `adb` is in your PATH variable or navigate to its location.
+4. In a terminal, type `adb devices` to verify connected devices.
+5. Type `adb device-name install /path/to/apk` or `adb -s device-name install /path/to/apk` to install to SD card/internal memory (recommended for emulators).
+   Device name is optional to include, try without if you have having difficulties.
 
 # How to Run: 
 
