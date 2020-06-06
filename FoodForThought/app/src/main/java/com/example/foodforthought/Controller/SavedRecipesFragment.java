@@ -65,7 +65,7 @@ public class SavedRecipesFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), false);
+        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), "fromSaved");
         recyclerView.setAdapter(recipeAdapter);
         recipeList = new ArrayList<>();
 
@@ -118,7 +118,7 @@ public class SavedRecipesFragment extends Fragment {
 
                 // add to scrolling feed
                 recipeList.add(new Recipe(doc.getId(), doc.getData(), null));
-                recipeAdapter = new RecipeAdapter(getContext(), recipeList, false);
+                recipeAdapter = new RecipeAdapter(getContext(), recipeList, "fromSaved");
                 recyclerView.setAdapter(recipeAdapter);
             }
             else {

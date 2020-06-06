@@ -791,11 +791,14 @@ public class RecipeFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
                 // depending on what page we came from. go back to a different page
-                if(bundle.getBoolean("fromMain") == true) {
+                if(bundle.getString("origin").equals("fromMain")) {
                     fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
                 }
-                else {
+                else if(bundle.getString("origin").equals("fromSaved")){
                     fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
+                }
+                else {
+                    fragmentTransaction.replace(R.id.container_fragment, new UserProfileFragment());
                 }
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();

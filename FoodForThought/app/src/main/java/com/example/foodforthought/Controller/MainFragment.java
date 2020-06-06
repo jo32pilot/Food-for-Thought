@@ -74,7 +74,7 @@ public class MainFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), true);
+        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), "fromMain");
         recyclerView.setAdapter(recipeAdapter);
 
         // If user isn't logged in or has logged out.
@@ -152,7 +152,7 @@ public class MainFragment extends Fragment {
                 }
 
                 // set the adapter to the recycler view
-                recipeAdapter = new RecipeAdapter(getContext(), recipeList, true);
+                recipeAdapter = new RecipeAdapter(getContext(), recipeList, "fromMain");
                 recyclerView.setAdapter(recipeAdapter);
             } else {
                 // error logging

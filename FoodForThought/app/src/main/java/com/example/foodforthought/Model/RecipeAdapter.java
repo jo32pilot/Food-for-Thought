@@ -35,19 +35,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
     private TextView numDislikes;
     private FirebaseUser firebaseUser;
 
-    // if the adapter was used in mainFeed or not
-    private boolean fromMain;
+    // if the adapter was used in mainFeed, savedList, or profile
+    private String origin;
 
     /**
      * Constructor for Reciper Adapter which takes in a list of Recipe objects and a context object
      * @param rContext Context describes current state of application
      * @param rPost list of recipes
-     * @param fromMain if the adapter was used in mainfeed or not
+     * @param origin where the adapter was originally used
      */
-    public RecipeAdapter(Context rContext, List<Recipe> rPost, boolean fromMain){
+    public RecipeAdapter(Context rContext, List<Recipe> rPost, String origin) {
         this.rContext = rContext;
         this.rPost = rPost;
-        this.fromMain = fromMain;
+        this.origin = origin;
     }
 
     /**
@@ -98,7 +98,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                 RecipeFragment recipeFragment = new RecipeFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("recipe", recipe);
-                bundle.putBoolean("fromMain", fromMain);
+
+                bundle.putString("origin", origin);
+
                 recipeFragment.setArguments(bundle);
 
                 // switch screens
@@ -120,7 +122,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                 RecipeFragment recipeFragment = new RecipeFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("recipe", recipe);
-                bundle.putBoolean("fromMain", fromMain);
+                bundle.putString("origin", origin);
                 recipeFragment.setArguments(bundle);
 
                 // switch screens

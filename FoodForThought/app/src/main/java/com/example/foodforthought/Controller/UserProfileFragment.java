@@ -63,7 +63,7 @@ public class UserProfileFragment extends Fragment {
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), false);
+        recipeAdapter = new RecipeAdapter(getContext(), new ArrayList<>(), "fromProfile");
         recyclerView.setAdapter(recipeAdapter);
         recipeList = new ArrayList<>();
 
@@ -138,7 +138,7 @@ public class UserProfileFragment extends Fragment {
             if (task.isSuccessful()) {
                 DocumentSnapshot doc = task.getResult();
                 recipeList.add(new Recipe(doc.getId(), doc.getData(), null));
-                recipeAdapter = new RecipeAdapter(getContext(), recipeList, false);
+                recipeAdapter = new RecipeAdapter(getContext(), recipeList, "fromProfile");
                 recyclerView.setAdapter(recipeAdapter);
             }
             else {
