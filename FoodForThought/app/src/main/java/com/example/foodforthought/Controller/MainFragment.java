@@ -42,6 +42,10 @@ import java.util.PriorityQueue;
  * your inventory, the higher up that recipe will be in the feed.
  */
 public class MainFragment extends Fragment {
+    // constants
+    private static final int INIT_PQ_CAP = 20;
+    private static final int LIST_LIMIT = 50;
+
     // views and variables
     private List<String> userInventory;
     private RecyclerView recyclerView;
@@ -49,9 +53,6 @@ public class MainFragment extends Fragment {
     private List<Recipe> recipeList;
     private Database db = new Database();
     private View view;
-
-    // initial post limit
-    private static final int INIT_PQ_CAP = 20;
 
     /**
      * Builds the view when the fragment is opened.
@@ -164,7 +165,8 @@ public class MainFragment extends Fragment {
     };
 
     // Listener for when we've received the user's ingredients.
-    OnCompleteListener<DocumentSnapshot> onGetUserIngredients = new OnCompleteListener<DocumentSnapshot>() {
+    OnCompleteListener<DocumentSnapshot> onGetUserIngredients =
+            new OnCompleteListener<DocumentSnapshot>() {
         /**
          * When we get the ingredients from the user inventory, we want to compare them to the
          * ingredients in the recipe feed.
@@ -177,7 +179,8 @@ public class MainFragment extends Fragment {
                 DocumentSnapshot userIngredients = task.getResult();
                 if (userIngredients != null) {
                     // Get user's inventory which is stored as a map (ingredient name -> amount)
-                    Map<String, Object> invMap = (Map<String, Object>) userIngredients.get("inventory");
+                    Map<String, Object> invMap =
+                            (Map<String, Object>) userIngredients.get("inventory");
                     if(invMap == null){
                         userInventory = new ArrayList<>();
                     }
@@ -191,7 +194,7 @@ public class MainFragment extends Fragment {
                         // Begin second query to get recipes based on user's inventory.
                         if (userInventory != null) {
                             recipesRef.whereArrayContainsAny("all_ingredients", userInventory)
-                                    .limit(50)
+                                    .limit(LIST_LIMIT)
                                     .get()
                                     .addOnCompleteListener(onGetRecipes);
                         }

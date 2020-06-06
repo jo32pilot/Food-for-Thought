@@ -54,7 +54,8 @@ public class UserProfileFragment extends Fragment {
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         // default initializations
         view = inflater.inflate(R.layout.fragment_userprofile, container, false);
         recyclerView = view.findViewById(R.id.recycler_view3);
@@ -151,7 +152,8 @@ public class UserProfileFragment extends Fragment {
     };
 
     // Listener for when we've received the user's recipes
-    OnCompleteListener<DocumentSnapshot> onGetUserRecipes = new OnCompleteListener<DocumentSnapshot>() {
+    OnCompleteListener<DocumentSnapshot> onGetUserRecipes =
+            new OnCompleteListener<DocumentSnapshot>() {
         /**
          * Once the self made recipes are received, get the individuals recipe data.
          * @param task The self_made recipes list.

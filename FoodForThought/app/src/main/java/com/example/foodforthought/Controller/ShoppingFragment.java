@@ -49,6 +49,13 @@ import java.util.Map;
  * you have bought it from the store. When it is checked off, it is added to your inventory.
  */
 public class ShoppingFragment extends Fragment {
+    // constants
+    public static final int ITEM_DPI = 250;
+    public static final int TEXT_SIZE = 20;
+    public static final int BUTTON_DPI = 40;
+    public static final int AMOUNT_DPI = 30;
+    public static final float HALF = 0.5f;
+
     // views and variables
     private SearchView searchShopping;
     private LinearLayout shoppingListLayout;
@@ -68,7 +75,8 @@ public class ShoppingFragment extends Fragment {
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_shopping, container, false);
 
         // If user isn't logged in or has logged out.
@@ -179,7 +187,8 @@ public class ShoppingFragment extends Fragment {
    }
 
     // when the ingredients are gotten from the database
-    OnCompleteListener<QuerySnapshot> onGetAllIngredients = new OnCompleteListener<QuerySnapshot>() {
+    OnCompleteListener<QuerySnapshot> onGetAllIngredients =
+            new OnCompleteListener<QuerySnapshot>() {
         /**
          * After getting all ingredients in the database, suggest some of them.
          * @param task ingredient info from the database
@@ -208,7 +217,8 @@ public class ShoppingFragment extends Fragment {
     }
 
     // once the user's shopping list is retrieved from the database
-    OnCompleteListener<DocumentSnapshot> onGetShoppingList = new OnCompleteListener<DocumentSnapshot>() {
+    OnCompleteListener<DocumentSnapshot> onGetShoppingList =
+            new OnCompleteListener<DocumentSnapshot>() {
         /**
          * After the shopping list is gotten from the database, build the page based on
          * the list.
@@ -283,7 +293,7 @@ public class ShoppingFragment extends Fragment {
 
         // Set checkbox params
         final float scale = getContext().getResources().getDisplayMetrics().density;
-        int checkPixels = (int) (250 * scale + 0.5f);
+        int checkPixels = (int) (ITEM_DPI * scale + HALF);
         checkBox.setLayoutParams(new LinearLayout.LayoutParams(
                 checkPixels,ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -291,12 +301,12 @@ public class ShoppingFragment extends Fragment {
         checkBox.setText(query);
 
         // Set size of text
-        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+        checkBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,TEXT_SIZE);
         checkBox.setGravity(Gravity.BOTTOM);
 
         //Set image for minus button
         minusButton.setImageResource(R.drawable.ic_action_min);
-        int buttonPixels = (int) (40 * scale + 0.5f);
+        int buttonPixels = (int) (BUTTON_DPI * scale + HALF);
         minusButton.setLayoutParams(new LinearLayout.LayoutParams(
                 buttonPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -309,15 +319,16 @@ public class ShoppingFragment extends Fragment {
         amount.setGravity(Gravity.CENTER);
 
         // Set regular distance for amount text (UI)
-        int amountPixels = (int) (30 * scale + 0.5f);
-        amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
+        int amountPixels = (int) (AMOUNT_DPI * scale + HALF);
+        amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         // Set input type to numbers
         amount.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
 
         // Set base amount to 1
         amount.setText(String.valueOf(amount1));
-        amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+        amount.setTextSize(TypedValue.COMPLEX_UNIT_SP,TEXT_SIZE);
         amount.addTextChangedListener(new TextWatcher() {
             /**
              * Defaults out.
@@ -353,7 +364,8 @@ public class ShoppingFragment extends Fragment {
                             updatedMap.put("shopping_list", shopping_list);
                             db.update("user_ingredients", userIngredientsId, updatedMap,
                                     ShoppingFragment.this,
-                                    "Could not remove. Please try again", onSuccessListener);
+                                    "Could not remove. Please try again",
+                                    onSuccessListener);
                             shoppingListLayout.removeView(linearLayout);
                         } else {
                             int temp = Integer.valueOf(s.toString());
@@ -361,7 +373,8 @@ public class ShoppingFragment extends Fragment {
                             map.put("shopping_list." + query, temp);
                             db.update("user_ingredients", userIngredientsId,
                                     map, ShoppingFragment.this,
-                                    "Could not update amount. Please try again", onSuccessListener);
+                                    "Could not update amount. Please try again",
+                                    onSuccessListener);
                         }
                     }
                 }
@@ -383,7 +396,8 @@ public class ShoppingFragment extends Fragment {
                     shopping_list.remove(query);
                     Map<String, Object> updatedMap = new HashMap<>();
                     Map<String, Object> updateInventory = new HashMap<>();
-                    updateInventory.put("inventory." + query, Integer.valueOf(amount.getText().toString()));
+                    updateInventory.put("inventory." + query,
+                            Integer.valueOf(amount.getText().toString()));
                     updatedMap.put("shopping_list", shopping_list);
                     db.update("user_ingredients", userIngredientsId,
                             updatedMap, ShoppingFragment.this,
@@ -410,7 +424,8 @@ public class ShoppingFragment extends Fragment {
                 map.put("shopping_list." + query, temp + 1);
                 db.update("user_ingredients", userIngredientsId,
                         map, ShoppingFragment.this,
-                        "Could not update amount. Please try again", onSuccessListener);
+                        "Could not update amount. Please try again",
+                        onSuccessListener);
             }
         });
 
@@ -427,7 +442,9 @@ public class ShoppingFragment extends Fragment {
                 Map<String, Object> map = new HashMap<>();
                 map.put("shopping_list." + query, temp - 1);
                 db.update("user_ingredients", userIngredientsId,
-                        map, ShoppingFragment.this, "Could not update amount. Please try again", onSuccessListener);
+                        map, ShoppingFragment.this,
+                        "Could not update amount. Please try again",
+                        onSuccessListener);
                 amount.setText(String.valueOf(temp - 1));
 
             }
@@ -442,8 +459,6 @@ public class ShoppingFragment extends Fragment {
          * @param aVoid Unused
          */
         @Override
-        public void onSuccess(Void aVoid) {
-
-        }
+        public void onSuccess(Void aVoid) {}
     };
 }

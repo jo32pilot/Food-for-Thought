@@ -49,6 +49,12 @@ import java.util.Map;
  * on different recipes.
  */
 public class RecipeFragment extends Fragment {
+    // constants
+    private static final int LAYOUT = 300;
+    private static final int HALF_LAYOUT = 150;
+    private static final int MARGIN = 10;
+    private static final int MIN_VERSION = 26;
+
     // the database wrapper
     private Database db = new Database();
 
@@ -65,7 +71,8 @@ public class RecipeFragment extends Fragment {
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recipe, container, false);
 
         // If user isn't logged in or has logged out.
@@ -79,7 +86,8 @@ public class RecipeFragment extends Fragment {
         Recipe recipe = (Recipe) bundle.getSerializable("recipe");
 
         // color either like or dislike button
-        OnCompleteListener<DocumentSnapshot> saveColor = new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> saveColor =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * Colors the saved icon differently depending on if the user has
              * saved this recipe or not.
@@ -110,7 +118,8 @@ public class RecipeFragment extends Fragment {
                 }
             }
         };
-        db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), saveColor);
+        db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                saveColor);
 
         // save button functionality
         OnCompleteListener<DocumentSnapshot> onSave = new OnCompleteListener<DocumentSnapshot>() {
@@ -139,7 +148,8 @@ public class RecipeFragment extends Fragment {
                         // remove from saved
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("saved", FieldValue.arrayRemove(recipe.getId()));
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map, RecipeFragment.this, "Deleted From Saved",
                                 "Failed to delete from saved!");
 
@@ -152,7 +162,8 @@ public class RecipeFragment extends Fragment {
                         savedRecipes.add(recipe.getId());
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("saved", savedRecipes);
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map, RecipeFragment.this, "Added to Saved",
                                 "Failed to add to saved!");
 
@@ -171,7 +182,8 @@ public class RecipeFragment extends Fragment {
              */
             public void onClick(View v) {
                 // add recipe to user's saved list
-                db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), onSave);
+                db.getDocument("user_recipes",
+                        "user_recipes_id_"+firebaseUser.getUid(), onSave);
             }
         });
 
@@ -181,7 +193,8 @@ public class RecipeFragment extends Fragment {
             Picasso.with(getContext()).load(recipe.getURL()).into(recipeImage);
         }
         else {
-            Picasso.with(getContext()).load("drawable://" + R.drawable.logo).into(recipeImage);
+            Picasso.with(getContext()).load("drawable://"
+                    + R.drawable.logo).into(recipeImage);
         }
 
         // likes and dislikes
@@ -191,7 +204,8 @@ public class RecipeFragment extends Fragment {
         dislikes.setText(""+recipe.getDislikes());
 
         // color either like or dislike button
-        OnCompleteListener<DocumentSnapshot> thumbColor = new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> thumbColor =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * Colors the like button text based on whether the user has like this recipe before
              * or not.
@@ -232,7 +246,8 @@ public class RecipeFragment extends Fragment {
                 }
             }
         };
-        db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), thumbColor);
+        db.getDocument("user_recipes",
+                "user_recipes_id_"+firebaseUser.getUid(), thumbColor);
 
         // like action
         OnCompleteListener<DocumentSnapshot> onLike = new OnCompleteListener<DocumentSnapshot>() {
@@ -278,14 +293,17 @@ public class RecipeFragment extends Fragment {
                         // remove from disliked, add to liked
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("disliked", FieldValue.arrayRemove(recipe.getId()));
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
-                                map, RecipeFragment.this, "Deleted From Disliked",
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
+                                map, RecipeFragment.this,
+                                "Deleted From Disliked",
                                 "Failed to delete from disliked!");
                         ArrayList<String> addLiked = (ArrayList<String>)doc.get("liked");
                         addLiked.add(recipe.getId());
                         Map<String, Object> map2 = new HashMap<String, Object>();
                         map2.put("liked", addLiked);
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map2, RecipeFragment.this, "Added to Liked",
                                 "Failed to add to liked!");
                         long numDislikes = recipe.getDislikes();
@@ -294,8 +312,10 @@ public class RecipeFragment extends Fragment {
                         long numLikes = recipe.getLikes();
                         numLikes++;
                         recipe.setLikes(numLikes);
-                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
-                               RecipeFragment.this, "successfully liked recipe",
+                        db.update("recipes", recipe.getId(),
+                                getRecipeMap(recipe, userInput),
+                               RecipeFragment.this,
+                                "successfully liked recipe",
                                "failure to like recipe");
                     }
                     // if its neither been liked nor disliked
@@ -306,14 +326,17 @@ public class RecipeFragment extends Fragment {
                         addLiked.add(recipe.getId());
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("liked", addLiked);
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map, RecipeFragment.this, "Added to Liked",
                                 "Failed to add to liked!");
                         long numLikes = recipe.getLikes();
                         numLikes++;
                         recipe.setLikes(numLikes);
-                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
-                               RecipeFragment.this, "successfully liked recipe",
+                        db.update("recipes", recipe.getId(),
+                                getRecipeMap(recipe, userInput),
+                               RecipeFragment.this,
+                                "successfully liked recipe",
                                "failure to like recipe");
                     }
 
@@ -341,12 +364,14 @@ public class RecipeFragment extends Fragment {
              */
             @Override
             public void onClick(View view) {
-                db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), onLike);
+                db.getDocument("user_recipes",
+                        "user_recipes_id_"+firebaseUser.getUid(), onLike);
             }
         });
 
         // dislike action
-        OnCompleteListener<DocumentSnapshot> onDislike = new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> onDislike =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * When the user dislikes a recipe, the databases is accessed.
              * Based on the database: if the recipe is already disliked, then do nothing.
@@ -389,14 +414,16 @@ public class RecipeFragment extends Fragment {
                         // remove from liked, add to disliked
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("liked", FieldValue.arrayRemove(recipe.getId()));
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map, RecipeFragment.this, "Deleted From Liked",
                                 "Failed to delete from Liked!");
                         ArrayList<String> addDisliked = (ArrayList<String>)doc.get("disliked");
                         addDisliked.add(recipe.getId());
                         Map<String, Object> map2 = new HashMap<String, Object>();
                         map2.put("disliked", addDisliked);
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map2, RecipeFragment.this, "Added to Disliked",
                                 "Failed to add to disliked!");
                         long numDislikes = recipe.getDislikes();
@@ -405,8 +432,10 @@ public class RecipeFragment extends Fragment {
                         long numLikes = recipe.getLikes();
                         numLikes--;
                         recipe.setLikes(numLikes);
-                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
-                                RecipeFragment.this, "successfully disliked recipe",
+                        db.update("recipes", recipe.getId(),
+                                getRecipeMap(recipe, userInput),
+                                RecipeFragment.this,
+                                "successfully disliked recipe",
                                 "failure to dislike recipe");
                     }
                     // if neither
@@ -417,14 +446,17 @@ public class RecipeFragment extends Fragment {
                         addDisliked.add(recipe.getId());
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("disliked", addDisliked);
-                        db.update("user_recipes", "user_recipes_id_"+firebaseUser.getUid(),
+                        db.update("user_recipes",
+                                "user_recipes_id_"+firebaseUser.getUid(),
                                 map, RecipeFragment.this, "Added to Disliked",
                                 "Failed to add to disliked!");
                         long numDislikes = recipe.getDislikes();
                         numDislikes++;
                         recipe.setDislikes(numDislikes);
-                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
-                                RecipeFragment.this, "successfully disliked recipe",
+                        db.update("recipes", recipe.getId(),
+                                getRecipeMap(recipe, userInput),
+                                RecipeFragment.this,
+                                "successfully disliked recipe",
                                 "failure to dislike recipe");
                     }
 
@@ -452,7 +484,8 @@ public class RecipeFragment extends Fragment {
              */
             @Override
             public void onClick(View view) {
-                db.getDocument("user_recipes", "user_recipes_id_"+firebaseUser.getUid(), onDislike);
+                db.getDocument("user_recipes",
+                        "user_recipes_id_"+firebaseUser.getUid(), onDislike);
             }
         });
 
@@ -478,7 +511,8 @@ public class RecipeFragment extends Fragment {
         totalTime.setText("" + recipe.getTime() + " minutes");
 
         // ingredients
-        OnCompleteListener<DocumentSnapshot> onGetUserInventory= new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> onGetUserInventory =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * When the page is loaded, we must determine what ingredients the user has
              * in their inventory.
@@ -501,7 +535,9 @@ public class RecipeFragment extends Fragment {
                     for(int i = 0; i < ingredients.size(); i++) {
                         // create a new checkbox
                         CheckBox checkBox = new CheckBox(view.getContext());
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams params =
+                                new LinearLayout.LayoutParams(LinearLayout
+                                        .LayoutParams.MATCH_PARENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                         checkBox.setLayoutParams(params);
                         checkBox.setText((String)ingredients.get(i).get("ingredient"));
@@ -510,7 +546,8 @@ public class RecipeFragment extends Fragment {
                         // if this ingredient is saved as a string in the database
                         if(ingredients.get(i).get("parsed_ingredient") instanceof String) {
                             // if we have this ingredient in our inventory
-                            if (inventory.containsKey(ingredients.get(i).get("parsed_ingredient"))) {
+                            if (inventory.containsKey(ingredients.get(i)
+                                    .get("parsed_ingredient"))) {
                                 // check it off
                                 checkBox.setChecked(true);
                             }
@@ -523,7 +560,8 @@ public class RecipeFragment extends Fragment {
                         // parsed ingredients
                         else {
                             // its an array of parsed ingredients
-                            ArrayList<String> parsed = (ArrayList<String>)ingredients.get(i).get("parsed_ingredient");
+                            ArrayList<String> parsed =
+                                    (ArrayList<String>)ingredients.get(i).get("parsed_ingredient");
                             boolean hasIngredients = true;
                             for (int j = 0; j < parsed.size(); j++) {
                                 if(!inventory.containsKey(parsed.get(j)))
@@ -540,7 +578,8 @@ public class RecipeFragment extends Fragment {
                     // add "Make" button
                     if(hasAllIngredients) {
                         Button button = new Button(getContext());
-                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(300, 150);
+                        LinearLayout.LayoutParams params =
+                                new LinearLayout.LayoutParams(LAYOUT, HALF_LAYOUT);
                         button.setLayoutParams(params);
                         button.setGravity(Gravity.CENTER);
                         button.setText("MAKE");
@@ -555,13 +594,16 @@ public class RecipeFragment extends Fragment {
                                 // get rid of used inventory
                                 for(int i = 0; i < ingredients.size(); i ++) {
                                     // it is a single ingredient
-                                    if(ingredients.get(i).get("parsed_ingredient") instanceof String) {
-                                        String parsedIngredient = (String)ingredients.get(i).get("parsed_ingredient");
+                                    if(ingredients.get(i)
+                                            .get("parsed_ingredient") instanceof String) {
+                                        String parsedIngredient =
+                                                (String)ingredients.get(i).get("parsed_ingredient");
 
                                         // the amount of the ingredient we have left
                                         long num;
                                         if(inventory.get(parsedIngredient) instanceof String) {
-                                            num = Long.parseLong((String)inventory.get(parsedIngredient));
+                                            num = Long.parseLong((String)inventory
+                                                    .get(parsedIngredient));
                                         }
                                         else {
                                             // its a long
@@ -587,14 +629,17 @@ public class RecipeFragment extends Fragment {
                                     }
                                     // its an array of parsed ingredients
                                     else {
-                                        ArrayList<String> parsedIngredients = (ArrayList<String>)ingredients.get(i).get("parsed_ingredient");
+                                        ArrayList<String> parsedIngredients =
+                                                (ArrayList<String>)ingredients.get(i)
+                                                        .get("parsed_ingredient");
 
                                         // get rid of each of the parsed ingredients
                                         for(int j = 0; j < parsedIngredients.size(); j++) {
                                             String thisIngredient = parsedIngredients.get(j);
                                             long num;
                                             if(inventory.get(thisIngredient) instanceof String) {
-                                                num = Long.parseLong((String)inventory.get(thisIngredient));
+                                                num = Long.parseLong((String)inventory
+                                                        .get(thisIngredient));
                                             }
                                             else {
                                                 // its a long
@@ -619,15 +664,18 @@ public class RecipeFragment extends Fragment {
                                 // need to push changes to database
                                 Map<String, Object> hash = new HashMap<>();
                                 hash.put("inventory", inventory);
-                                db.update("user_ingredients", "user_ingredients_id_"+firebaseUser.getUid(),
-                                        hash, RecipeFragment.this, "Updated Inventory",
+                                db.update("user_ingredients",
+                                        "user_ingredients_id_"+firebaseUser.getUid(),
+                                        hash, RecipeFragment.this,
+                                        "Updated Inventory",
                                         "Failed to Update Inventory");
 
                                 // reload page
                                 userInput = "";
                                 userNumber = 0;
-                                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                                if (Build.VERSION.SDK_INT >= 26) {
+                                FragmentTransaction ft = getActivity().getSupportFragmentManager()
+                                        .beginTransaction();
+                                if (Build.VERSION.SDK_INT >= MIN_VERSION) {
                                     ft.setReorderingAllowed(false);
                                 }
                                 ft.detach(RecipeFragment.this).attach(RecipeFragment.this).commit();
@@ -648,8 +696,8 @@ public class RecipeFragment extends Fragment {
             }
         };
         // check if the ingredients we have in our inventory
-        db.getDocument("user_ingredients", "user_ingredients_id_"+firebaseUser.getUid(),
-                onGetUserInventory);
+        db.getDocument("user_ingredients", "user_ingredients_id_"
+                        + firebaseUser.getUid(), onGetUserInventory);
 
         // instructions
         LinearLayout recipeInstructions = view.findViewById(R.id.recipeInstructions);
@@ -662,16 +710,18 @@ public class RecipeFragment extends Fragment {
 
             // instruction holder
             LinearLayout instruction = new LinearLayout(getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0,0,0,10);
+            params.setMargins(0,0,0,MARGIN);
             instruction.setOrientation(LinearLayout.HORIZONTAL);
             instruction.setGravity(Gravity.CENTER_VERTICAL);
             instruction.setLayoutParams(params);
 
             // "Step #)"
             TextView step = new TextView(getContext());
-            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams params2 =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
             step.setLayoutParams(params2);
             step.setText("Step " + (i+1) + ")");
@@ -679,9 +729,10 @@ public class RecipeFragment extends Fragment {
 
             // the information of this step
             TextView infoText = new TextView(getContext());
-            LinearLayout.LayoutParams params3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams params3 =
+                    new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            params3.setMargins(10,0,0,0);
+            params3.setMargins(MARGIN,0,0,0);
             infoText.setLayoutParams(params3);
             infoText.setGravity(Gravity.LEFT);
             infoText.setText(instructions.get(i));
@@ -694,7 +745,8 @@ public class RecipeFragment extends Fragment {
 
         // load comments section
         LinearLayout commentsSection = view.findViewById(R.id.recipeComments);
-        OnCompleteListener<DocumentSnapshot> onGetUser = new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> onGetUser =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * When the user who posted the comment is gotten from the database, load their profile
              * picture and username to the page.
@@ -708,7 +760,8 @@ public class RecipeFragment extends Fragment {
                     // create user profile image
                     ImageView userProfile = new ImageView(view.getContext());
                     userProfile.setImageResource(R.drawable.profilepic);
-                    LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(150, 150);
+                    LinearLayout.LayoutParams imageParams =
+                            new LinearLayout.LayoutParams(HALF_LAYOUT, HALF_LAYOUT);
                     userProfile.setLayoutParams(imageParams);
 
                     // name of user field
@@ -720,7 +773,8 @@ public class RecipeFragment extends Fragment {
 
                         // load default picture
                         if (doc.get("profilePictureURL") != null) {
-                            Picasso.with(getContext()).load((String)doc.get("profilePictureURL")).into(userProfile);
+                            Picasso.with(getContext()).load((String)doc.get("profilePictureURL"))
+                                    .into(userProfile);
                         }
                     }
                     else {
@@ -730,22 +784,25 @@ public class RecipeFragment extends Fragment {
 
                     // create new comment
                     LinearLayout newComment = new LinearLayout(view.getContext());
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams params =
+                            new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.MATCH_PARENT);
-                    params.setMargins(0, 0, 0, 10);
+                    params.setMargins(0, 0, 0, MARGIN);
                     newComment.setLayoutParams(params);
 
                     // div text section
                     LinearLayout textSection = new LinearLayout(getContext());
-                    LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams params2 =
+                            new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params2.setMargins(10, 0, 0, 0);
+                    params2.setMargins(MARGIN, 0, 0, 0);
                     textSection.setLayoutParams(params2);
                     textSection.setOrientation(LinearLayout.VERTICAL);
 
                     // create user comment text
                     TextView userText = new TextView((view.getContext()));
-                    LinearLayout.LayoutParams textParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams textParams =
+                            new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
                     userText.setLayoutParams(textParams);
                     userText.setText(recipe.getComments().get(userNumber).get("comment"));
@@ -795,10 +852,12 @@ public class RecipeFragment extends Fragment {
                     fragmentTransaction.replace(R.id.container_fragment, new MainFragment());
                 }
                 else if(bundle.getString("origin").equals("fromSaved")){
-                    fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
+                    fragmentTransaction.replace(R.id.container_fragment,
+                            new SavedRecipesFragment());
                 }
                 else {
-                    fragmentTransaction.replace(R.id.container_fragment, new UserProfileFragment());
+                    fragmentTransaction.replace(R.id.container_fragment,
+                            new UserProfileFragment());
                 }
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
@@ -833,8 +892,10 @@ public class RecipeFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // get user input
                         userInput = input.getText().toString();
-                        db.update("recipes", recipe.getId(), getRecipeMap(recipe, userInput),
-                                RecipeFragment.this, "successfully added comment",
+                        db.update("recipes", recipe.getId(),
+                                getRecipeMap(recipe, userInput),
+                                RecipeFragment.this,
+                                "successfully added comment",
                                 "failure to add comment");
                         db.getDocument("users", firebaseUser.getUid(), onGetUser);
                     }

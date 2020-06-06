@@ -131,7 +131,8 @@ public class SavedRecipesFragment extends Fragment {
     };
 
     // Listener for when we've received the user's ingredients.
-    OnCompleteListener<DocumentSnapshot> onGetUserRecipes = new OnCompleteListener<DocumentSnapshot>() {
+    OnCompleteListener<DocumentSnapshot> onGetUserRecipes =
+            new OnCompleteListener<DocumentSnapshot>() {
         /**
          * When we get the user_recipes from the database, we set up a recycler view of the
          * user's saved recipes.

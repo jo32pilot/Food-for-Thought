@@ -35,6 +35,9 @@ import java.util.Map;
  * username and password.
  */
 public class SignUpFragment extends Fragment {
+    // constants
+    private static final int MIN_PASSWORD_LENGTH = 6;
+
     // views and variables
     EditText mFirstName, mLastName, mEmail, mPassword, mConfirm;
     FirebaseAuth fAuth;
@@ -48,7 +51,8 @@ public class SignUpFragment extends Fragment {
      * @return The fully built view.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_signup, container, false);
     }
@@ -100,7 +104,7 @@ public class SignUpFragment extends Fragment {
                     mEmail.setError("Password is Required.");
                     return;
                 }
-                if(password.length() < 6) {
+                if(password.length() < MIN_PASSWORD_LENGTH) {
                     mPassword.setError("Password must be at least 6 characters long.");
                     return;
                 }
@@ -110,7 +114,8 @@ public class SignUpFragment extends Fragment {
                 }
 
                 // function which create new user
-                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(
+                        new OnCompleteListener<AuthResult>() {
                     /**
                      * Once the new account has been made, let the current user now.
                      * Then log them into the app.
@@ -119,7 +124,8 @@ public class SignUpFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            Toast.makeText(getContext(), "User Created", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "User Created",
+                                    Toast.LENGTH_SHORT).show();
 
                             // Store Data into database
                             FirebaseUser us = fAuth.getCurrentUser();
@@ -130,7 +136,8 @@ public class SignUpFragment extends Fragment {
                             startActivity(intent);
                         }
                         else {
-                            Toast.makeText(getContext(), " Error! " + task.getException().getMessage(),
+                            Toast.makeText(getContext(), " Error! " +
+                                            task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

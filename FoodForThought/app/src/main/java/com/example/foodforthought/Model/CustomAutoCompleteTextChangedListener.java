@@ -74,7 +74,8 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
         AddRecipeFragment addRecipeFragment = (AddRecipeFragment) frag;
 
         // when we get the ingredients from the database
-        OnCompleteListener<QuerySnapshot> onGetIngredients = new OnCompleteListener<QuerySnapshot>() {
+        OnCompleteListener<QuerySnapshot> onGetIngredients =
+                new OnCompleteListener<QuerySnapshot>() {
             /**
              * After getting the ingredients from the database, get the ones that fit
              * the userInput. Uses these as suggestions.
@@ -94,7 +95,8 @@ public class CustomAutoCompleteTextChangedListener implements TextWatcher {
                     addRecipeFragment.setSuggestions(suggestions);
                     addRecipeFragment.getAdapter().notifyDataSetChanged();
                     addRecipeFragment.setAdapter(new ArrayAdapter<>(context,
-                            android.R.layout.simple_dropdown_item_1line, addRecipeFragment.getSuggestions()));
+                            android.R.layout.simple_dropdown_item_1line,
+                            addRecipeFragment.getSuggestions()));
                     addRecipeFragment.getIngredient().setAdapter(addRecipeFragment.getAdapter());
                 }
                 else {

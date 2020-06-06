@@ -59,7 +59,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(rContext).inflate(R.layout.post, parent, false);
+        View view = LayoutInflater.from(rContext).inflate(R.layout.post, parent,
+                false);
         return new RecipeAdapter.viewHolder(view);
     }
 
@@ -104,7 +105,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                 recipeFragment.setArguments(bundle);
 
                 // switch screens
-                ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
+                ((FragmentActivity) view.getContext()).getSupportFragmentManager()
+                        .beginTransaction()
                         .replace(R.id.container_fragment, recipeFragment)
                         .commit();
             }
@@ -126,7 +128,8 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.viewHolder
                 recipeFragment.setArguments(bundle);
 
                 // switch screens
-                ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
+                ((FragmentActivity) view.getContext()).getSupportFragmentManager()
+                        .beginTransaction()
                         .replace(R.id.container_fragment, recipeFragment)
                         .commit();
             }

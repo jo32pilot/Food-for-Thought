@@ -58,6 +58,7 @@ public class InventoryFragment extends Fragment {
     public static final int TEXT_SIZE = 20;
     public static final int BUTTON_DPI = 40;
     public static final int AMOUNT_DPI = 30;
+    public static final float HALF = 0.5f;
 
     // global views and variables
     private SearchView searchIngredients;
@@ -79,7 +80,8 @@ public class InventoryFragment extends Fragment {
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inventory, container, false);
 
         // searchbar and pantry list views
@@ -227,7 +229,8 @@ public class InventoryFragment extends Fragment {
     };
 
     // Listener for when we've received the user's ingredients.
-    OnCompleteListener<DocumentSnapshot> onGetUserInventory = new OnCompleteListener<DocumentSnapshot>() {
+    OnCompleteListener<DocumentSnapshot> onGetUserInventory =
+            new OnCompleteListener<DocumentSnapshot>() {
         /**
          * When the user's inventory is gotten from the database.
          * @param task The user inventory data.
@@ -272,7 +275,8 @@ public class InventoryFragment extends Fragment {
         Map<String, Object> updatedMap = new HashMap<>();
         updatedMap.put("inventory", userInventory);
         db.update("user_ingredients", userIngredientsId, updatedMap,
-                this, "Could not create item. Please try again", onSuccessListener);
+                this, "Could not create item. Please try again",
+                onSuccessListener);
 
         // Create Row to put all items into
         LinearLayout linearLayout = new LinearLayout(this.getContext());
@@ -336,7 +340,8 @@ public class InventoryFragment extends Fragment {
 
          // Set regular distance for amount text (UI changes)
         int amountPixels = calculatePixels(AMOUNT_DPI);
-        amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels, ViewGroup.LayoutParams.WRAP_CONTENT));
+        amount.setLayoutParams(new LinearLayout.LayoutParams(amountPixels,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         amount.setTextSize(TypedValue.COMPLEX_UNIT_SP, TEXT_SIZE);
         amount.setGravity(Gravity.CENTER);
 
@@ -448,7 +453,7 @@ public class InventoryFragment extends Fragment {
      * @return dpi converted to local pixel count
      */
     private int calculatePixels(int dpi){
-        int pixels = (int) (dpi * scale + 0.5f);
+        int pixels = (int) (dpi * scale + HALF);
         return pixels;
     }
 

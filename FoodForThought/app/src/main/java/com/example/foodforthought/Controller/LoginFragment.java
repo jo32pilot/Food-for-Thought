@@ -40,7 +40,8 @@ public class LoginFragment extends Fragment {
      * @return The fully built view.
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
@@ -98,7 +99,8 @@ public class LoginFragment extends Fragment {
                 }
                 // Let user know that an invalid email was input
                 else {
-                    Toast.makeText(getContext(),"Invalid email address", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),"Invalid email address",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

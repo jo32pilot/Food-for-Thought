@@ -46,7 +46,6 @@ import java.util.Objects;
  * in the home activity so that its state persists upon leaving this fragment.
  */
 public class AddRecipeFragment extends Fragment {
-
     // lists of ingredients and instructions
     ArrayList<String> ingredients = new ArrayList<>();
     ArrayList<String> instructions = new ArrayList<>();
@@ -68,13 +67,15 @@ public class AddRecipeFragment extends Fragment {
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.test_add_recipe, container, false);
 
         // Set up Back button to go back to Saved Recipes Tab
         ImageButton back = v.findViewById(R.id.backButton);
         back.setOnClickListener(v1 -> {
-            FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
+            FragmentManager fragmentManager =
+                    Objects.requireNonNull(getActivity()).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
             fragmentTransaction.addToBackStack(null);
@@ -120,13 +121,16 @@ public class AddRecipeFragment extends Fragment {
         servings = view.findViewById(R.id.servings);
 
         // Setup ingredient suggestions from our database
-        ingredient.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this, this.getContext()));
-        adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getContext()), android.R.layout.simple_dropdown_item_1line, suggestions);
+        ingredient.addTextChangedListener(new CustomAutoCompleteTextChangedListener(this,
+                this.getContext()));
+        adapter = new ArrayAdapter<>(Objects.requireNonNull(this.getContext()),
+                android.R.layout.simple_dropdown_item_1line, suggestions);
         ingredient.setAdapter(adapter);
 
         // Completion listener to check if an ingredient exists in our database before
         // allowing the user to add the ingredient to their list
-        OnCompleteListener<DocumentSnapshot> onExists = new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> onExists =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * Checks if an ingredient exists in the database.
              * @param task The ingredient info from the database.
@@ -199,7 +203,8 @@ public class AddRecipeFragment extends Fragment {
                 // First write the recipe to our recipes collection
                 db.write("recipes", uid + name,
                         getRecipeMap(name, totalTime, username, totalServings),
-                        AddRecipeFragment.this, "", "Something went wrong!");
+                        AddRecipeFragment.this, "",
+                        "Something went wrong!");
 
                 // Then write the recipe name to the user's self_made
                 // recipes list. (Note: FieldValue.arrayUnion returns an
@@ -224,7 +229,8 @@ public class AddRecipeFragment extends Fragment {
         // the input name. That is to say, user's can name their recipes the
         // same name as existing recipes, but they cannot create a recipe
         // with the name of a recipe they previously created.
-        OnCompleteListener<DocumentSnapshot> onRecipeExists = new OnCompleteListener<DocumentSnapshot>() {
+        OnCompleteListener<DocumentSnapshot> onRecipeExists =
+                new OnCompleteListener<DocumentSnapshot>() {
             /**
              * Determines if the recipe already exits int he database.
              * @param task Recipe info from the database.
@@ -326,7 +332,8 @@ public class AddRecipeFragment extends Fragment {
      * @param servings Serving size.
      * @return A map representing the recipe to write to the database.
      */
-    private Map<String, Object> getRecipeMap(String name, String time, String user, String servings){
+    private Map<String, Object> getRecipeMap(String name, String time, String user,
+                                             String servings) {
         Map<String, Object> recipe = new HashMap<>();
         recipe.put("all_ingredients", ingredients);
         recipe.put("image", "");

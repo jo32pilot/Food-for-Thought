@@ -40,7 +40,8 @@ public class HomeActivity extends AppCompatActivity {
         // Initializes navbar
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
-        // Load default fragment a.k.a. the first fragment after the login page is the main feed fragment
+        // Load default fragment a.k.a. the first fragment after the login page is the main
+        // feed fragment
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.container_fragment, new MainFragment());
@@ -70,7 +71,8 @@ public class HomeActivity extends AppCompatActivity {
                     if (item.getItemId() == R.id.SavedRecipesItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, new SavedRecipesFragment());
+                        fragmentTransaction.replace(R.id.container_fragment,
+                                new SavedRecipesFragment());
                         fragmentTransaction.commit();
                     }
 
@@ -78,7 +80,8 @@ public class HomeActivity extends AppCompatActivity {
                     if (item.getItemId() == R.id.InventoryItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, new InventoryFragment());
+                        fragmentTransaction.replace(R.id.container_fragment,
+                                new InventoryFragment());
                         fragmentTransaction.commit();
                     }
 
@@ -86,7 +89,8 @@ public class HomeActivity extends AppCompatActivity {
                     if (item.getItemId() == R.id.ShoppingItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, new ShoppingFragment());
+                        fragmentTransaction.replace(R.id.container_fragment,
+                                new ShoppingFragment());
                         fragmentTransaction.commit();
                     }
 
@@ -94,7 +98,8 @@ public class HomeActivity extends AppCompatActivity {
                     if (item.getItemId() == R.id.UserProfileItem){
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.container_fragment, new UserProfileFragment());
+                        fragmentTransaction.replace(R.id.container_fragment,
+                                new UserProfileFragment());
                         fragmentTransaction.commit();
                     }
                     return true;

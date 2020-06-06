@@ -79,7 +79,8 @@ public class AddListAdapter extends BaseAdapter implements ListAdapter {
 
         // null check
         if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater =
+                    (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = inflater.inflate(R.layout.custom_list_element, null);
         }
 
