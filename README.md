@@ -69,6 +69,10 @@ OR using ADB (emulator or physical)
 5. Once you have created an account, return and login with the information you used during sign-up
 
 # Known Bugs:
+Android back button not programmed. Currently just takes the user back to login page.
+
+Going between pages too quickly may result in errors.
+
 Ingredients may not display as checked off in some cases where the names are slightly different. For example, “unsalted butter” may be different from “butter”. The application errs on the side of needing to be more specific rather than general.
 
 Recipes will check off ingredients even if the user does not have enough of them in the inventory. This is intended.
