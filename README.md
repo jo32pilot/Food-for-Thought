@@ -45,7 +45,7 @@ Test Cases Account (has specific inventory used in Test Cases document, use Popu
 (Special Note for Samsung phones: click on Apps -> click on the three dots -> Special access -> Install unknown apps)
 
 2. Click on Google Drive and select Allow from this source 
-3. From your phone, click [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing) or download it from the github repository under the Install folder. 
+3. From your phone, click [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing) to download the APK file or download it from the github repository under the Install folder. 
 4. Select the APK file and open file with Package installer
 5. Select Food For Thought from your apps to run the application
 
