@@ -35,7 +35,7 @@ Test Cases Account (has specific inventory used in Test Cases document, use Popu
 
 
 1. Android phone or emulator with version Android 6.0+ (Marshmallow/SDK 23) to install
-2. Google Drive App
+2. Google Drive App (if using the first installion option)
 
 
 # Installation Instructions: 
@@ -46,13 +46,13 @@ Install on physical device
 (Special Note for Samsung phones: click on Apps -> click on the three dots -> Special access -> Install unknown apps)
 
 2. Click on Google Drive and select Allow from this source 
-3. From your phone, click [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing) to download the APK file or download it from the github repository under the Install folder. 
+3. Locate the APK file in the github repository under the 'Install' folder or download it [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing). 
 4. Select the APK file and open file with Package installer
 5. Select Food For Thought from your apps to run the application
 
-OR using ADB (emulator or physical)
+Or using ADB (emulator or physical)
 
-1. Click [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing) to download the APK file or download it from the github repository under the Install folder. 
+1. Locate the APK file in the github repository under the 'Install' folder or download it [here](https://drive.google.com/drive/folders/1dIIXy3aO0oAqRmydvhjhIfa0oB5SQ_gm?usp=sharing). 
 2. Launch the emulator or connect an Android phone with USB debugging on.
 3. Make sure `adb` is in your PATH variable or navigate to its location.
 4. In a terminal, type `adb devices` to verify connected devices.
