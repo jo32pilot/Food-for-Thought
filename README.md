@@ -56,8 +56,7 @@ Or using ADB (emulator or physical)
 2. Launch the emulator or connect an Android phone with USB debugging on.
 3. Make sure `adb` is in your PATH variable or navigate to its location.
 4. In a terminal, type `adb devices` to verify connected devices.
-5. Type `adb device-name install /path/to/apk` or `adb -s device-name install /path/to/apk` to install to SD card/internal memory (recommended for emulators).
-   Device name is optional to include, try without if you have having difficulties.
+5. Type `adb install /path/to/apk` or `adb -s device-name install /path/to/apk` to install to SD card/internal memory (recommended for emulators).
 
 # How to Run: 
 
